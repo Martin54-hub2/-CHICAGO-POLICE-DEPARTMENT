@@ -1,0 +1,69 @@
+{
+  "districts": [
+    {
+      "number": 1,
+      "name": "Central",
+      "description": "Serving downtown Chicago and the Loop business district",
+      "streets": ["State Street", "Michigan Avenue", "Wabash Avenue", "Clark Street"],
+      "boundaries": "North: Chicago River, South: Roosevelt Rd, East: Lake Michigan, West: Canal St",
+      "commander": "Captain Robert Johnson",
+      "phone": "(312) 745-4290",
+      "address": "1718 S State St, Chicago, IL 60616"
+    },
+    {
+      "number": 2,
+      "name": "Wentworth",
+      "description": "Covers Chinatown and Near South Side neighborhoods",
+      "streets": ["Wentworth Avenue", "Cermak Road", "Canal Street"],
+      "boundaries": "North: 16th St, South: 31st St, East: Lake Michigan, West: Dan Ryan Expy",
+      "commander": "Captain Sarah Martinez",
+      "phone": "(312) 747-8366",
+      "address": "5101 S Wentworth Ave, Chicago, IL 60609"
+    },
+    {
+      "number": 15,
+      "name": "Southside",
+      "description": "Serving the greater South Side community",
+      "streets": ["Ashland Avenue", "63rd Street", "Western Avenue", "79th Street"],
+      "boundaries": "North: 59th St, South: 87th St, East: Cottage Grove, West: Western Ave",
+      "commander": "Commander Michael Thompson",
+      "phone": "(312) 747-8730",
+      "address": "5701 S Racine Ave, Chicago, IL 60636"
+    }
+  ],
+  "posts": [
+    {
+      "title": "CPD Announces New Community Policing Initiative",
+      "body": "The Chicago Police Department is proud to announce the launch of a new community policing initiative aimed at strengthening relationships between officers and the communities they serve. This program will include regular community meetings, increased foot patrols, and partnership with local organizations.\n\nOfficers will be assigned to specific neighborhoods to build lasting relationships with residents and business owners. The initiative begins next month and will roll out across all districts over the next six months.\n\nResidents are encouraged to attend upcoming community meetings to learn more about the program and meet their neighborhood officers.",
+      "excerpt": "New initiative aims to strengthen community relationships through increased engagement and neighborhood partnerships.",
+      "category": "news",
+      "featured": true,
+      "tags": ["community", "policing", "initiative"]
+    },
+    {
+      "title": "Crime Statistics Show Decrease in Violent Incidents",
+      "body": "Recent statistics released by the Chicago Police Department show a significant decrease in violent crime across the city. Compared to the same period last year, violent incidents have decreased by 12%.\n\nThis positive trend is attributed to increased community engagement, improved technology deployment, and enhanced officer training. The CPD remains committed to building on this progress through continued investment in community programs and modern policing strategies.",
+      "excerpt": "Latest crime statistics show 12% decrease in violent incidents citywide.",
+      "category": "news",
+      "featured": true,
+      "tags": ["statistics", "crime", "safety"]
+    },
+    {
+      "title": "Join CPD: Now Hiring Qualified Officers",
+      "body": "The Chicago Police Department is currently accepting applications for the upcoming 2024 academy class. We are seeking dedicated individuals who want to make a difference in their community.\n\nQualified candidates must be at least 21 years of age, possess a valid driver's license, and have completed at least 60 semester hours of college credit. The application process includes written exams, physical fitness testing, background investigation, and interviews.\n\nStarting salary is competitive with full benefits including health insurance, pension, and paid time off. Apply today at joinCPD.org.",
+      "excerpt": "Now accepting applications for the 2024 police academy class. Competitive salary and benefits.",
+      "category": "announcement",
+      "featured": false,
+      "tags": ["recruitment", "hiring", "careers"]
+    },
+    {
+      "title": "Summer Safety Tips from CPD",
+      "body": "As summer approaches, the Chicago Police Department wants to ensure residents stay safe while enjoying the warmer weather. Here are some important safety tips:\n\n1. Never leave valuables visible in parked vehicles\n2. Stay aware of your surroundings, especially in crowded areas\n3. Keep bicycles locked with a U-lock\n4. Report suspicious activity to police immediately\n5. Program emergency contacts in your phone\n\nOfficers will be increasing patrols in parks and beach areas throughout the summer months. If you see something, say something - call 911 for emergencies or 311 for non-emergency situations.",
+      "excerpt": "Important safety tips for enjoying a safe summer in Chicago.",
+      "category": "alert",
+      "featured": false,
+      "tags": ["safety", "summer", "prevention"]
+    }
+  ],
+  "instructions": "Use these samples to populate your database for testing. You can create them through the admin panel or via API calls."
+}
