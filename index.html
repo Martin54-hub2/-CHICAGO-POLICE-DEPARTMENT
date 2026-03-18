@@ -818,242 +818,53 @@
 <script>
 const API_BASE_URL = 'https://chicago-police-department-production.up.railway.app';
 
-// API-First Database with localStorage cache
+
+// LocalStorage-Only Database
 const DB = {
-  // Authentication
-  async login(username, password) {
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      });
-      
-      if (!response.ok) throw new Error('Login failed');
-      
-      const data = await response.json();
-      // Cache token and user data
-      localStorage.setItem('authToken', data.token);
-      localStorage.setItem('currentUser', JSON.stringify(data.user));
-      return data;
-    } catch (error) {
-      console.error('[AUTH] Login error:', error);
-      throw error;
-    }
-  },
-  
-  // Get single officer
-  async getOfficer(username) {
-    try {
-      const token = localStorage.getItem('authToken');
-      const response = await fetch(`${API_BASE_URL}/api/officers/${username}`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      
-      if (!response.ok) throw new Error('Failed to fetch officer');
-      
-      const officer = await response.json();
-      // Cache in localStorage
-      const cached = JSON.parse(localStorage.getItem('cachedOfficers') || '{}');
-      cached[username] = officer;
-      localStorage.setItem('cachedOfficers', JSON.stringify(cached));
-      return officer;
-    } catch (error) {
-      console.error('[DB] Get officer error:', error);
-      // Fallback to cache
-      const cached = JSON.parse(localStorage.getItem('cachedOfficers') || '{}');
-      return cached[username] || null;
-    }
-  },
-  
-  // Update officer profile
-  async updateOfficer(username, data) {
-    try {
-      const token = localStorage.getItem('authToken');
-      const response = await fetch(`${API_BASE_URL}/api/officers/${username}`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+  init() {
+    if (!localStorage.getItem('officers')) {
+      const now = new Date().toISOString();
+      localStorage.setItem('officers', JSON.stringify({
+        "AdminPannel": {
+          password: "CPD543",
+          name: "System Administrator",
+          callsign: "Admin-1",
+          rank: "Administrator",
+          role: "Admin",
+          department: "Administration",
+          infractions: [],
+          createdAt: now
         },
-        body: JSON.stringify(data)
-      });
-      
-      if (!response.ok) throw new Error('Failed to update officer');
-      
-      const updated = await response.json();
-      // Update cache
-      const cached = JSON.parse(localStorage.getItem('cachedOfficers') || '{}');
-      cached[username] = updated;
-      localStorage.setItem('cachedOfficers', JSON.stringify(cached));
-      return updated;
-    } catch (error) {
-      console.error('[DB] Update officer error:', error);
-      // Update cache anyway
-      const cached = JSON.parse(localStorage.getItem('cachedOfficers') || '{}');
-      cached[username] = { ...cached[username], ...data };
-      localStorage.setItem('cachedOfficers', JSON.stringify(cached));
-      throw error;
-    }
-  },
-  
-  // Upload photo
-  async uploadPhoto(username, photoData) {
-    try {
-      const token = localStorage.getItem('authToken');
-      const response = await fetch(`${API_BASE_URL}/api/officers/${username}/photo`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+        "JohnSmith": {
+          password: "officer123",
+          name: "John Smith",
+          callsign: "1-Adam-12",
+          rank: "Officer",
+          role: "Officer",
+          department: "Patrol",
+          infractions: [],
+          createdAt: now
         },
-        body: JSON.stringify({ photo: photoData })
-      });
-      
-      if (!response.ok) throw new Error('Failed to upload photo');
-      
-      const updated = await response.json();
-      // Update cache
-      const cached = JSON.parse(localStorage.getItem('cachedOfficers') || '{}');
-      if (cached[username]) cached[username].photo = photoData;
-      localStorage.setItem('cachedOfficers', JSON.stringify(cached));
-      return updated;
-    } catch (error) {
-      console.error('[DB] Upload photo error:', error);
-      // Update cache anyway
-      const cached = JSON.parse(localStorage.getItem('cachedOfficers') || '{}');
-      if (cached[username]) cached[username].photo = photoData;
-      localStorage.setItem('cachedOfficers', JSON.stringify(cached));
-      throw error;
+        "B.Stafford": {
+          password: "super123",
+          name: "B. Stafford",
+          callsign: "1-King-1",
+          rank: "Superintendent",
+          role: "Admin",
+          department: "Administration",
+          infractions: [],
+          createdAt: now
+        }
+      }));
     }
   },
   
-  // Upload banner
-  async uploadBanner(username, bannerData) {
-    try {
-      const token = localStorage.getItem('authToken');
-      const response = await fetch(`${API_BASE_URL}/api/officers/${username}/banner`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ banner: bannerData })
-      });
-      
-      if (!response.ok) throw new Error('Failed to upload banner');
-      
-      const updated = await response.json();
-      // Update cache
-      const cached = JSON.parse(localStorage.getItem('cachedOfficers') || '{}');
-      if (cached[username]) cached[username].banner = bannerData;
-      localStorage.setItem('cachedOfficers', JSON.stringify(cached));
-      return updated;
-    } catch (error) {
-      console.error('[DB] Upload banner error:', error);
-      // Update cache anyway
-      const cached = JSON.parse(localStorage.getItem('cachedOfficers') || '{}');
-      if (cached[username]) cached[username].banner = bannerData;
-      localStorage.setItem('cachedOfficers', JSON.stringify(cached));
-      throw error;
-    }
+  getOfficers() {
+    return JSON.parse(localStorage.getItem('officers') || '{}');
   },
   
-  // Add certification
-  async addCertification(username, cert) {
-    try {
-      const token = localStorage.getItem('authToken');
-      const response = await fetch(`${API_BASE_URL}/api/officers/${username}/certifications`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ certification: cert })
-      });
-      
-      if (!response.ok) throw new Error('Failed to add certification');
-      return await response.json();
-    } catch (error) {
-      console.error('[DB] Add certification error:', error);
-      throw error;
-    }
-  },
-  
-  // Remove certification
-  async removeCertification(username, index) {
-    try {
-      const token = localStorage.getItem('authToken');
-      const response = await fetch(`${API_BASE_URL}/api/officers/${username}/certifications/${index}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      
-      if (!response.ok) throw new Error('Failed to remove certification');
-      return await response.json();
-    } catch (error) {
-      console.error('[DB] Remove certification error:', error);
-      throw error;
-    }
-  },
-  
-  // Add commendation
-  async addCommendation(username, commend) {
-    try {
-      const token = localStorage.getItem('authToken');
-      const response = await fetch(`${API_BASE_URL}/api/officers/${username}/commendations`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ commendation: commend })
-      });
-      
-      if (!response.ok) throw new Error('Failed to add commendation');
-      return await response.json();
-    } catch (error) {
-      console.error('[DB] Add commendation error:', error);
-      throw error;
-    }
-  },
-  
-  // Remove commendation
-  async removeCommendation(username, index) {
-    try {
-      const token = localStorage.getItem('authToken');
-      const response = await fetch(`${API_BASE_URL}/api/officers/${username}/commendations/${index}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      
-      if (!response.ok) throw new Error('Failed to remove commendation');
-      return await response.json();
-    } catch (error) {
-      console.error('[DB] Remove commendation error:', error);
-      throw error;
-    }
-  },
-  
-  // Add infraction
-  async addInfraction(username, infraction) {
-    try {
-      const token = localStorage.getItem('authToken');
-      const response = await fetch(`${API_BASE_URL}/api/officers/${username}/infractions`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(infraction)
-      });
-      
-      if (!response.ok) throw new Error('Failed to add infraction');
-      return await response.json();
-    } catch (error) {
-      console.error('[DB] Add infraction error:', error);
-      throw error;
-    }
+  saveOfficers(officers) {
+    localStorage.setItem('officers', JSON.stringify(officers));
   }
 };
 
