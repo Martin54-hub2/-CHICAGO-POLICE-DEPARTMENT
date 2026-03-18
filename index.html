@@ -1066,17 +1066,57 @@ async function handleLogin(e) {
   
   console.log('[AUTH] Attempting login for:', username);
   
-  try {
-    const data = await DB.login(username, password);
-    currentUser = { username, ...data.user };
+  // Initialize officers in localStorage if not exists
+  if (!localStorage.getItem('officers')) {
+    const now = new Date().toISOString();
+    localStorage.setItem('officers', JSON.stringify({
+      "AdminPannel": {
+        password: "CPD543",
+        name: "System Administrator",
+        callsign: "Admin-1",
+        rank: "Administrator",
+        role: "Admin",
+        department: "Administration",
+        infractions: [],
+        createdAt: now
+      },
+      "JohnSmith": {
+        password: "officer123",
+        name: "John Smith",
+        callsign: "1-Adam-12",
+        rank: "Officer",
+        role: "Officer",
+        department: "Patrol",
+        infractions: [],
+        createdAt: now
+      },
+      "B.Stafford": {
+        password: "super123",
+        name: "B. Stafford",
+        callsign: "1-King-1",
+        rank: "Superintendent",
+        role: "Admin",
+        department: "Administration",
+        infractions: [],
+        createdAt: now
+      }
+    }));
+  }
+  
+  // Get officers from localStorage
+  const officers = JSON.parse(localStorage.getItem('officers') || '{}');
+  
+  // Check credentials
+  if (officers[username] && officers[username].password === password) {
+    currentUser = { username, ...officers[username] };
+    localStorage.setItem('currentUser', JSON.stringify(currentUser));
     
     console.log('[AUTH] Login successful');
     await updateHeaderForUser();
     showPage('dashboard');
     await loadDashboard();
-  } catch (error) {
-    console.error('[AUTH] Login failed:', error);
-    alert('Invalid credentials or server error. Please try again.');
+  } else {
+    alert('Invalid credentials');
   }
   
   return false;
@@ -1088,19 +1128,16 @@ async function updateHeaderForUser(){
   if(currentUser){
     const roleMenu=currentUser.role==='Admin'?'<div class="dropdown-item" onclick="showPage(\'admin\')">Admin Panel</div>':currentUser.role==='Supervisor'?'<div class="dropdown-item" onclick="showPage(\'supervisor\')">Supervisor Panel</div>':'';
     
-    // Load officer data from cache
+    // Load officer data from localStorage
     let badgeContent = currentUser.callsign?.substring(0,3) || '--';
     let badgeStyle = '';
     
-    try {
-      const officer = await DB.getOfficer(currentUser.username);
-      
-      if (officer && officer.photo) {
-        badgeStyle = `background-image:url(${officer.photo});background-size:cover;background-position:center;`;
-        badgeContent = '';
-      }
-    } catch (error) {
-      console.error('[HEADER] Error loading officer photo:', error);
+    const officers = DB.getOfficers();
+    const officer = officers[currentUser.username];
+    
+    if (officer && officer.photo) {
+      badgeStyle = `background-image:url(${officer.photo});background-size:cover;background-position:center;`;
+      badgeContent = '';
     }
     
     h.innerHTML=`<button class="btn btn-outline">Transform</button><a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-primary">Join CPD</a><div class="user-menu"><div class="user-btn" onclick="toggleUserMenu()"><div class="user-badge" style="${badgeStyle}">${badgeContent}</div><div class="user-info"><div class="user-name">${currentUser.name}</div><div class="user-rank">${currentUser.rank}</div></div></div><div class="user-dropdown" id="userDropdown"><div class="dropdown-item" onclick="showPage('dashboard')">Dashboard</div>${roleMenu}<div class="dropdown-item" onclick="window.location.href='mdt.html'">MDT System</div><div class="dropdown-item" onclick="logout()">Logout</div></div></div><button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>`
@@ -1978,6 +2015,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 window.addEventListener('load', async () => {
+  // Initialize database
+  DB.init();
+  
   // Remove loading screen after 1 second
   setTimeout(() => {
     document.body.classList.remove('loading');
@@ -1986,9 +2026,8 @@ window.addEventListener('load', async () => {
   
   // Check if user is logged in from cache
   const saved = localStorage.getItem('currentUser');
-  const token = localStorage.getItem('authToken');
   
-  if (saved && token) {
+  if (saved) {
     currentUser = JSON.parse(saved);
     console.log('[INIT] Restoring session for:', currentUser.username);
     
