@@ -102,6 +102,8 @@ const suspectSchema = new mongoose.Schema({
   address: String,
   description: String,
   mugshot: String,
+  license: { type: String, default: 'None' }, // Driver's license status
+  foid: { type: String, default: 'None' }, // Firearms license status
   charges: [{
     code: String,
     title: String,
@@ -164,7 +166,7 @@ app.get('/api/suspects/:id', authenticate, async (req, res) => {
 // CREATE suspect (all logged-in users can add)
 app.post('/api/suspects', authenticate, async (req, res) => {
   try {
-    const { name, age, gender, race, address, description, mugshot } = req.body;
+    const { name, age, gender, race, address, description, mugshot, license, foid } = req.body;
     
     const suspect = new Suspect({
       name,
@@ -174,6 +176,8 @@ app.post('/api/suspects', authenticate, async (req, res) => {
       address,
       description,
       mugshot: mugshot || '',
+      license: license || 'None',
+      foid: foid || 'None',
       charges: [],
       createdBy: req.user.name
     });
@@ -217,11 +221,23 @@ app.post('/api/suspects/:id/charges', authenticate, async (req, res) => {
 // UPDATE suspect (all logged-in users can update)
 app.put('/api/suspects/:id', authenticate, async (req, res) => {
   try {
-    const { name, age, gender, race, address, description, mugshot } = req.body;
+    const { name, age, gender, race, address, description, mugshot, license, foid } = req.body;
+    
+    const updateData = { 
+      name, 
+      age, 
+      gender, 
+      race, 
+      address, 
+      description,
+      ...(mugshot && { mugshot }),
+      ...(license && { license }),
+      ...(foid && { foid })
+    };
     
     const suspect = await Suspect.findByIdAndUpdate(
       req.params.id,
-      { name, age, gender, race, address, description, ...(mugshot && { mugshot }) },
+      updateData,
       { new: true }
     );
     
@@ -244,6 +260,28 @@ app.delete('/api/suspects/:id', authenticate, async (req, res) => {
     
     await Suspect.findByIdAndDelete(req.params.id);
     res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// REMOVE specific charge from suspect (all logged-in users can remove)
+app.delete('/api/suspects/:id/charges/:chargeIndex', authenticate, async (req, res) => {
+  try {
+    const suspect = await Suspect.findById(req.params.id);
+    if (!suspect) {
+      return res.status(404).json({ error: 'Suspect not found' });
+    }
+    
+    const chargeIndex = parseInt(req.params.chargeIndex);
+    if (chargeIndex < 0 || chargeIndex >= suspect.charges.length) {
+      return res.status(400).json({ error: 'Invalid charge index' });
+    }
+    
+    suspect.charges.splice(chargeIndex, 1);
+    await suspect.save();
+    
+    res.json(suspect);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

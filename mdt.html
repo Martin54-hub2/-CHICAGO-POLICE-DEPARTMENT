@@ -77,7 +77,7 @@ body{font-family:'Courier New',monospace;background:#0a0e1a;color:#00ff41;min-he
 <div style="margin:2rem 0;border-top:2px solid #00ff41;padding-top:2rem">
 <div class="menu-item active" onclick="showView('search')">SEARCH</div>
 <div class="menu-item" onclick="showView('add')">ADD SUSPECT</div>
-<div class="menu-item" onclick="showView('codes')">PENAL CODES</div>
+<div class="menu-item" onclick="showView('codes')">PENAL CODES (50)</div>
 <div class="menu-item" onclick="window.location.href='index.html'">EXIT MDT</div>
 </div>
 </div>
@@ -126,6 +126,24 @@ body{font-family:'Courier New',monospace;background:#0a0e1a;color:#00ff41;min-he
 <input type="text" class="form-input" id="suspectDescription" placeholder="Height, weight, distinguishing features">
 </div>
 <div class="form-group">
+<label class="form-label">DRIVER'S LICENSE</label>
+<select class="form-select" id="suspectLicense">
+<option value="Valid">Valid</option>
+<option value="Suspended">Suspended</option>
+<option value="Revoked">Revoked</option>
+<option value="None">None</option>
+</select>
+</div>
+<div class="form-group">
+<label class="form-label">FIREARMS LICENSE (FOID)</label>
+<select class="form-select" id="suspectFOID">
+<option value="Valid">Valid</option>
+<option value="Expired">Expired</option>
+<option value="Revoked">Revoked</option>
+<option value="None">None</option>
+</select>
+</div>
+<div class="form-group">
 <label class="form-label">MUGSHOT (PHOTO)</label>
 <input type="file" class="form-input" id="suspectMugshot" accept="image/*" onchange="previewMugshot()">
 <img id="mugshotPreview" style="max-width:150px;margin-top:.5rem;display:none;border:2px solid #00ff41">
@@ -148,7 +166,11 @@ body{font-family:'Courier New',monospace;background:#0a0e1a;color:#00ff41;min-he
 <input type="text" class="form-input" id="chargeReason" placeholder="e.g., Traffic Stop on Michigan Ave" required>
 </div>
 <div class="form-group">
-<label class="form-label">SELECT PENAL CODE</label>
+<label class="form-label">SEARCH PENAL CODE</label>
+<input type="text" class="form-input" id="codeSearch" placeholder="Search by code or crime..." oninput="filterPenalCodes()">
+</div>
+<div class="form-group">
+<label class="form-label">SELECT PENAL CODE (${PENAL_CODES.length} AVAILABLE)</label>
 <div class="penal-code-grid" id="penalCodesList"></div>
 </div>
 <button class="btn" onclick="saveCharge()">ADD CHARGE</button>
@@ -163,28 +185,58 @@ function getAuthToken() {
   return localStorage.getItem('authToken');
 }
 
-// Chicago Penal Codes (Static Data)
+// Chicago Penal Codes (Expanded to 50)
 const PENAL_CODES = [
   { code: '720 ILCS 5/9-1', title: 'First Degree Murder', penalty: 'Life imprisonment or death penalty' },
+  { code: '720 ILCS 5/9-2', title: 'Second Degree Murder', penalty: '4-20 years prison' },
+  { code: '720 ILCS 5/9-3', title: 'Involuntary Manslaughter', penalty: '2-5 years prison' },
+  { code: '720 ILCS 5/9-3.2', title: 'Reckless Homicide', penalty: '3-14 years prison' },
   { code: '720 ILCS 5/12-3.2', title: 'Domestic Battery', penalty: 'Up to 1 year jail, $2,500 fine' },
+  { code: '720 ILCS 5/12-3.3', title: 'Aggravated Domestic Battery', penalty: '2-5 years prison' },
+  { code: '720 ILCS 5/18-1', title: 'Robbery', penalty: '2-15 years prison' },
   { code: '720 ILCS 5/18-2', title: 'Armed Robbery', penalty: '6-30 years prison' },
+  { code: '720 ILCS 5/18-3', title: 'Vehicular Hijacking', penalty: '4-15 years prison' },
+  { code: '720 ILCS 5/18-4', title: 'Aggravated Vehicular Hijacking', penalty: '7-30 years prison' },
   { code: '720 ILCS 5/19-1', title: 'Burglary', penalty: '4-15 years prison' },
+  { code: '720 ILCS 5/19-3', title: 'Residential Burglary', penalty: '6-30 years prison' },
   { code: '720 ILCS 5/11-1.20', title: 'Criminal Sexual Assault', penalty: '4-15 years prison' },
+  { code: '720 ILCS 5/11-1.30', title: 'Aggravated Criminal Sexual Assault', penalty: '6-60 years prison' },
+  { code: '720 ILCS 5/11-1.40', title: 'Predatory Criminal Sexual Assault', penalty: '6-60 years prison' },
   { code: '720 ILCS 5/16-1', title: 'Theft', penalty: 'Up to 10 years, varies by value' },
-  { code: '720 ILCS 5/24-1.1', title: 'Unlawful Use of Weapons', penalty: '1-3 years prison' },
+  { code: '720 ILCS 5/16-1(b)(1)', title: 'Retail Theft', penalty: 'Up to 3 years prison' },
+  { code: '720 ILCS 5/16-16', title: 'Financial Identity Theft', penalty: '2-10 years prison' },
+  { code: '720 ILCS 5/16-25', title: 'Computer Fraud', penalty: '1-10 years prison' },
+  { code: '720 ILCS 5/24-1', title: 'Unlawful Use of Weapons', penalty: '1-10 years prison' },
+  { code: '720 ILCS 5/24-1.1', title: 'Unlawful Use of Weapons by Felon', penalty: '1-3 years prison' },
+  { code: '720 ILCS 5/24-1.6', title: 'Aggravated Unlawful Use of Weapon', penalty: '1-10 years prison' },
+  { code: '720 ILCS 5/24-1.8', title: 'Unlawful Possession of Firearm by Street Gang Member', penalty: '2-10 years prison' },
   { code: '720 ILCS 550/4', title: 'Cannabis Possession', penalty: 'Up to 6 months, $1,500 fine' },
+  { code: '720 ILCS 550/5', title: 'Cannabis Manufacture/Delivery', penalty: '1-15 years prison' },
   { code: '720 ILCS 570/402', title: 'Controlled Substance Possession', penalty: '1-15 years prison' },
-  { code: '625 ILCS 5/11-501', title: 'DUI', penalty: 'Up to 1 year, license suspension' },
+  { code: '720 ILCS 570/401', title: 'Controlled Substance Trafficking', penalty: '4-60 years prison' },
+  { code: '625 ILCS 5/11-501', title: 'Driving Under the Influence (DUI)', penalty: 'Up to 1 year, license suspension' },
+  { code: '625 ILCS 5/11-501.1', title: 'Aggravated DUI', penalty: '1-12 years prison' },
+  { code: '625 ILCS 5/11-204.1', title: 'Aggravated Fleeing/Eluding', penalty: '1-7 years prison' },
+  { code: '625 ILCS 5/6-303', title: 'Driving on Suspended/Revoked License', penalty: 'Up to 1 year, $2,500 fine' },
   { code: '720 ILCS 5/12-2', title: 'Aggravated Assault', penalty: 'Up to 5 years prison' },
   { code: '720 ILCS 5/12-3', title: 'Battery', penalty: 'Up to 1 year jail' },
+  { code: '720 ILCS 5/12-3.05', title: 'Aggravated Battery', penalty: '2-10 years prison' },
+  { code: '720 ILCS 5/10-1', title: 'Kidnapping', penalty: '4-15 years prison' },
   { code: '720 ILCS 5/10-2', title: 'Aggravated Kidnapping', penalty: '6-30 years prison' },
   { code: '720 ILCS 5/11-9.1', title: 'Sexual Exploitation of a Child', penalty: '6-30 years prison' },
+  { code: '720 ILCS 5/11-20.1', title: 'Child Pornography', penalty: '4-15 years prison' },
   { code: '720 ILCS 5/33-3', title: 'Official Misconduct', penalty: '2-5 years prison' },
+  { code: '720 ILCS 5/32-4', title: 'Obstructing Justice', penalty: '2-5 years prison' },
+  { code: '720 ILCS 5/31-1', title: 'Resisting a Peace Officer', penalty: 'Up to 1 year jail' },
+  { code: '720 ILCS 5/31-4', title: 'Aggravated Fleeing or Eluding', penalty: '2-7 years prison' },
   { code: '720 ILCS 5/17-3', title: 'Identity Theft', penalty: '1-10 years prison' },
   { code: '720 ILCS 5/20-1', title: 'Arson', penalty: '4-30 years prison' },
-  { code: '720 ILCS 5/31-1', title: 'Resisting a Peace Officer', penalty: 'Up to 1 year jail' },
+  { code: '720 ILCS 5/20-1.1', title: 'Aggravated Arson', penalty: '6-30 years prison' },
   { code: '720 ILCS 5/21-1', title: 'Criminal Damage to Property', penalty: 'Up to 5 years prison' },
-  { code: '720 ILCS 5/26-1', title: 'Disorderly Conduct', penalty: 'Up to 30 days jail, $1,500 fine' }
+  { code: '720 ILCS 5/21-1.3', title: 'Criminal Damage to Government Property', penalty: '2-5 years prison' },
+  { code: '720 ILCS 5/26-1', title: 'Disorderly Conduct', penalty: 'Up to 30 days jail, $1,500 fine' },
+  { code: '720 ILCS 5/26-4', title: 'Mob Action', penalty: '1-5 years prison' },
+  { code: '720 ILCS 5/32-10', title: 'Interference with Public Officer', penalty: 'Up to 1 year jail' }
 ];
 
 // Update time
@@ -224,16 +276,20 @@ function showView(view) {
 function displayPenalCodes() {
   const content = document.getElementById('mainContent');
   content.innerHTML = `
-    <h2 style="margin-bottom:1.5rem;border-bottom:2px solid #00ff41;padding-bottom:1rem">ILLINOIS PENAL CODES REFERENCE</h2>
-    ${PENAL_CODES.map(code => `
-      <div class="charge-item">
-        <div class="charge-header">
-          <span class="charge-code">${code.code}</span>
+    <h2 style="margin-bottom:1.5rem;border-bottom:2px solid #00ff41;padding-bottom:1rem">
+      ILLINOIS PENAL CODES REFERENCE - ${PENAL_CODES.length} CODES
+    </h2>
+    <div style="display:grid;gap:.75rem">
+      ${PENAL_CODES.map((code, index) => `
+        <div class="charge-item">
+          <div class="charge-header">
+            <span class="charge-code">${index + 1}. ${code.code}</span>
+          </div>
+          <div style="font-weight:700;margin-bottom:.5rem">${code.title}</div>
+          <div style="font-size:.875rem;opacity:.8">Penalty: ${code.penalty}</div>
         </div>
-        <div style="font-weight:700;margin-bottom:.5rem">${code.title}</div>
-        <div style="font-size:.875rem;opacity:.8">Penalty: ${code.penalty}</div>
-      </div>
-    `).join('')}
+      `).join('')}
+    </div>
   `;
 }
 
@@ -274,6 +330,7 @@ function displaySuspectCard(suspect) {
           `<img src="${suspect.mugshot}" class="mugshot" alt="Mugshot">` : 
           `<div class="mugshot">NO PHOTO</div>`
         }
+        <button class="btn-secondary" style="width:100%;margin-top:.5rem;padding:.5rem" onclick="editSuspect('${suspect._id}')">EDIT INFO</button>
       </div>
       <div class="suspect-info">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
@@ -306,6 +363,14 @@ function displaySuspectCard(suspect) {
           <span class="info-label">DESCRIPTION:</span>
           <span>${suspect.description || 'N/A'}</span>
         </div>
+        <div class="info-row">
+          <span class="info-label">DRIVER'S LICENSE:</span>
+          <span style="color:${suspect.license === 'Valid' ? '#00ff41' : '#ff4141'}">${suspect.license || 'UNKNOWN'}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">FOID CARD:</span>
+          <span style="color:${suspect.foid === 'Valid' ? '#00ff41' : '#ff4141'}">${suspect.foid || 'UNKNOWN'}</span>
+        </div>
         
         <div class="charges-list">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
@@ -313,14 +378,18 @@ function displaySuspectCard(suspect) {
             <button class="btn-secondary" style="padding:.5rem 1rem;width:auto" onclick="openAddChargeModal('${suspect._id}')">+ ADD CHARGE</button>
           </div>
           ${suspect.charges && suspect.charges.length > 0 ? 
-            suspect.charges.map(charge => `
+            suspect.charges.map((charge, idx) => `
               <div class="charge-item">
                 <div class="charge-header">
                   <span class="charge-code">${charge.code}</span>
-                  <span style="font-size:.75rem">${charge.date}</span>
+                  <div>
+                    <span style="font-size:.75rem;margin-right:1rem">${charge.date}</span>
+                    <button class="btn-sm" style="background:#ff4141;color:#fff;padding:.25rem .75rem;border:none;cursor:pointer" onclick="removeCharge('${suspect._id}', ${idx})">REMOVE</button>
+                  </div>
                 </div>
                 <div style="font-weight:700">${charge.title}</div>
                 <div style="font-size:.875rem;margin-top:.5rem">Reason: ${charge.reason}</div>
+                <div style="font-size:.75rem;margin-top:.25rem;opacity:.7">Added by: ${charge.addedBy}</div>
               </div>
             `).join('') :
             '<div style="text-align:center;opacity:.5;padding:1rem">NO CHARGES ON RECORD</div>'
@@ -408,20 +477,177 @@ async function saveSuspect(e) {
   }
 }
 
+// Edit suspect
+async function editSuspect(suspectId) {
+  try {
+    const response = await fetch(`${API_URL}/suspects/${suspectId}`);
+    const suspect = await response.json();
+    
+    document.getElementById('suspectName').value = suspect.name;
+    document.getElementById('suspectAge').value = suspect.age;
+    document.getElementById('suspectGender').value = suspect.gender;
+    document.getElementById('suspectRace').value = suspect.race;
+    document.getElementById('suspectAddress').value = suspect.address || '';
+    document.getElementById('suspectDescription').value = suspect.description || '';
+    document.getElementById('suspectLicense').value = suspect.license || 'None';
+    document.getElementById('suspectFOID').value = suspect.foid || 'None';
+    
+    if (suspect.mugshot) {
+      document.getElementById('mugshotPreview').src = suspect.mugshot;
+      document.getElementById('mugshotPreview').style.display = 'block';
+    }
+    
+    // Store ID for update
+    document.getElementById('addSuspectModal').dataset.editId = suspectId;
+    document.getElementById('addSuspectModal').classList.add('active');
+  } catch (error) {
+    console.error('Error loading suspect:', error);
+    alert('ERROR LOADING SUSPECT');
+  }
+}
+
+// Update saveSuspect to handle edits
+const originalSaveSuspect = saveSuspect;
+saveSuspect = async function(e) {
+  e.preventDefault();
+  
+  const token = getAuthToken();
+  if (!token) {
+    alert('Please login first');
+    return;
+  }
+  
+  const modal = document.getElementById('addSuspectModal');
+  const editId = modal.dataset.editId;
+  const mugshotFile = document.getElementById('suspectMugshot').files[0];
+  
+  const processSave = async (mugshotData) => {
+    const suspectData = {
+      name: document.getElementById('suspectName').value,
+      age: parseInt(document.getElementById('suspectAge').value),
+      gender: document.getElementById('suspectGender').value,
+      race: document.getElementById('suspectRace').value,
+      address: document.getElementById('suspectAddress').value,
+      description: document.getElementById('suspectDescription').value,
+      license: document.getElementById('suspectLicense').value,
+      foid: document.getElementById('suspectFOID').value,
+      mugshot: mugshotData || (editId ? document.getElementById('mugshotPreview').src : '')
+    };
+    
+    try {
+      const url = editId ? `${API_URL}/suspects/${editId}` : `${API_URL}/suspects`;
+      const method = editId ? 'PUT' : 'POST';
+      
+      const response = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(suspectData)
+      });
+      
+      if (!response.ok) throw new Error('Failed to save suspect');
+      
+      alert(editId ? 'SUSPECT UPDATED' : 'SUSPECT ADDED TO SYSTEM');
+      closeModal('addSuspectModal');
+      delete modal.dataset.editId;
+      
+      // Clear form
+      document.getElementById('suspectName').value = '';
+      document.getElementById('suspectAge').value = '';
+      document.getElementById('suspectAddress').value = '';
+      document.getElementById('suspectDescription').value = '';
+      document.getElementById('suspectMugshot').value = '';
+      document.getElementById('mugshotPreview').style.display = 'none';
+      
+      // Refresh if search was active
+      const searchInput = document.getElementById('searchInput');
+      if (searchInput.value) {
+        searchSuspect();
+      }
+    } catch (error) {
+      console.error('Error saving suspect:', error);
+      alert('ERROR SAVING SUSPECT');
+    }
+  };
+  
+  if (mugshotFile) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      processSave(e.target.result);
+    };
+    reader.readAsDataURL(mugshotFile);
+  } else {
+    processSave(null);
+  }
+};
+
+// Remove charge
+async function removeCharge(suspectId, chargeIndex) {
+  if (!confirm('REMOVE THIS CHARGE FROM RECORD?')) return;
+  
+  const token = getAuthToken();
+  if (!token) {
+    alert('Please login first');
+    return;
+  }
+  
+  try {
+    const response = await fetch(`${API_URL}/suspects/${suspectId}/charges/${chargeIndex}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    
+    if (!response.ok) throw new Error('Failed to remove charge');
+    
+    alert('CHARGE REMOVED');
+    searchSuspect(); // Refresh display
+  } catch (error) {
+    console.error('Error removing charge:', error);
+    alert('ERROR REMOVING CHARGE');
+  }
+}
+
 // Open add charge modal
 function openAddChargeModal(suspectId) {
   document.getElementById('chargeSuspectId').value = suspectId;
   document.getElementById('chargeReason').value = '';
+  document.getElementById('codeSearch').value = '';
   
+  renderPenalCodesList(PENAL_CODES);
+  
+  document.getElementById('addChargeModal').classList.add('active');
+}
+
+// Render penal codes list
+function renderPenalCodesList(codes) {
   const codesList = document.getElementById('penalCodesList');
-  codesList.innerHTML = PENAL_CODES.map((code, index) => `
-    <div class="penal-code-item" onclick="selectPenalCode(${index})">
+  codesList.innerHTML = codes.map((code, index) => `
+    <div class="penal-code-item" onclick="selectPenalCode(${PENAL_CODES.indexOf(code)})">
       <div class="penal-code-title">${code.code} - ${code.title}</div>
       <div class="penal-code-penalty">${code.penalty}</div>
     </div>
   `).join('');
+}
+
+// Filter penal codes by search
+function filterPenalCodes() {
+  const search = document.getElementById('codeSearch').value.toLowerCase();
+  if (!search) {
+    renderPenalCodesList(PENAL_CODES);
+    return;
+  }
   
-  document.getElementById('addChargeModal').classList.add('active');
+  const filtered = PENAL_CODES.filter(code => 
+    code.code.toLowerCase().includes(search) ||
+    code.title.toLowerCase().includes(search) ||
+    code.penalty.toLowerCase().includes(search)
+  );
+  
+  renderPenalCodesList(filtered);
 }
 
 let selectedPenalCode = null;
