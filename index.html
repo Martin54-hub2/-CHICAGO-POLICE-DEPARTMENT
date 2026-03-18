@@ -980,14 +980,31 @@ function renderOfficerCard(username,officer,isSupervisor=false){const canEdit=cu
 async function viewProfile(username){
   try {
     const token = localStorage.getItem('authToken');
-    if (!token) return;
+    let officer = null;
     
-    const response = await fetch(`${API_BASE_URL}/api/officers/${username}`, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-    const officer = await response.json();
+    // Try API first
+    if (token) {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/officers/${username}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (response.ok) {
+          officer = await response.json();
+        }
+      } catch (apiError) {
+        console.log('API call failed, using localStorage');
+      }
+    }
     
-    if (!officer) return;
+    // Fallback to localStorage if API failed
+    if (!officer) {
+      const officers = DB.getOfficers();
+      officer = officers[username];
+      if (!officer) {
+        alert('Officer not found');
+        return;
+      }
+    }
     
     // Store username for edit check
     document.getElementById('profileName').dataset.username = username;
@@ -1016,8 +1033,8 @@ async function viewProfile(username){
     document.getElementById('profileRank').textContent = officer.rank;
     document.getElementById('profileCallsign').textContent = officer.callsign || 'Not Assigned';
     document.getElementById('profileRankBadge').textContent = officer.rank;
-    document.getElementById('profileRankBadge').className = 'rank-badge rank-' + officer.role.toLowerCase();
-    document.getElementById('profileDept').textContent = officer.department || 'Patrol';
+    document.getElementById('profileRankBadge').className = 'rank-badge rank-' + (officer.role || 'officer').toLowerCase();
+    document.getElementById('profileDept').textContent = officer.department || officer.dept || 'Patrol';
     document.getElementById('profileYears').textContent = officer.yearsOfService || '0';
     document.getElementById('profileBadgeNum').textContent = officer.badgeNumber || officer.callsign || '-';
     document.getElementById('profileJoinDate').textContent = officer.joinDate || 'Not recorded';
@@ -1058,6 +1075,7 @@ async function viewProfile(username){
     showPage('profile');
   } catch (error) {
     console.error('Error loading profile:', error);
+    alert('Error loading profile. Please try again.');
   }
 }
 
@@ -1078,22 +1096,30 @@ async function uploadProfilePhoto() {
     const photoData = e.target.result;
     
     const token = localStorage.getItem('authToken');
-    if (!token) {
-      alert('Please login first');
-      return;
-    }
     
     try {
-      const response = await fetch(`${API_BASE_URL}/api/officers/${viewedUsername}/photo`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ photo: photoData })
-      });
+      // Try API first
+      if (token) {
+        try {
+          const response = await fetch(`${API_BASE_URL}/api/officers/${viewedUsername}/photo`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ photo: photoData })
+          });
+        } catch (apiError) {
+          console.log('API failed, using localStorage');
+        }
+      }
       
-      if (!response.ok) throw new Error('Failed to upload photo');
+      // Save to localStorage
+      const officers = DB.getOfficers();
+      if (officers[viewedUsername]) {
+        officers[viewedUsername].photo = photoData;
+        DB.saveOfficers(officers);
+      }
       
       // Update display
       document.getElementById('profilePhoto').src = photoData;
@@ -1109,7 +1135,7 @@ async function uploadProfilePhoto() {
       alert('Photo updated!');
     } catch (error) {
       console.error('Error uploading photo:', error);
-      alert('Error uploading photo');
+      alert('Error uploading photo. Please try again.');
     }
   };
   reader.readAsDataURL(file);
@@ -1132,22 +1158,30 @@ async function uploadBanner() {
     const bannerData = e.target.result;
     
     const token = localStorage.getItem('authToken');
-    if (!token) {
-      alert('Please login first');
-      return;
-    }
     
     try {
-      const response = await fetch(`${API_BASE_URL}/api/officers/${viewedUsername}/profile`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ bannerPhoto: bannerData })
-      });
+      // Try API first
+      if (token) {
+        try {
+          const response = await fetch(`${API_BASE_URL}/api/officers/${viewedUsername}/profile`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ bannerPhoto: bannerData })
+          });
+        } catch (apiError) {
+          console.log('API failed, using localStorage');
+        }
+      }
       
-      if (!response.ok) throw new Error('Failed to upload banner');
+      // Save to localStorage
+      const officers = DB.getOfficers();
+      if (officers[viewedUsername]) {
+        officers[viewedUsername].bannerPhoto = bannerData;
+        DB.saveOfficers(officers);
+      }
       
       // Update display
       const bannerEl = document.getElementById('profileBanner');
@@ -1157,7 +1191,7 @@ async function uploadBanner() {
       alert('Banner updated!');
     } catch (error) {
       console.error('Error uploading banner:', error);
-      alert('Error uploading banner');
+      alert('Error uploading banner. Please try again.');
     }
   };
   reader.readAsDataURL(file);
@@ -1187,18 +1221,37 @@ async function openEditProfile() {
   document.getElementById('editPhone').value = phone !== 'Not provided' ? phone : '';
   document.getElementById('editEmergency').value = emergency !== 'Not provided' ? emergency : '';
   
-  // Get certifications and commendations from displayed data
+  // Get certifications and commendations from API or localStorage
   const token = localStorage.getItem('authToken');
   
-  // Fetch to get array data (viewedUsername already declared above)
-  fetch(`${API_BASE_URL}/api/officers/${viewedUsername}/profile`, {
-    headers: { 'Authorization': `Bearer ${token}` }
-  })
-  .then(res => res.json())
-  .then(officer => {
-    document.getElementById('editCerts').value = officer.certifications ? officer.certifications.join(', ') : '';
-    document.getElementById('editCommendations').value = officer.commendations ? officer.commendations.join(', ') : '';
-  });
+  // Try API first, fallback to localStorage
+  if (token) {
+    fetch(`${API_BASE_URL}/api/officers/${viewedUsername}/profile`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+    .then(res => res.json())
+    .then(officer => {
+      document.getElementById('editCerts').value = officer.certifications ? officer.certifications.join(', ') : '';
+      document.getElementById('editCommendations').value = officer.commendations ? officer.commendations.join(', ') : '';
+    })
+    .catch(error => {
+      console.log('API failed, using localStorage');
+      const officers = DB.getOfficers();
+      const officer = officers[viewedUsername];
+      if (officer) {
+        document.getElementById('editCerts').value = officer.certifications ? officer.certifications.join(', ') : '';
+        document.getElementById('editCommendations').value = officer.commendations ? officer.commendations.join(', ') : '';
+      }
+    });
+  } else {
+    // Use localStorage
+    const officers = DB.getOfficers();
+    const officer = officers[viewedUsername];
+    if (officer) {
+      document.getElementById('editCerts').value = officer.certifications ? officer.certifications.join(', ') : '';
+      document.getElementById('editCommendations').value = officer.commendations ? officer.commendations.join(', ') : '';
+    }
+  }
   
   openModal('editProfileModal');
 }
@@ -1227,23 +1280,38 @@ async function saveProfile(e) {
   };
   
   try {
-    const response = await fetch(`${API_BASE_URL}/api/officers/${viewedUsername}/profile`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(profileData)
-    });
+    // Try API first
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/officers/${viewedUsername}/profile`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(profileData)
+      });
+      
+      if (!response.ok) throw new Error('API failed');
+    } catch (apiError) {
+      console.log('API failed, saving to localStorage');
+    }
     
-    if (!response.ok) throw new Error('Failed to update profile');
+    // Also save to localStorage
+    const officers = DB.getOfficers();
+    if (officers[viewedUsername]) {
+      officers[viewedUsername] = {
+        ...officers[viewedUsername],
+        ...profileData
+      };
+      DB.saveOfficers(officers);
+    }
     
     closeModal('editProfileModal');
     alert('Profile updated!');
     viewProfile(viewedUsername);
   } catch (error) {
     console.error('Error updating profile:', error);
-    alert('Error updating profile');
+    alert('Error updating profile. Please try again.');
   }
   
   return false;
