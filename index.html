@@ -4,86 +4,113 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Chicago City Police Department</title>
-<link rel="icon" type="image/png" href="cpd-badge-favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* Base Styles - Using Real CPD Website Fonts */
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI','Roboto',sans-serif;background:#f5f5f5;min-height:100vh;color:#1f2937}
-
-/* Loading Screen */
-.loading-screen{position:fixed;inset:0;background:linear-gradient(135deg,#1e40af,#0284c7);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .6s,visibility .6s}.loading-screen.hidden{opacity:0;visibility:hidden}.city-skyline{position:absolute;bottom:0;left:0;right:0;height:200px;display:flex;align-items:flex-end;justify-content:center;gap:4px;opacity:.3}.building{background:rgba(255,255,255,.2);border-radius:2px 2px 0 0;animation:buildingGrow 1.5s ease-out forwards}.building:nth-child(1){width:40px;height:120px;animation-delay:0s}.building:nth-child(2){width:50px;height:160px;animation-delay:.1s}.building:nth-child(3){width:35px;height:100px;animation-delay:.2s}.building:nth-child(4){width:60px;height:180px;animation-delay:.3s}.building:nth-child(5){width:45px;height:140px;animation-delay:.4s}.building:nth-child(6){width:55px;height:150px;animation-delay:.5s}.building:nth-child(7){width:40px;height:110px;animation-delay:.6s}.building:nth-child(8){width:50px;height:170px;animation-delay:.7s}@keyframes buildingGrow{from{transform:scaleY(0);opacity:0}to{transform:scaleY(1);opacity:1}}.loading-content{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:2rem}.loading-badge{width:100px;height:100px;background:rgba(255,255,255,.15);border-radius:12px;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(10px);animation:float 3s ease-in-out infinite}@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}.logo-box{width:60px;height:60px;background:#0284c7;border-radius:6px;position:relative;box-shadow:0 4px 12px rgba(0,0,0,.2)}.logo-star{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:35px;height:35px;clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);background:#dc2626}.loading-text{color:#fff;font-size:1.5rem;font-weight:700;text-transform:uppercase;letter-spacing:2px}.loading-spinner{width:60px;height:60px;border:3px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{100%{transform:rotate(360deg)}}
-body.loading .header,body.loading .page,body.loading .footer{display:none}
-
-/* Header */
-.header{background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.1);position:sticky;top:0;z-index:1000}.header-top{max-width:1400px;margin:0 auto;padding:1.25rem 2rem;display:flex;justify-content:space-between;align-items:center}.logo-section{display:flex;align-items:center;gap:1rem;cursor:pointer}.header-logo-box{width:42px;height:42px;background:#0284c7;border-radius:4px;position:relative}.header-logo-star{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:24px;height:24px;clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);background:#dc2626}.logo-text{font-size:1.5rem;font-weight:700;color:#2c3e50;text-transform:uppercase}.header-actions{display:flex;gap:1rem;align-items:center}
-
-/* Buttons */
-.btn{padding:.625rem 1.5rem;border:none;border-radius:4px;font-size:.875rem;font-weight:600;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block}.btn-sm{padding:.5rem 1rem;font-size:.8rem}.btn-outline{background:#fff;border:2px solid #d1d5db;color:#374151}.btn-outline:hover{border-color:#0284c7;color:#0284c7}.btn-primary{background:#0284c7;color:#fff}.btn-primary:hover{background:#0369a1}.btn-login{background:#2c3e50;color:#fff}.btn-login:hover{background:#34495e}.btn-danger{background:#dc2626;color:#fff}.btn-danger:hover{background:#b91c1c}.btn-success{background:#059669;color:#fff}.btn-success:hover{background:#047857}.btn-warning{background:#d97706;color:#fff}.btn-warning:hover{background:#b45309}
-
-/* User Menu */
-.user-menu{position:relative}.user-btn{display:flex;align-items:center;gap:.5rem;padding:.5rem 1rem;background:#f3f4f6;border:2px solid #e5e7eb;border-radius:6px;cursor:pointer;transition:all .2s}.user-btn:hover{background:#e5e7eb}.user-badge{width:32px;height:32px;background:linear-gradient(135deg,#0284c7,#0369a1);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.75rem;font-weight:700}.user-info{text-align:left}.user-name{font-size:.875rem;font-weight:600;color:#2c3e50}.user-rank{font-size:.75rem;color:#6b7280}.user-dropdown{position:absolute;top:100%;right:0;margin-top:.5rem;background:#fff;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.15);min-width:200px;display:none;z-index:100}.user-dropdown.active{display:block}.dropdown-item{padding:.75rem 1rem;border-bottom:1px solid #f3f4f6;cursor:pointer;transition:background .2s;font-size:.875rem;color:#374151}.dropdown-item:hover{background:#f3f4f6}.dropdown-item:last-child{border:none}.mobile-menu-btn{display:none;background:none;border:none;font-size:1.5rem;cursor:pointer}
-
-/* Navigation */
-.navigation{background:#fff;border-top:1px solid #e5e7eb}.nav-content{max-width:1400px;margin:0 auto;padding:0 2rem;display:flex;gap:2.5rem}.nav-link{padding:1rem 0;color:#374151;text-decoration:none;font-size:.9rem;font-weight:500;position:relative;transition:color .2s}.nav-link:hover,.nav-link.active{color:#0284c7}.nav-link.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:#0284c7}
-
-/* Page Styles */
-.page-title-bar{background:#f8f9fa;padding:2rem;border-bottom:1px solid #e5e7eb}.page-title{font-size:2.5rem;font-weight:700;color:#2c3e50;max-width:1400px;margin:0 auto}.content-wrapper{max-width:1400px;margin:0 auto;padding:3rem 2rem}.cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}.card{border-radius:8px;overflow:hidden;position:relative;min-height:280px;display:flex;align-items:flex-end;box-shadow:0 2px 8px rgba(0,0,0,.1);cursor:pointer;transition:transform .2s,box-shadow .2s}.card:hover{transform:translateY(-4px);box-shadow:0 8px 20px rgba(0,0,0,.15)}.card-large{grid-column:span 2;min-height:400px}.card-bg{position:absolute;inset:0;background-size:cover;background-position:center}.card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.8) 0%,rgba(0,0,0,.3) 60%,transparent 100%);z-index:1}.card-content{position:relative;z-index:2;padding:2rem;color:#fff;width:100%}.card-title{font-size:2rem;font-weight:700;margin-bottom:.75rem}.card-description{font-size:1rem;line-height:1.6;margin-bottom:1.5rem;opacity:.95}.page{display:none}.page.active{display:block}
-
-/* NEW: Professional Homepage Sections */
-.service-catalog{background:#f3f4f6;padding:5rem 2rem}.service-catalog h2{text-align:center;font-size:2.25rem;color:#1a1a1a;font-weight:700;margin-bottom:1.5rem}.service-catalog p{text-align:center;color:#4a5568;font-size:1rem;line-height:1.8;max-width:900px;margin:0 auto 4rem}.service-grid-icons{display:grid;grid-template-columns:repeat(5,1fr);gap:2rem;max-width:1200px;margin:0 auto}.service-icon-card{background:#fff;padding:3rem 1.5rem;text-align:center;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,0.1);transition:box-shadow 0.3s,transform 0.3s;cursor:pointer}.service-icon-card:hover{box-shadow:0 4px 12px rgba(0,0,0,0.15);transform:translateY(-2px)}.service-icon-card svg{margin:0 auto 1.5rem}.service-icon-card h4{color:#1a1a1a;font-size:1.125rem;font-weight:600;margin:0}
-
-.find-district{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);padding:5rem 2rem;color:#fff}.find-district h2{text-align:center;font-size:2.25rem;font-weight:700;margin-bottom:1rem}.find-district-intro{text-align:center;font-size:1rem;margin-bottom:3rem;opacity:0.95}.district-finder-box{background:#fff;border-radius:12px;padding:0;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,0.3);max-width:1200px;margin:0 auto}.district-tabs{display:flex;border-bottom:1px solid #e5e7eb}.district-tab{flex:1;padding:1.25rem;background:none;border:none;color:#6b7280;font-weight:600;font-size:1rem;cursor:pointer;border-bottom:3px solid transparent;transition:all 0.3s}.district-tab.active{color:#1e40af;border-bottom-color:#1e40af}.district-tab-content{padding:3rem;display:none}.district-tab-content.active{display:block}.district-search-form{display:grid;grid-template-columns:minmax(150px,200px) minmax(100px,150px) 1fr;gap:1.5rem;margin-bottom:2rem}.district-search-form label{display:block;font-size:0.875rem;font-weight:600;color:#374151;margin-bottom:0.5rem}.district-search-form input,.district-search-form select{width:100%;padding:0.875rem;border:2px solid #e5e7eb;border-radius:6px;font-size:1rem}.district-search-form input:focus,.district-search-form select:focus{border-color:#1e40af;outline:none}.district-find-btn{width:100%;padding:1rem;background:#1e40af;color:#fff;border:none;border-radius:6px;font-size:1rem;font-weight:700;cursor:pointer;transition:background 0.3s;letter-spacing:0.5px}.district-find-btn:hover{background:#1e3a8a}
-
-.document-cards-section{background:#fff;padding:5rem 2rem}.document-cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;max-width:1200px;margin:0 auto}.document-card{background:#fff;padding:2rem;border-left:4px solid #0ea5e9;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,0.1);text-decoration:none;transition:all 0.3s;cursor:pointer}.document-card:hover{box-shadow:0 4px 12px rgba(0,0,0,0.15);transform:translateY(-2px)}.document-card h4{color:#1a1a1a;font-size:1.125rem;font-weight:600;margin:0;line-height:1.5}
-
-.recruitment-footer{background:linear-gradient(rgba(30,58,138,0.92),rgba(30,64,175,0.92)),url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1600') center/cover;padding:6rem 2rem;color:#fff;text-align:center}.recruitment-footer h2{font-size:2.75rem;font-weight:700;margin-bottom:1.5rem;line-height:1.2}.recruitment-footer p{font-size:1.125rem;line-height:1.8;margin-bottom:2.5rem;opacity:0.95;max-width:1000px;margin-left:auto;margin-right:auto}.recruitment-footer .btn-primary{display:inline-block;padding:1.125rem 3rem;font-size:1.125rem;box-shadow:0 4px 12px rgba(0,0,0,0.2)}
-
-/* Form Styles */
-.form-group{margin-bottom:1.5rem}.form-label{display:block;font-size:.875rem;font-weight:600;color:#374151;margin-bottom:.5rem}.form-input,.form-textarea,.form-select{width:100%;padding:.75rem 1rem;border:2px solid #e5e7eb;border-radius:6px;font-size:.9rem;font-family:inherit}.form-textarea{min-height:100px;resize:vertical}.form-input:focus,.form-textarea:focus,.form-select:focus{outline:none;border-color:#0284c7}
-
-/* Login Page */
-.login-container{min-height:calc(100vh - 200px);display:flex;align-items:center;justify-content:center;padding:3rem 2rem}.login-box{background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.1);padding:3rem;max-width:450px;width:100%}.login-header{text-align:center;margin-bottom:2rem}.login-logo{width:80px;height:80px;background:#0284c7;border-radius:8px;margin:0 auto 1.5rem;position:relative}.login-logo-star{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:45px;height:45px;clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);background:#dc2626}.login-title{font-size:1.75rem;font-weight:700;color:#2c3e50;margin-bottom:.5rem}.login-subtitle{color:#6b7280;font-size:.9rem}.btn-login-submit{width:100%;padding:.875rem;background:#0284c7;color:#fff;border:none;border-radius:6px;font-size:1rem;font-weight:600;cursor:pointer}.btn-login-submit:hover{background:#0369a1}.login-footer{margin-top:2rem;text-align:center;font-size:.875rem;color:#6b7280}.login-footer a{color:#0284c7;text-decoration:none}
-
-/* Dashboard & Admin Styles */
-.dashboard-header{background:#fff;padding:2rem;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:2rem}.officer-info{display:flex;align-items:center;gap:2rem}.officer-badge-large{width:80px;height:80px;background:linear-gradient(135deg,#0284c7,#0369a1);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.5rem;font-weight:700}.officer-details h2{font-size:1.5rem;color:#2c3e50;margin-bottom:.5rem}.officer-details p{color:#6b7280;margin:.25rem 0}.dashboard-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(350px,1fr));gap:1.5rem;margin-bottom:2rem}.dashboard-card{background:#fff;padding:1.5rem;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.08)}.dashboard-card h3{font-size:1.25rem;color:#2c3e50;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center}.empty-state{text-align:center;padding:2rem;color:#9ca3af;font-style:italic}.report-item,.update-item{padding:1rem;border:1px solid #e5e7eb;border-radius:6px;margin-bottom:.75rem;transition:background .2s}.report-item:hover{background:#f9fafb}.report-header{display:flex;justify-content:space-between;align-items:start;margin-bottom:.5rem}.report-id{font-size:.75rem;font-weight:600;color:#0284c7;background:#eff6ff;padding:.25rem .5rem;border-radius:4px}.report-date{font-size:.75rem;color:#9ca3af}.report-type{font-size:.875rem;color:#4b5563;margin-top:.5rem;font-weight:600}.report-desc{font-size:.875rem;color:#6b7280;margin-top:.5rem}.status-badge{font-size:.75rem;padding:.25rem .75rem;border-radius:12px;font-weight:600}.status-active{background:#dcfce7;color:#166534}.status-pending{background:#fef3c7;color:#92400e}.status-completed{background:#dbeafe;color:#1e40af}.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;align-items:center;justify-content:center;padding:2rem}.modal.active{display:flex}.modal-content{background:#fff;border-radius:12px;max-width:600px;width:100%;max-height:90vh;overflow-y:auto;padding:2rem}.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem}.modal-title{font-size:1.5rem;font-weight:700;color:#2c3e50}.modal-close{background:none;border:none;font-size:1.5rem;cursor:pointer;color:#9ca3af}.modal-close:hover{color:#2c3e50}.admin-section{background:#fff;padding:2rem;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:2rem}.admin-section h3{font-size:1.25rem;color:#2c3e50;margin-bottom:1rem}.search-box{display:flex;gap:1rem;margin-bottom:2rem}.search-input{flex:1;padding:.75rem 1rem;border:2px solid #e5e7eb;border-radius:6px;font-size:.9rem}.search-input:focus{outline:none;border-color:#0284c7}.officer-list{max-height:400px;overflow-y:auto}.officer-card{padding:1.5rem;border:1px solid #e5e7eb;border-radius:8px;margin-bottom:1rem;cursor:pointer;transition:all .2s}.officer-card:hover{background:#f9fafb;box-shadow:0 2px 8px rgba(0,0,0,.08)}.officer-card-header{display:flex;justify-content:space-between;align-items:start;margin-bottom:.75rem}.officer-name{font-size:1.1rem;font-weight:600;color:#2c3e50}.officer-meta{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem;margin-top:.75rem}.officer-meta-item{font-size:.875rem;color:#6b7280}.officer-meta-label{font-weight:600;color:#374151}.infraction-item{padding:1rem;border-left:3px solid #dc2626;background:#fef2f2;border-radius:4px;margin-bottom:.75rem}.infraction-header{display:flex;justify-content:space-between;margin-bottom:.5rem}.infraction-reason{font-weight:600;color:#dc2626}.infraction-date{font-size:.75rem;color:#9ca3af}.infraction-details{font-size:.875rem;color:#6b7280;margin-top:.5rem}.infraction-issuer{font-size:.75rem;color:#7c2d12;font-style:italic}.rank-badge{display:inline-block;padding:.25rem .75rem;border-radius:12px;font-size:.75rem;font-weight:600;background:#e0e7ff;color:#3730a3}.rank-admin{background:#fef3c7;color:#92400e}.rank-supervisor{background:#dbeafe;color:#1e40af}.rank-officer{background:#e0e7ff;color:#3730a3}.profile-header{background:linear-gradient(135deg,#1e40af,#0284c7);color:#fff;padding:3rem 2rem;border-radius:8px;margin-bottom:2rem}.profile-badge{width:100px;height:100px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;margin-bottom:1rem}.profile-info{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin-top:1.5rem}.profile-info-item{background:rgba(255,255,255,.1);padding:1rem;border-radius:6px}.profile-info-label{font-size:.875rem;opacity:.8;margin-bottom:.25rem}.profile-info-value{font-size:1.1rem;font-weight:600}.update-item{padding:1rem;border:1px solid #e5e7eb;border-radius:6px;margin-bottom:.75rem}.update-item strong{color:#2c3e50;display:block;margin-bottom:.25rem}.update-item small{color:#9ca3af;font-size:.75rem}.update-item p{margin-top:.5rem;color:#6b7280;font-size:.875rem}
-
-/* Footer */
-.footer{background:#2c3e50;color:#fff;padding:3rem 2rem 1.5rem;margin-top:4rem}.footer-content{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:3rem;margin-bottom:2rem}.footer-section h4{font-size:1.1rem;margin-bottom:1rem}.footer-section p{color:#cbd5e1;line-height:1.6}.footer-section a{display:block;color:#cbd5e1;text-decoration:none;margin-bottom:.75rem}.footer-section a:hover{color:#0284c7}.footer-bottom{max-width:1400px;margin:0 auto;padding-top:2rem;border-top:1px solid #475569;text-align:center;color:#cbd5e1}
-
-/* Responsive */
-@media (max-width:1024px){.cards-grid{grid-template-columns:repeat(2,1fr)}.service-grid-icons{grid-template-columns:repeat(3,1fr)}.document-cards-grid{grid-template-columns:repeat(2,1fr)}}
-@media (max-width:768px){.logo-text{font-size:1rem}.header-actions .btn-outline{display:none}.mobile-menu-btn{display:block}.nav-content{display:none;flex-direction:column;gap:0;padding:0}.nav-content.mobile-open{display:flex}.nav-link{padding:1rem 2rem;border-top:1px solid #e5e7eb}.cards-grid{grid-template-columns:1fr}.card-large{grid-column:1}.dashboard-grid{grid-template-columns:1fr}.service-grid-icons{grid-template-columns:repeat(2,1fr)}.district-search-form{grid-template-columns:1fr}.document-cards-grid{grid-template-columns:1fr}}
+body{font-family:'Inter',-apple-system,sans-serif;background:#f5f5f5;color:#1f2937}
+.loading-screen{position:fixed;inset:0;background:linear-gradient(135deg,#1e40af,#0284c7);display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity .6s}.loading-screen.hidden{opacity:0;pointer-events:none}
+.loading-text{color:#fff;font-size:2rem;font-weight:700}
+.header{background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.1);position:sticky;top:0;z-index:1000}
+.header-top{max-width:1400px;margin:0 auto;padding:1.25rem 2rem;display:flex;justify-content:space-between;align-items:center}
+.logo-section{display:flex;align-items:center;gap:1rem;cursor:pointer}
+.logo-box{width:42px;height:42px;background:#0284c7;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.5rem;font-weight:700}
+.logo-text{font-size:1.5rem;font-weight:700;color:#2c3e50;text-transform:uppercase}
+.header-actions{display:flex;gap:1rem;align-items:center}
+.btn{padding:.625rem 1.5rem;border:none;border-radius:4px;font-size:.875rem;font-weight:600;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block}
+.btn-outline{background:#fff;border:2px solid #d1d5db;color:#374151}.btn-outline:hover{border-color:#0284c7;color:#0284c7}
+.btn-primary{background:#0284c7;color:#fff}.btn-primary:hover{background:#0369a1}
+.btn-login{background:#2c3e50;color:#fff}.btn-login:hover{background:#34495e}
+.btn-danger{background:#dc2626;color:#fff}.btn-danger:hover{background:#b91c1c}
+.btn-success{background:#059669;color:#fff}.btn-success:hover{background:#047857}
+.btn-sm{padding:.5rem 1rem;font-size:.8rem}
+.navigation{background:#fff;border-top:1px solid #e5e7eb}
+.nav-content{max-width:1400px;margin:0 auto;padding:0 2rem;display:flex;gap:2.5rem}
+.nav-link{padding:1rem 0;color:#374151;text-decoration:none;font-size:.9rem;font-weight:500;transition:color .2s}
+.nav-link:hover,.nav-link.active{color:#0284c7}
+.page{display:none}.page.active{display:block}
+.page-title-bar{background:#f8f9fa;padding:2rem;border-bottom:1px solid #e5e7eb}
+.page-title{font-size:2.5rem;font-weight:700;color:#2c3e50;max-width:1400px;margin:0 auto}
+.content-wrapper{max-width:1400px;margin:0 auto;padding:3rem 2rem}
+.cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.card{border-radius:8px;overflow:hidden;position:relative;min-height:280px;display:flex;align-items:flex-end;box-shadow:0 2px 8px rgba(0,0,0,.1);cursor:pointer;transition:transform .2s}
+.card:hover{transform:translateY(-4px);box-shadow:0 8px 20px rgba(0,0,0,.15)}
+.card-large{grid-column:span 2;min-height:400px}
+.card-bg{position:absolute;inset:0;background-size:cover;background-position:center}
+.card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.8),rgba(0,0,0,.3) 60%,transparent);z-index:1}
+.card-content{position:relative;z-index:2;padding:2rem;color:#fff;width:100%}
+.card-title{font-size:2rem;font-weight:700;margin-bottom:.75rem}
+.card-description{font-size:1rem;line-height:1.6;margin-bottom:1.5rem}
+.service-catalog{background:#f3f4f6;padding:5rem 2rem}
+.service-catalog h2{text-align:center;font-size:2.25rem;font-weight:700;margin-bottom:1.5rem}
+.service-grid-icons{display:grid;grid-template-columns:repeat(5,1fr);gap:2rem;max-width:1200px;margin:2rem auto}
+.service-icon-card{background:#fff;padding:3rem 1.5rem;text-align:center;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,0.1)}
+.service-icon-card h4{color:#1a1a1a;font-size:1.125rem;font-weight:600}
+.find-district{background:linear-gradient(135deg,#1e3a8a,#1e40af);padding:5rem 2rem;color:#fff}
+.find-district h2{text-align:center;font-size:2.25rem;font-weight:700;margin-bottom:3rem}
+.document-cards-section{background:#fff;padding:5rem 2rem}
+.document-cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;max-width:1200px;margin:0 auto}
+.document-card{background:#fff;padding:2rem;border-left:4px solid #0ea5e9;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,0.1);cursor:pointer;transition:all .3s}
+.document-card:hover{box-shadow:0 4px 12px rgba(0,0,0,0.15);transform:translateY(-2px)}
+.document-card h4{color:#1a1a1a;font-size:1.125rem;font-weight:600}
+.recruitment-footer{background:linear-gradient(rgba(30,58,138,0.9),rgba(30,64,175,0.9)),url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1600') center/cover;padding:6rem 2rem;color:#fff;text-align:center}
+.recruitment-footer h2{font-size:2.75rem;font-weight:700;margin-bottom:1.5rem}
+.recruitment-footer p{font-size:1.125rem;margin-bottom:2.5rem;max-width:800px;margin-left:auto;margin-right:auto}
+.login-container{min-height:80vh;display:flex;align-items:center;justify-content:center}
+.login-box{background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.1);padding:3rem;max-width:450px;width:100%}
+.login-title{font-size:1.75rem;font-weight:700;color:#2c3e50;margin-bottom:2rem;text-align:center}
+.form-group{margin-bottom:1.5rem}
+.form-label{display:block;font-size:.875rem;font-weight:600;color:#374151;margin-bottom:.5rem}
+.form-input{width:100%;padding:.75rem 1rem;border:2px solid #e5e7eb;border-radius:6px;font-size:.9rem}
+.form-input:focus{outline:none;border-color:#0284c7}
+.btn-login-submit{width:100%;padding:.875rem;background:#0284c7;color:#fff;border:none;border-radius:6px;font-size:1rem;font-weight:600;cursor:pointer}
+.btn-login-submit:hover{background:#0369a1}
+.dashboard-header{background:#fff;padding:2rem;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:2rem}
+.officer-info{display:flex;align-items:center;gap:2rem}
+.officer-badge-large{width:80px;height:80px;background:linear-gradient(135deg,#0284c7,#0369a1);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.5rem;font-weight:700}
+.officer-details h2{font-size:1.5rem;color:#2c3e50}
+.officer-details p{color:#6b7280;margin:.25rem 0}
+.dashboard-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(350px,1fr));gap:1.5rem}
+.dashboard-card{background:#fff;padding:1.5rem;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.dashboard-card h3{font-size:1.25rem;color:#2c3e50;margin-bottom:1rem}
+.empty-state{text-align:center;padding:2rem;color:#9ca3af;font-style:italic}
+.admin-section{background:#fff;padding:2rem;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:2rem}
+.admin-section h3{font-size:1.25rem;color:#2c3e50;margin-bottom:1rem}
+.footer{background:#2c3e50;color:#fff;padding:3rem 2rem;margin-top:4rem}
+.footer-content{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:3rem}
+.footer-section h4{font-size:1.1rem;margin-bottom:1rem}
+.footer-section a{display:block;color:#cbd5e1;text-decoration:none;margin-bottom:.75rem}
+.footer-bottom{text-align:center;padding-top:2rem;border-top:1px solid #475569;color:#cbd5e1;max-width:1400px;margin:2rem auto 0}
+.user-menu{position:relative}
+.user-btn{display:flex;align-items:center;gap:.5rem;padding:.5rem 1rem;background:#f3f4f6;border:2px solid #e5e7eb;border-radius:6px;cursor:pointer}
+.user-badge{width:32px;height:32px;background:#0284c7;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.75rem;font-weight:700}
+.user-name{font-size:.875rem;font-weight:600;color:#2c3e50}
+.user-rank{font-size:.75rem;color:#6b7280}
+.user-dropdown{position:absolute;top:100%;right:0;margin-top:.5rem;background:#fff;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.15);min-width:200px;display:none}
+.user-dropdown.active{display:block}
+.dropdown-item{padding:.75rem 1rem;cursor:pointer;transition:background .2s;font-size:.875rem;color:#374151}
+.dropdown-item:hover{background:#f3f4f6}
+@media (max-width:768px){.cards-grid{grid-template-columns:1fr}.card-large{grid-column:1}.service-grid-icons{grid-template-columns:repeat(2,1fr)}.document-cards-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body class="loading">
 
 <div class="loading-screen" id="loadingScreen">
-<div class="city-skyline">
-<div class="building"></div><div class="building"></div><div class="building"></div><div class="building"></div>
-<div class="building"></div><div class="building"></div><div class="building"></div><div class="building"></div>
-</div>
-<div class="loading-content">
-<div class="loading-badge"><div class="logo-box"><div class="logo-star"></div></div></div>
-<div class="loading-text">Chicago City Police</div>
-<div class="loading-spinner"></div>
-</div>
+<div class="loading-text">CHICAGO POLICE</div>
 </div>
 
 <header class="header">
 <div class="header-top">
 <div class="logo-section" onclick="showPage('home')">
-<div class="header-logo-box"><div class="header-logo-star"></div></div>
+<div class="logo-box">★</div>
 <span class="logo-text">Chicago Police Department</span>
 </div>
 <div class="header-actions" id="headerActions">
 <button class="btn btn-outline">Transform</button>
 <a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-primary">Join CPD</a>
-<button class="btn btn-login" onclick="showPage('login')" id="loginBtn">Portal Login</button>
-<button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+<button class="btn btn-login" onclick="showPage('login')">Portal Login</button>
 </div>
 </div>
-<nav class="navigation" id="navigation">
+<nav class="navigation">
 <div class="nav-content">
 <a href="#" class="nav-link active" onclick="showPage('home');return false">Home</a>
 <a href="#" class="nav-link" onclick="showPage('news');return false">News & Media</a>
@@ -95,142 +122,70 @@ body.loading .header,body.loading .page,body.loading .footer{display:none}
 </nav>
 </header>
 
+<!-- HOME PAGE -->
 <div id="home-page" class="page active">
 <div class="page-title-bar"><div class="page-title">We serve and protect.</div></div>
 <div class="content-wrapper">
 <div class="cards-grid">
-<div class="card card-large" onclick="showPage('join')">
-<div class="card-bg" style="background:linear-gradient(rgba(0,0,0,.4),rgba(0,0,0,.4)),url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800') center/cover"></div>
+<div class="card card-large">
+<div class="card-bg" style="background:linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.5)),url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800') center/cover"></div>
 <div class="card-overlay"></div>
 <div class="card-content">
 <h2 class="card-title">Join CPD</h2>
-<p class="card-description">Make a difference within your community and help the people of Chicago. Answer the call to serve those in need and begin building a better tomorrow today.</p>
-<button class="btn btn-primary" onclick="window.open('https://discord.gg/7vQEJnaD','_blank');event.stopPropagation()">Get Started</button>
+<p class="card-description">Make a difference within your community and help the people of Chicago.</p>
+<button class="btn btn-primary" onclick="window.open('https://discord.gg/7vQEJnaD','_blank')">Get Started</button>
 </div>
 </div>
-<div class="card" onclick="showPage('superintendent')">
-<div class="card-bg" style="background:linear-gradient(rgba(0,0,0,.4),rgba(0,0,0,.4)),url('https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400') center/cover"></div>
+<div class="card">
+<div class="card-bg" style="background:linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.5)),url('https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400') center/cover"></div>
 <div class="card-overlay"></div>
 <div class="card-content">
 <h2 class="card-title">Superintendent B.Stafford</h2>
-<button class="btn btn-primary" onclick="showPage('superintendent');event.stopPropagation()">Learn About Us</button>
+<button class="btn btn-primary">Learn About Us</button>
 </div>
 </div>
-<div class="card" onclick="showPage('help-solve')">
-<div class="card-bg" style="background:linear-gradient(rgba(0,0,0,.4),rgba(0,0,0,.4)),url('https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b?w=400') center/cover"></div>
+<div class="card">
+<div class="card-bg" style="background:linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.5)),url('https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b?w=400') center/cover"></div>
 <div class="card-overlay"></div>
 <div class="card-content">
 <h2 class="card-title">Help Solve Crimes</h2>
-<p class="card-description">Identify subjects on the video page.</p>
-<button class="btn btn-primary" onclick="window.open('https://discord.gg/7vQEJnaD','_blank');event.stopPropagation()">Watch Videos</button>
+<button class="btn btn-primary">Watch Videos</button>
 </div>
 </div>
-<div class="card" onclick="showPage('use-of-force')">
-<div class="card-bg" style="background:linear-gradient(rgba(0,0,0,.4),rgba(0,0,0,.4)),url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400') center/cover"></div>
+<div class="card">
+<div class="card-bg" style="background:linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.5)),url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400') center/cover"></div>
 <div class="card-overlay"></div>
 <div class="card-content">
-<h2 class="card-title">Use of Force Policy Reform</h2>
-<p class="card-description">Policies dictate Department members' ability to use force.</p>
-<button class="btn btn-primary" onclick="showPage('use-of-force');event.stopPropagation()">Read More</button>
+<h2 class="card-title">Use of Force Policy</h2>
+<button class="btn btn-primary">Read More</button>
 </div>
 </div>
-<div class="card" onclick="showPage('documents')">
-<div class="card-bg" style="background-color:#1e40af"></div>
+<div class="card">
+<div class="card-bg" style="background:#1e40af"></div>
 <div class="card-overlay"></div>
 <div class="card-content">
 <h2 class="card-title">Documents</h2>
-<p class="card-description">Access department policies and public records.</p>
-<button class="btn btn-primary" onclick="showPage('documents');event.stopPropagation()">View Documents</button>
+<button class="btn btn-primary" onclick="showPage('documents')">View Documents</button>
 </div>
 </div>
 </div>
 </div>
 
-<!-- NEW PROFESSIONAL SECTIONS -->
 <div class="service-catalog">
-<div style="max-width:1200px;margin:0 auto">
 <h2>Service Catalog</h2>
-<p>The Chicago Police Department offers several services for its Chicago citizens. We have services for purchasing crime and traffic reports, registering your bicycle or canine, reporting and submitting tips, requesting data and statistics, and searching one of our several databases. With over 10+ services we hope to serve your needs.</p>
 <div class="service-grid-icons">
-<div class="service-icon-card">
-<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.5">
-<path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-</svg>
-<h4>Purchase</h4>
-</div>
-<div class="service-icon-card">
-<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#facc15" stroke-width="1.5">
-<path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-</svg>
-<h4>Register</h4>
-</div>
-<div class="service-icon-card">
-<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="1.5">
-<circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/>
-</svg>
-<h4>Report</h4>
-</div>
-<div class="service-icon-card">
-<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="1.5">
-<path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"/>
-</svg>
-<h4>Request</h4>
-</div>
-<div class="service-icon-card">
-<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="1.5">
-<circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
-</svg>
-<h4>Search</h4>
-</div>
-</div>
+<div class="service-icon-card"><h4>Purchase</h4></div>
+<div class="service-icon-card"><h4>Register</h4></div>
+<div class="service-icon-card"><h4>Report</h4></div>
+<div class="service-icon-card"><h4>Request</h4></div>
+<div class="service-icon-card"><h4>Search</h4></div>
 </div>
 </div>
 
 <div class="find-district">
-<div style="max-width:1200px;margin:0 auto">
 <h2>Find Your District</h2>
-<p class="find-district-intro">Use the interactive map or search by address to find your district.</p>
-<div class="district-finder-box">
-<div class="district-tabs">
-<button id="searchTab" class="district-tab active" onclick="switchDistrictTab('search')">SEARCH MY ADDRESS</button>
-<button id="mapTab" class="district-tab" onclick="switchDistrictTab('map')">VIEW MAP</button>
-</div>
-<div id="searchTabContent" class="district-tab-content active">
-<div class="district-search-form">
-<div>
-<label>Street #</label>
-<input type="text" id="districtStreetNumber" placeholder="Number">
-</div>
-<div>
-<label>Direction</label>
-<select id="districtDirection">
-<option value="">-</option>
-<option value="N">N</option>
-<option value="S">S</option>
-<option value="E">E</option>
-<option value="W">W</option>
-</select>
-</div>
-<div>
-<label>Street Name</label>
-<input type="text" id="districtStreetName" placeholder="Name of street">
-</div>
-</div>
-<button class="district-find-btn" onclick="alert('District finder coming soon! Connect your district database.')">FIND MY DISTRICT</button>
-<div id="districtResult" style="margin-top:1rem"></div>
-</div>
-<div id="mapTabContent" class="district-tab-content">
-<div style="background:#f3f4f6;height:400px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#6b7280">
-<div style="text-align:center">
-<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" style="margin:0 auto 1rem">
-<path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
-</svg>
-<p style="font-size:1.125rem;font-weight:600;color:#374151">Interactive District Map</p>
-<p style="font-size:0.875rem;color:#6b7280;margin-top:0.5rem">Map integration coming soon</p>
-</div>
-</div>
-</div>
-</div>
+<div style="text-align:center;max-width:600px;margin:0 auto;padding:3rem;background:rgba(255,255,255,0.1);border-radius:12px">
+<p style="font-size:1.125rem">Search functionality coming soon. Connect your district database in the admin panel.</p>
 </div>
 </div>
 
@@ -243,53 +198,140 @@ body.loading .header,body.loading .page,body.loading .footer{display:none}
 <div class="document-card"><h4>Independent Monitoring Report #12</h4></div>
 <div class="document-card"><h4>Draft Policy Review & Comment</h4></div>
 <div class="document-card"><h4>CPD Consent Decree Status Report</h4></div>
-<div class="document-card"><h4>2025 PERF Recommendations Update</h4></div>
-<div class="document-card"><h4>Strategy for Organizational Excellence</h4></div>
+<div class="document-card"><h4>2025 PERF Recommendations</h4></div>
+<div class="document-card"><h4>Strategy for Excellence</h4></div>
 <div class="document-card"><h4>Public Records Release</h4></div>
-<div class="document-card"><h4>Community Policing Strategic Plans</h4></div>
+<div class="document-card"><h4>Community Policing Plans</h4></div>
 </div>
 </div>
 
 <div class="recruitment-footer">
-<div style="max-width:1000px;margin:0 auto">
 <h2>Join CPD. It Starts with You.</h2>
-<p>The City of Chicago is currently seeking qualified Police Officer candidates for the Chicago Police Department's (CPD) upcoming 2024 and 2025 academy classes. Chicago has the second-largest Police Department in the nation, with over 12,000 officers dedicated to protecting the lives, property, and rights of all people. We accomplish this through professionalism, innovation, and a progressive approach to community relational policing.</p>
+<p>Chicago has the second-largest Police Department in the nation, with over 12,000 officers dedicated to protecting the lives, property, and rights of all people.</p>
 <a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-primary">Join CPD</a>
 </div>
 </div>
 
-</div>
-
-<!-- Keep all your other pages exactly as they are -->
+<!-- LOGIN PAGE -->
 <div id="login-page" class="page">
 <div class="login-container">
 <div class="login-box">
-<div class="login-header">
-<div class="login-logo"><div class="login-logo-star"></div></div>
 <h2 class="login-title">Officer Portal</h2>
-<p class="login-subtitle">Chicago City Police Department</p>
-</div>
 <form onsubmit="handleLogin(event)">
 <div class="form-group">
 <label class="form-label">Username</label>
-<input type="text" class="form-input" id="usernameInput" placeholder="Enter username" required>
+<input type="text" class="form-input" id="usernameInput" required>
 </div>
 <div class="form-group">
 <label class="form-label">Password</label>
-<input type="password" class="form-input" id="passwordInput" placeholder="Enter password" required>
+<input type="password" class="form-input" id="passwordInput" required>
 </div>
 <button type="submit" class="btn-login-submit">Sign In</button>
 </form>
-<div class="login-footer">
-<p>Forgot password? <a href="#" onclick="alert('Contact IT Support');return false">Reset</a></p>
-<p style="margin-top:1rem">Need access? <a href="https://discord.gg/7vQEJnaD" target="_blank">Apply to Join</a></p>
+</div>
+</div>
+</div>
+
+<!-- DASHBOARD PAGE -->
+<div id="dashboard-page" class="page">
+<div class="page-title-bar"><div class="page-title">Officer Dashboard</div></div>
+<div class="content-wrapper">
+<div class="dashboard-header">
+<div class="officer-info">
+<div class="officer-badge-large" id="dashBadge">--</div>
+<div class="officer-details">
+<h2 id="dashName">Officer Name</h2>
+<p><strong>Rank:</strong> <span id="dashRank">-</span></p>
+<p><strong>Callsign:</strong> <span id="dashCallsign">-</span></p>
+<p><strong>Status:</strong> <span style="color:#059669">Active</span></p>
+</div>
+</div>
+</div>
+<div class="dashboard-grid">
+<div class="dashboard-card">
+<h3>Recent Activity</h3>
+<div class="empty-state">No recent activity</div>
+</div>
+<div class="dashboard-card">
+<h3>Department Updates</h3>
+<div class="empty-state">No updates</div>
 </div>
 </div>
 </div>
 </div>
 
-<!-- I'm truncating the rest of the pages for brevity, but they remain exactly as in your original file -->
-<!-- Include all your other pages: dashboard, profile, admin, etc. -->
+<!-- ADMIN PAGE -->
+<div id="admin-page" class="page">
+<div class="page-title-bar"><div class="page-title">Admin Panel</div></div>
+<div class="content-wrapper">
+<div class="admin-section">
+<h3>Officer Management</h3>
+<div class="empty-state">Admin features available after backend connection</div>
+</div>
+</div>
+</div>
+
+<!-- NEWS PAGE -->
+<div id="news-page" class="page">
+<div class="page-title-bar"><div class="page-title">News & Media</div></div>
+<div class="content-wrapper">
+<div class="admin-section">
+<h3>Latest News</h3>
+<div class="empty-state">No news posts yet</div>
+</div>
+</div>
+</div>
+
+<!-- SERVICES PAGE -->
+<div id="services-page" class="page">
+<div class="page-title-bar"><div class="page-title">Get Service</div></div>
+<div class="content-wrapper">
+<div class="admin-section">
+<h3>Available Services</h3>
+<p>File reports, request documents, and access department services.</p>
+</div>
+</div>
+</div>
+
+<!-- COMMUNITY PAGE -->
+<div id="community-page" class="page">
+<div class="page-title-bar"><div class="page-title">Community Policing</div></div>
+<div class="content-wrapper">
+<div class="admin-section">
+<h3>Community Programs</h3>
+<p>Learn about our community engagement initiatives and programs.</p>
+</div>
+</div>
+</div>
+
+<!-- INSIDE CCPD PAGE -->
+<div id="inside-page" class="page">
+<div class="page-title-bar"><div class="page-title">Inside CCPD</div></div>
+<div class="content-wrapper">
+<div class="admin-section">
+<h3>Department Information</h3>
+<p>Internal resources and information for department members.</p>
+</div>
+</div>
+</div>
+
+<!-- DOCUMENTS PAGE -->
+<div id="documents-page" class="page">
+<div class="page-title-bar"><div class="page-title">Documents</div></div>
+<div class="content-wrapper">
+<div class="admin-section">
+<h3>Public Records & Policies</h3>
+<div class="document-cards-grid" style="margin-top:2rem">
+<div class="document-card"><h4>Use of Force Policy</h4></div>
+<div class="document-card"><h4>Department Guidelines</h4></div>
+<div class="document-card"><h4>Training Materials</h4></div>
+<div class="document-card"><h4>Public Records</h4></div>
+<div class="document-card"><h4>Annual Reports</h4></div>
+<div class="document-card"><h4>Community Resources</h4></div>
+</div>
+</div>
+</div>
+</div>
 
 <footer class="footer">
 <div class="footer-content">
@@ -299,48 +341,131 @@ body.loading .header,body.loading .page,body.loading .footer{display:none}
 </div>
 <div class="footer-section">
 <h4>Quick Links</h4>
-<a href="#" onclick="showPage('home');return false">File a Report</a>
-<a href="https://discord.gg/7vQEJnaD" target="_blank">Community Programs</a>
+<a href="#" onclick="showPage('home');return false">Home</a>
 <a href="https://discord.gg/7vQEJnaD" target="_blank">Join Us</a>
 </div>
 <div class="footer-section">
 <h4>Resources</h4>
 <a href="#" onclick="showPage('news');return false">News</a>
-<a href="#" onclick="showPage('documents');return false">Policies</a>
-<a href="#" onclick="showPage('leadership');return false">Leadership</a>
+<a href="#" onclick="showPage('documents');return false">Documents</a>
 </div>
 </div>
 <div class="footer-bottom"><p>&copy; 2026 Chicago City Police Department. All rights reserved.</p></div>
 </footer>
 
 <script>
-// District Tab Switcher
-function switchDistrictTab(tab) {
-    document.getElementById('searchTab').classList.toggle('active', tab === 'search');
-    document.getElementById('mapTab').classList.toggle('active', tab === 'map');
-    document.getElementById('searchTabContent').classList.toggle('active', tab === 'search');
-    document.getElementById('mapTabContent').classList.toggle('active', tab === 'map');
-}
-
-// Keep all your existing JavaScript
-const DB={init(){if(!localStorage.ccpd_officers)localStorage.ccpd_officers=JSON.stringify({"AdminPannel":{password:"CPD543",name:"System Administrator",callsign:"Admin-1",rank:"Administrator",role:"Admin",infractions:[]},"JohnSmith":{password:"officer123",name:"John Smith",callsign:"1-Adam-12",rank:"Officer",role:"Officer",infractions:[]},"B.Stafford":{password:"super123",name:"B.Stafford",callsign:"1-King-1",rank:"Superintendent",role:"Admin",infractions:[]}});if(!localStorage.ccpd_reports)localStorage.ccpd_reports=JSON.stringify([]);if(!localStorage.ccpd_updates)localStorage.ccpd_updates=JSON.stringify([]);},get(key){return JSON.parse(localStorage.getItem(key)||'{}')},set(key,val){localStorage.setItem(key,JSON.stringify(val))},getOfficers(){return this.get('ccpd_officers')},saveOfficers(o){this.set('ccpd_officers',o)},getReports(){return JSON.parse(localStorage.ccpd_reports||'[]')},saveReports(r){localStorage.ccpd_reports=JSON.stringify(r)},getUpdates(){return JSON.parse(localStorage.ccpd_updates||'[]')},saveUpdates(u){localStorage.ccpd_updates=JSON.stringify(u)}};
+const DB={
+  init(){
+    if(!localStorage.ccpd_officers){
+      localStorage.ccpd_officers=JSON.stringify({
+        "AdminPannel":{password:"CPD543",name:"System Administrator",callsign:"Admin-1",rank:"Administrator",role:"Admin"},
+        "JohnSmith":{password:"officer123",name:"John Smith",callsign:"1-Adam-12",rank:"Officer",role:"Officer"},
+        "B.Stafford":{password:"super123",name:"B.Stafford",callsign:"1-King-1",rank:"Superintendent",role:"Admin"}
+      });
+    }
+  },
+  getOfficers(){return JSON.parse(localStorage.ccpd_officers||'{}')},
+  saveOfficers(o){localStorage.ccpd_officers=JSON.stringify(o)}
+};
 DB.init();
+
 let currentUser=null;
 
-function handleLogin(e){e.preventDefault();const u=document.getElementById('usernameInput').value;const p=document.getElementById('passwordInput').value;const officers=DB.getOfficers();if(officers[u]&&officers[u].password===p){currentUser={username:u,...officers[u]};localStorage.currentUser=JSON.stringify(currentUser);updateHeaderForUser();showPage('dashboard');loadDashboard()}else{alert('Invalid credentials')}return false}
+function handleLogin(e){
+  e.preventDefault();
+  const u=document.getElementById('usernameInput').value;
+  const p=document.getElementById('passwordInput').value;
+  const officers=DB.getOfficers();
+  if(officers[u]&&officers[u].password===p){
+    currentUser={username:u,...officers[u]};
+    localStorage.currentUser=JSON.stringify(currentUser);
+    updateHeaderForUser();
+    showPage('dashboard');
+    loadDashboard();
+  }else{
+    alert('Invalid credentials');
+  }
+  return false;
+}
 
-function updateHeaderForUser(){const h=document.getElementById('headerActions');if(currentUser){const roleMenu=currentUser.role==='Admin'?'<div class="dropdown-item" onclick="showPage(\'admin\')">⚙️ Admin Panel</div>':currentUser.role==='Supervisor'?'<div class="dropdown-item" onclick="showPage(\'supervisor\')">👮 Supervisor Panel</div>':'';h.innerHTML=`<button class="btn btn-outline">Transform</button><a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-primary">Join CPD</a><div class="user-menu"><div class="user-btn" onclick="toggleUserMenu()"><div class="user-badge">${currentUser.callsign?.substring(0,3)||'--'}</div><div class="user-info"><div class="user-name">${currentUser.name}</div><div class="user-rank">${currentUser.rank}</div></div></div><div class="user-dropdown" id="userDropdown"><div class="dropdown-item" onclick="showPage('dashboard')">📊 Dashboard</div>${roleMenu}<div class="dropdown-item" onclick="viewProfile('${currentUser.username}')">👤 My Profile</div><div class="dropdown-item" onclick="logout()">🚪 Logout</div></div></div><button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>`}else{h.innerHTML=`<button class="btn btn-outline">Transform</button><a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-primary">Join CPD</a><button class="btn btn-login" onclick="showPage('login')" id="loginBtn">Portal Login</button><button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>`}}
+function updateHeaderForUser(){
+  const h=document.getElementById('headerActions');
+  if(currentUser){
+    const adminBtn=currentUser.role==='Admin'?'<div class="dropdown-item" onclick="showPage(\'admin\')">⚙️ Admin Panel</div>':'';
+    h.innerHTML=`
+      <button class="btn btn-outline">Transform</button>
+      <a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-primary">Join CPD</a>
+      <div class="user-menu">
+        <div class="user-btn" onclick="toggleUserMenu()">
+          <div class="user-badge">${currentUser.callsign?.substring(0,2)||'--'}</div>
+          <div style="text-align:left">
+            <div class="user-name">${currentUser.name}</div>
+            <div class="user-rank">${currentUser.rank}</div>
+          </div>
+        </div>
+        <div class="user-dropdown" id="userDropdown">
+          <div class="dropdown-item" onclick="showPage('dashboard')">📊 Dashboard</div>
+          ${adminBtn}
+          <div class="dropdown-item" onclick="logout()">🚪 Logout</div>
+        </div>
+      </div>
+    `;
+  }else{
+    h.innerHTML=`
+      <button class="btn btn-outline">Transform</button>
+      <a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-primary">Join CPD</a>
+      <button class="btn btn-login" onclick="showPage('login')">Portal Login</button>
+    `;
+  }
+}
 
-function toggleUserMenu(){document.getElementById('userDropdown')?.classList.toggle('active')}
-function logout(){currentUser=null;localStorage.removeItem('currentUser');updateHeaderForUser();showPage('home')}
+function toggleUserMenu(){
+  document.getElementById('userDropdown')?.classList.toggle('active');
+}
 
-function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));const page=document.getElementById(id+'-page');if(page){page.classList.add('active');window.scrollTo(0,0)}document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));document.getElementById('navigation').classList.remove('mobile-open')}
+function logout(){
+  currentUser=null;
+  localStorage.removeItem('currentUser');
+  updateHeaderForUser();
+  showPage('home');
+}
 
-function toggleMobileMenu(){document.getElementById('navigation').classList.toggle('mobile-open')}
+function loadDashboard(){
+  if(!currentUser)return;
+  document.getElementById('dashBadge').textContent=currentUser.callsign?.substring(0,4)||'--';
+  document.getElementById('dashName').textContent=currentUser.name;
+  document.getElementById('dashRank').textContent=currentUser.rank;
+  document.getElementById('dashCallsign').textContent=currentUser.callsign||'Not Assigned';
+}
 
-window.addEventListener('load',()=>{setTimeout(()=>{document.body.classList.remove('loading');document.getElementById('loadingScreen').classList.add('hidden')},2000);const saved=localStorage.currentUser;if(saved){currentUser=JSON.parse(saved);updateHeaderForUser()}});
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const page=document.getElementById(id+'-page');
+  if(page){
+    page.classList.add('active');
+    window.scrollTo(0,0);
+  }
+  document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+  if(id==='dashboard'&&currentUser)loadDashboard();
+}
 
-document.addEventListener('click',e=>{if(!e.target.closest('.user-menu'))document.getElementById('userDropdown')?.classList.remove('active')});
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    document.body.classList.remove('loading');
+    document.getElementById('loadingScreen').classList.add('hidden');
+  },1500);
+  const saved=localStorage.currentUser;
+  if(saved){
+    currentUser=JSON.parse(saved);
+    updateHeaderForUser();
+  }
+});
+
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.user-menu')){
+    document.getElementById('userDropdown')?.classList.remove('active');
+  }
+});
 </script>
 </body>
 </html>
