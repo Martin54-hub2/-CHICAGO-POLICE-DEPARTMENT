@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>News & Media - CPD</title>
+<link rel="icon" type="image/png" href="cpd-badge-favicon.png">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f5}
+.header{background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.1);padding:1.25rem 2rem}
+.header-content{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+.logo-section{display:flex;align-items:center;gap:1rem}
+.header-logo-box{width:42px;height:42px;background:#0284c7;border-radius:4px;position:relative}
+.header-logo-star{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:24px;height:24px;clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);background:#dc2626}
+.logo-text{font-size:1.5rem;font-weight:700;color:#2c3e50;text-transform:uppercase}
+.back-link{color:#0284c7;text-decoration:none;font-weight:600;font-size:.9rem}
+.back-link:hover{text-decoration:underline}
+.page-title-bar{background:#1e3a8a;color:#fff;padding:3rem 2rem;text-align:center}
+.page-title{font-size:2.5rem;font-weight:700;margin-bottom:.5rem}
+.page-subtitle{font-size:1.1rem;opacity:.9}
+.content{max-width:1400px;margin:2rem auto;padding:0 2rem}
+.admin-section{background:#fff;padding:2rem;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:2rem}
+.admin-section h3{color:#1e3a8a;margin-bottom:1.5rem}
+.btn{padding:.625rem 1.5rem;border:none;border-radius:4px;font-size:.875rem;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-primary{background:#0284c7;color:#fff}
+.btn-primary:hover{background:#0369a1}
+.btn-danger{background:#dc2626;color:#fff}
+.btn-danger:hover{background:#b91c1c}
+.btn-sm{padding:.5rem 1rem;font-size:.8rem}
+.news-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(350px,1fr));gap:2rem;margin-top:2rem}
+.news-card{background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.1);transition:transform .2s}
+.news-card:hover{transform:translateY(-4px);box-shadow:0 8px 20px rgba(0,0,0,.15)}
+.news-image{width:100%;height:200px;object-fit:cover;background:#e5e7eb}
+.news-content{padding:1.5rem}
+.news-date{font-size:.75rem;color:#6b7280;margin-bottom:.5rem}
+.news-title{font-size:1.25rem;font-weight:700;color:#1e3a8a;margin-bottom:.75rem}
+.news-excerpt{color:#4b5563;line-height:1.6;font-size:.9rem}
+.news-admin{display:flex;gap:.5rem;margin-top:1rem;padding-top:1rem;border-top:1px solid #e5e7eb}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center}
+.modal.active{display:flex}
+.modal-content{background:#fff;border-radius:12px;padding:2rem;max-width:600px;width:90%;max-height:90vh;overflow-y:auto}
+.modal-header{display:flex;justify-content:space-between;margin-bottom:1.5rem}
+.modal-title{font-size:1.5rem;font-weight:700}
+.modal-close{background:none;border:none;font-size:1.5rem;cursor:pointer;color:#9ca3af}
+.modal-close:hover{color:#2c3e50}
+.form-group{margin-bottom:1.5rem}
+.form-label{display:block;font-size:.875rem;font-weight:600;color:#374151;margin-bottom:.5rem}
+.form-input,.form-textarea{width:100%;padding:.75rem 1rem;border:2px solid #e5e7eb;border-radius:6px;font-size:.9rem;font-family:inherit}
+.form-textarea{min-height:150px;resize:vertical}
+.form-input:focus,.form-textarea:focus{outline:none;border-color:#0284c7}
+.image-preview{max-width:100%;max-height:200px;margin-top:.5rem;border-radius:6px}
+.empty-state{text-align:center;padding:3rem;color:#9ca3af;font-style:italic}
+</style>
+</head>
+<body>
+
+<header class="header">
+<div class="header-content">
+<div class="logo-section">
+<div class="header-logo-box"><div class="header-logo-star"></div></div>
+<div class="logo-text">Chicago Police Department</div>
+</div>
+<a href="index.html" class="back-link">← Back to Home</a>
+</div>
+</header>
+
+<div class="page-title-bar">
+<h1 class="page-title">News & Media</h1>
+<p class="page-subtitle">Latest updates from the Chicago Police Department</p>
+</div>
+
+<div class="content">
+
+<!-- Admin Section (only visible to admins) -->
+<div class="admin-section" id="adminSection" style="display:none">
+<h3>Manage News Posts</h3>
+<button class="btn btn-primary" onclick="openCreateModal()">+ Create Post</button>
+</div>
+
+<!-- News Display -->
+<div id="newsGrid" class="news-grid"></div>
+
+</div>
+
+<!-- Create/Edit Post Modal -->
+<div id="postModal" class="modal">
+<div class="modal-content">
+<div class="modal-header">
+<h3 class="modal-title" id="modalTitle">Create News Post</h3>
+<button class="modal-close" onclick="closeModal()">×</button>
+</div>
+<form onsubmit="savePost(event)">
+<input type="hidden" id="postId">
+<div class="form-group">
+<label class="form-label">Title</label>
+<input type="text" class="form-input" id="postTitle" required>
+</div>
+<div class="form-group">
+<label class="form-label">Content</label>
+<textarea class="form-textarea" id="postContent" required></textarea>
+</div>
+<div class="form-group">
+<label class="form-label">Image</label>
+<input type="file" class="form-input" id="postImage" accept="image/*" onchange="previewImage()">
+<img id="imagePreview" class="image-preview" style="display:none">
+</div>
+<button type="submit" class="btn btn-primary" style="width:100%">Save Post</button>
+</form>
+</div>
+</div>
+
+<script>
+// Database
+const NewsDB={
+  init(){
+    if(!localStorage.ccpd_news){
+      localStorage.ccpd_news=JSON.stringify([
+        {
+          id:1,
+          title:'Community Alert – 12 & 18th Districts – Armed Robberies (P26-3-009A)',
+          content:'The Chicago Police Department is alerting residents in the 12th and 18th Districts about a series of armed robberies. Suspects have targeted victims walking alone during evening hours. Officers have increased patrols in affected areas. Residents are urged to remain vigilant, walk in groups when possible, and report suspicious activity immediately.',
+          image:'',
+          date:'March 17, 2026',
+          author:'CPD Communications'
+        }
+      ]);
+    }
+  },
+  getPosts(){return JSON.parse(localStorage.ccpd_news||'[]')},
+  savePosts(posts){localStorage.ccpd_news=JSON.stringify(posts)}
+};
+NewsDB.init();
+
+// Check if user is admin
+let isAdmin=false;
+const savedUser=localStorage.currentUser;
+if(savedUser){
+  const user=JSON.parse(savedUser);
+  isAdmin=user.role==='Admin';
+  if(isAdmin){
+    document.getElementById('adminSection').style.display='block';
+  }
+}
+
+// Load posts
+function loadPosts(){
+  const posts=NewsDB.getPosts();
+  const grid=document.getElementById('newsGrid');
+  
+  if(posts.length===0){
+    grid.innerHTML='<div class="empty-state">No news posts yet</div>';
+    return;
+  }
+  
+  grid.innerHTML=posts.sort((a,b)=>b.id-a.id).map(post=>`
+    <div class="news-card">
+      ${post.image?`<img src="${post.image}" class="news-image" alt="${post.title}">`:'<div class="news-image"></div>'}
+      <div class="news-content">
+        <div class="news-date">${post.date}</div>
+        <h3 class="news-title">${post.title}</h3>
+        <p class="news-excerpt">${post.content.substring(0,150)}${post.content.length>150?'...':''}</p>
+        ${isAdmin?`
+          <div class="news-admin">
+            <button class="btn btn-sm btn-primary" onclick="editPost(${post.id})">Edit</button>
+            <button class="btn btn-sm btn-danger" onclick="deletePost(${post.id})">Delete</button>
+          </div>
+        `:''}
+      </div>
+    </div>
+  `).join('');
+}
+
+// Modal functions
+function openCreateModal(){
+  document.getElementById('modalTitle').textContent='Create News Post';
+  document.getElementById('postId').value='';
+  document.getElementById('postTitle').value='';
+  document.getElementById('postContent').value='';
+  document.getElementById('postImage').value='';
+  document.getElementById('imagePreview').style.display='none';
+  document.getElementById('postModal').classList.add('active');
+}
+
+function editPost(id){
+  const posts=NewsDB.getPosts();
+  const post=posts.find(p=>p.id===id);
+  if(!post)return;
+  
+  document.getElementById('modalTitle').textContent='Edit News Post';
+  document.getElementById('postId').value=post.id;
+  document.getElementById('postTitle').value=post.title;
+  document.getElementById('postContent').value=post.content;
+  document.getElementById('postImage').value='';
+  
+  if(post.image){
+    document.getElementById('imagePreview').src=post.image;
+    document.getElementById('imagePreview').style.display='block';
+  }else{
+    document.getElementById('imagePreview').style.display='none';
+  }
+  
+  document.getElementById('postModal').classList.add('active');
+}
+
+function closeModal(){
+  document.getElementById('postModal').classList.remove('active');
+}
+
+function previewImage(){
+  const file=document.getElementById('postImage').files[0];
+  if(!file)return;
+  
+  const reader=new FileReader();
+  reader.onload=function(e){
+    document.getElementById('imagePreview').src=e.target.result;
+    document.getElementById('imagePreview').style.display='block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function savePost(e){
+  e.preventDefault();
+  
+  const id=document.getElementById('postId').value;
+  const title=document.getElementById('postTitle').value;
+  const content=document.getElementById('postContent').value;
+  const imageFile=document.getElementById('postImage').files[0];
+  
+  const posts=NewsDB.getPosts();
+  const savedUser=localStorage.currentUser;
+  const user=savedUser?JSON.parse(savedUser):{name:'Admin'};
+  
+  const processPost=(imageData)=>{
+    if(id){
+      // Edit existing
+      const index=posts.findIndex(p=>p.id==id);
+      if(index!==-1){
+        posts[index]={
+          ...posts[index],
+          title,
+          content,
+          image:imageData||posts[index].image
+        };
+      }
+    }else{
+      // Create new
+      posts.push({
+        id:Date.now(),
+        title,
+        content,
+        image:imageData||'',
+        date:new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}),
+        author:user.name
+      });
+    }
+    
+    NewsDB.savePosts(posts);
+    closeModal();
+    loadPosts();
+  };
+  
+  if(imageFile){
+    const reader=new FileReader();
+    reader.onload=function(e){
+      processPost(e.target.result);
+    };
+    reader.readAsDataURL(imageFile);
+  }else{
+    processPost(null);
+  }
+  
+  return false;
+}
+
+function deletePost(id){
+  if(!confirm('Delete this post?'))return;
+  const posts=NewsDB.getPosts().filter(p=>p.id!==id);
+  NewsDB.savePosts(posts);
+  loadPosts();
+}
+
+// Load on page load
+window.addEventListener('load',loadPosts);
+</script>
+
+</body>
+</html>
