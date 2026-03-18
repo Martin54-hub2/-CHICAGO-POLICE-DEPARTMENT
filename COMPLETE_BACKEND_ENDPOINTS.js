@@ -4,6 +4,111 @@
 // ========================================
 
 // ========================================
+// 0. OFFICERS PROFILE SYSTEM
+// ========================================
+
+// Note: Officers schema should already exist in your server.js
+// If not, add these fields to your existing Officers schema:
+/*
+const officerSchema = new mongoose.Schema({
+  username: { type: String, required: true, unique: true },
+  password: String,
+  name: String,
+  callsign: String,
+  rank: String,
+  role: String, // 'Admin', 'Supervisor', 'Officer'
+  photo: String, // base64 profile photo
+  email: String,
+  phone: String,
+  bio: String,
+  emergencyContact: String,
+  certifications: String,
+  badgeNumber: String,
+  joinDate: { type: String, default: () => new Date().toLocaleDateString() },
+  dept: { type: String, default: 'Patrol' },
+  infractions: [{
+    reason: String,
+    date: String,
+    notes: String,
+    issuedBy: String
+  }],
+  createdAt: { type: Date, default: Date.now }
+});
+
+const Officer = mongoose.model('Officer', officerSchema);
+*/
+
+// GET officer by username
+app.get('/api/officers/:username', authenticate, async (req, res) => {
+  try {
+    const officer = await Officer.findOne({ username: req.params.username });
+    if (!officer) {
+      return res.status(404).json({ error: 'Officer not found' });
+    }
+    
+    // Don't send password
+    const { password, ...officerData } = officer.toObject();
+    res.json(officerData);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// UPDATE officer profile (self or admin)
+app.put('/api/officers/:username/profile', authenticate, async (req, res) => {
+  try {
+    // Check permissions
+    if (req.user.username !== req.params.username && req.user.role !== 'Admin') {
+      return res.status(403).json({ error: 'Can only edit your own profile' });
+    }
+    
+    const { email, phone, bio, emergencyContact, certifications } = req.body;
+    
+    const officer = await Officer.findOneAndUpdate(
+      { username: req.params.username },
+      { email, phone, bio, emergencyContact, certifications },
+      { new: true }
+    );
+    
+    if (!officer) {
+      return res.status(404).json({ error: 'Officer not found' });
+    }
+    
+    const { password, ...officerData } = officer.toObject();
+    res.json(officerData);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// UPDATE officer photo (self or admin)
+app.put('/api/officers/:username/photo', authenticate, async (req, res) => {
+  try {
+    // Check permissions
+    if (req.user.username !== req.params.username && req.user.role !== 'Admin') {
+      return res.status(403).json({ error: 'Can only edit your own photo' });
+    }
+    
+    const { photo } = req.body;
+    
+    const officer = await Officer.findOneAndUpdate(
+      { username: req.params.username },
+      { photo },
+      { new: true }
+    );
+    
+    if (!officer) {
+      return res.status(404).json({ error: 'Officer not found' });
+    }
+    
+    const { password, ...officerData } = officer.toObject();
+    res.json(officerData);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// ========================================
 // 1. NEWS SYSTEM
 // ========================================
 
@@ -476,6 +581,86 @@ app.delete('/api/updates/:id', authenticate, async (req, res) => {
     
     await Update.findByIdAndDelete(req.params.id);
     res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// ========================================
+// 5. PROFILE SYSTEM
+// ========================================
+
+// NOTE: Add these fields to your Officer schema:
+// profilePhoto: String,
+// bannerPhoto: String,
+// bio: String,
+// yearsOfService: Number,
+// department: String,
+// certifications: [String],
+// commendations: [String],
+// email: String,
+// phone: String,
+// emergencyContact: String
+
+// UPDATE officer's profile (owner or admin)
+app.put('/api/officers/:username/profile', authenticate, async (req, res) => {
+  try {
+    // Only the officer themselves or an admin can update
+    if (req.user.username !== req.params.username && req.user.role !== 'Admin') {
+      return res.status(403).json({ error: 'Not authorized' });
+    }
+    
+    const {
+      profilePhoto,
+      bannerPhoto,
+      bio,
+      yearsOfService,
+      department,
+      certifications,
+      commendations,
+      email,
+      phone,
+      emergencyContact
+    } = req.body;
+    
+    const updateData = {};
+    if (profilePhoto !== undefined) updateData.profilePhoto = profilePhoto;
+    if (bannerPhoto !== undefined) updateData.bannerPhoto = bannerPhoto;
+    if (bio !== undefined) updateData.bio = bio;
+    if (yearsOfService !== undefined) updateData.yearsOfService = yearsOfService;
+    if (department !== undefined) updateData.department = department;
+    if (certifications !== undefined) updateData.certifications = certifications;
+    if (commendations !== undefined) updateData.commendations = commendations;
+    if (email !== undefined) updateData.email = email;
+    if (phone !== undefined) updateData.phone = phone;
+    if (emergencyContact !== undefined) updateData.emergencyContact = emergencyContact;
+    
+    const officer = await Officer.findOneAndUpdate(
+      { username: req.params.username },
+      { $set: updateData },
+      { new: true }
+    );
+    
+    if (!officer) {
+      return res.status(404).json({ error: 'Officer not found' });
+    }
+    
+    res.json(officer);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// GET officer's full profile
+app.get('/api/officers/:username/profile', authenticate, async (req, res) => {
+  try {
+    const officer = await Officer.findOne({ username: req.params.username });
+    
+    if (!officer) {
+      return res.status(404).json({ error: 'Officer not found' });
+    }
+    
+    res.json(officer);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

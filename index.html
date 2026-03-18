@@ -266,35 +266,141 @@
 </div>
 
 <div id="profile-page" class="page">
-<div class="content-wrapper">
-<div class="profile-header">
-<div class="profile-badge" id="profileBadge">-</div>
-<h1 id="profileName" style="font-size:2rem;margin-bottom:.5rem">Officer Name</h1>
-<span class="rank-badge" id="profileRankBadge">Officer</span>
-<div class="profile-info">
-<div class="profile-info-item">
-<div class="profile-info-label">Callsign</div>
-<div class="profile-info-value" id="profileCallsign">-</div>
+<div class="content-wrapper" style="padding:0">
+<!-- Profile Banner -->
+<div style="position:relative;height:250px;background:linear-gradient(135deg, #1e3a8a 0%, #0284c7 100%);cursor:pointer" onclick="document.getElementById('bannerInput').click()">
+<img id="profileBanner" src="" style="width:100%;height:100%;object-fit:cover;display:none">
+<div style="position:absolute;top:1rem;right:1rem;background:rgba(0,0,0,.5);color:#fff;padding:.5rem 1rem;border-radius:6px;font-size:.875rem">📷 Click to change banner</div>
+<input type="file" id="bannerInput" accept="image/*" style="display:none" onchange="uploadBanner()">
 </div>
-<div class="profile-info-item">
-<div class="profile-info-label">Rank</div>
-<div class="profile-info-value" id="profileRank">-</div>
+
+<div style="padding:0 2rem 2rem;margin-top:-80px;position:relative">
+<div style="display:flex;gap:2rem;align-items:flex-end;margin-bottom:2rem">
+<div style="position:relative">
+<img id="profilePhoto" src="" style="width:160px;height:160px;border-radius:50%;object-fit:cover;border:5px solid #fff;background:#e5e7eb;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.15);display:none" onclick="document.getElementById('profilePhotoInput').click()">
+<div class="profile-badge" id="profileBadge" style="cursor:pointer;width:160px;height:160px;font-size:3rem;border:5px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.15)" onclick="document.getElementById('profilePhotoInput').click()">-</div>
+<input type="file" id="profilePhotoInput" accept="image/*" style="display:none" onchange="uploadProfilePhoto()">
+<div style="position:absolute;bottom:5px;right:5px;background:#0284c7;color:#fff;width:45px;height:45px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.2)" onclick="document.getElementById('profilePhotoInput').click()">📷</div>
 </div>
-<div class="profile-info-item">
-<div class="profile-info-label">Status</div>
-<div class="profile-info-value">Active</div>
+<div style="flex:1;padding-bottom:1rem">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem">
+<h1 id="profileName" style="font-size:2.5rem;font-weight:700;color:#1e3a8a" data-username="">Officer Name</h1>
+<button class="btn btn-primary" onclick="openEditProfile()">✏️ Edit Profile</button>
 </div>
-<div class="profile-info-item">
-<div class="profile-info-label">Department</div>
-<div class="profile-info-value" id="profileDept">Patrol</div>
-</div>
+<span class="rank-badge" id="profileRankBadge" style="font-size:1rem;padding:.5rem 1rem">Officer</span>
+<div id="profileBio" style="margin-top:1rem;color:#4b5563;font-size:1rem;line-height:1.6;font-style:italic">No bio added yet</div>
 </div>
 </div>
 
+<!-- Profile Stats Grid -->
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2rem">
+<div style="background:#f8fafc;padding:1.5rem;border-radius:8px;border-left:4px solid #0284c7">
+<div style="font-size:.875rem;color:#6b7280;margin-bottom:.25rem">Callsign</div>
+<div id="profileCallsign" style="font-size:1.5rem;font-weight:700;color:#1e3a8a">-</div>
+</div>
+<div style="background:#f8fafc;padding:1.5rem;border-radius:8px;border-left:4px solid #0284c7">
+<div style="font-size:.875rem;color:#6b7280;margin-bottom:.25rem">Rank</div>
+<div id="profileRank" style="font-size:1.5rem;font-weight:700;color:#1e3a8a">-</div>
+</div>
+<div style="background:#f8fafc;padding:1.5rem;border-radius:8px;border-left:4px solid #059669">
+<div style="font-size:.875rem;color:#6b7280;margin-bottom:.25rem">Status</div>
+<div style="font-size:1.5rem;font-weight:700;color:#059669">Active</div>
+</div>
+<div style="background:#f8fafc;padding:1.5rem;border-radius:8px;border-left:4px solid #0284c7">
+<div style="font-size:.875rem;color:#6b7280;margin-bottom:.25rem">Department</div>
+<div id="profileDept" style="font-size:1.5rem;font-weight:700;color:#1e3a8a">Patrol</div>
+</div>
+<div style="background:#f8fafc;padding:1.5rem;border-radius:8px;border-left:4px solid #0284c7">
+<div style="font-size:.875rem;color:#6b7280;margin-bottom:.25rem">Years of Service</div>
+<div id="profileYears" style="font-size:1.5rem;font-weight:700;color:#1e3a8a">0</div>
+</div>
+</div>
+
+<!-- Additional Info (hidden fields for edit compatibility) -->
+<div style="display:none">
+<div id="profileBadgeNum">-</div>
+<div id="profileJoinDate">-</div>
+<div id="profileEmail">Not provided</div>
+<div id="profilePhone">Not provided</div>
+<div id="profileEmergency">Not provided</div>
+</div>
+
+<!-- Certifications -->
+<div class="admin-section">
+<h3>Certifications & Training</h3>
+<div id="profileCertifications" style="display:grid;gap:.75rem">
+<div class="empty-state">None listed</div>
+</div>
+</div>
+
+<!-- Commendations -->
+<div class="admin-section">
+<h3>Commendations</h3>
+<div id="profileCommendations" style="display:grid;gap:.75rem">
+<div class="empty-state">None listed</div>
+</div>
+</div>
+
+<!-- Infraction Log -->
 <div class="admin-section">
 <h3>Infraction Log</h3>
 <div id="profileInfractionsList"></div>
 </div>
+
+</div>
+</div>
+</div>
+
+<!-- Edit Profile Modal -->
+<div id="editProfileModal" class="modal">
+<div class="modal-content">
+<div class="modal-header">
+<h3 class="modal-title">Edit Profile</h3>
+<button class="modal-close" onclick="closeModal('editProfileModal')">×</button>
+</div>
+<form onsubmit="saveProfile(event)">
+<div class="form-group">
+<label class="form-label">Bio</label>
+<textarea class="form-textarea" id="editBio" rows="4" placeholder="Tell us about yourself..."></textarea>
+</div>
+<div class="form-group">
+<label class="form-label">Years of Service</label>
+<input type="number" class="form-input" id="editYears" min="0" placeholder="0">
+</div>
+<div class="form-group">
+<label class="form-label">Department</label>
+<select class="form-input" id="editDepartment">
+<option value="Patrol">Patrol</option>
+<option value="Detectives">Detectives</option>
+<option value="Special Operations">Special Operations</option>
+<option value="Traffic">Traffic</option>
+<option value="K9">K9 Unit</option>
+<option value="SWAT">SWAT</option>
+<option value="Administration">Administration</option>
+</select>
+</div>
+<div class="form-group">
+<label class="form-label">Email</label>
+<input type="email" class="form-input" id="editEmail">
+</div>
+<div class="form-group">
+<label class="form-label">Phone Number</label>
+<input type="tel" class="form-input" id="editPhone">
+</div>
+<div class="form-group">
+<label class="form-label">Emergency Contact</label>
+<input type="text" class="form-input" id="editEmergency" placeholder="Name and phone number">
+</div>
+<div class="form-group">
+<label class="form-label">Certifications (comma separated)</label>
+<textarea class="form-textarea" id="editCerts" rows="3" placeholder="e.g., CPR Certified, Firearms Instructor, Crisis Intervention"></textarea>
+</div>
+<div class="form-group">
+<label class="form-label">Commendations (comma separated)</label>
+<textarea class="form-textarea" id="editCommendations" rows="3" placeholder="e.g., Medal of Valor 2024, Lifesaving Award 2023"></textarea>
+</div>
+<button type="submit" class="btn btn-primary" style="width:100%">Save Changes</button>
+</form>
 </div>
 </div>
 
@@ -637,12 +743,85 @@ let currentUser=null;
 
 function handleLogin(e){e.preventDefault();const u=document.getElementById('usernameInput').value;const p=document.getElementById('passwordInput').value;const officers=DB.getOfficers();if(officers[u]&&officers[u].password===p){currentUser={username:u,...officers[u]};localStorage.currentUser=JSON.stringify(currentUser);updateHeaderForUser();showPage('dashboard');loadDashboard()}else{alert('Invalid credentials')}return false}
 
-function updateHeaderForUser(){const h=document.getElementById('headerActions');if(currentUser){const roleMenu=currentUser.role==='Admin'?'<div class="dropdown-item" onclick="showPage(\'admin\')">⚙️ Admin Panel</div>':currentUser.role==='Supervisor'?'<div class="dropdown-item" onclick="showPage(\'supervisor\')">👮 Supervisor Panel</div>':'';h.innerHTML=`<button class="btn btn-outline">Transform</button><a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-primary">Join CPD</a><div class="user-menu"><div class="user-btn" onclick="toggleUserMenu()"><div class="user-badge">${currentUser.callsign?.substring(0,3)||'--'}</div><div class="user-info"><div class="user-name">${currentUser.name}</div><div class="user-rank">${currentUser.rank}</div></div></div><div class="user-dropdown" id="userDropdown"><div class="dropdown-item" onclick="showPage('dashboard')">📊 Dashboard</div>${roleMenu}<div class="dropdown-item" onclick="window.location.href='mdt.html'">🖥️ MDT System</div><div class="dropdown-item" onclick="viewProfile('${currentUser.username}')">👤 My Profile</div><div class="dropdown-item" onclick="logout()">🚪 Logout</div></div></div><button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>`}else{h.innerHTML=`<button class="btn btn-outline">Transform</button><a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-primary">Join CPD</a><button class="btn btn-login" onclick="showPage('login')" id="loginBtn">Portal Login</button><button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>`}}
+async function updateHeaderForUser(){
+  const h=document.getElementById('headerActions');
+  
+  if(currentUser){
+    const roleMenu=currentUser.role==='Admin'?'<div class="dropdown-item" onclick="showPage(\'admin\')">⚙️ Admin Panel</div>':currentUser.role==='Supervisor'?'<div class="dropdown-item" onclick="showPage(\'supervisor\')">👮 Supervisor Panel</div>':'';
+    
+    // Fetch officer data for photo
+    let badgeContent = currentUser.callsign?.substring(0,3) || '--';
+    let badgeStyle = '';
+    
+    try {
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        const response = await fetch(`${API_BASE_URL}/api/officers/${currentUser.username}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const officer = await response.json();
+        
+        if (officer.photo) {
+          badgeStyle = `background-image:url(${officer.photo});background-size:cover;background-position:center;`;
+          badgeContent = '';
+        }
+      }
+    } catch (error) {
+      console.error('Error loading officer photo:', error);
+    }
+    
+    h.innerHTML=`<button class="btn btn-outline">Transform</button><a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-primary">Join CPD</a><div class="user-menu"><div class="user-btn" onclick="toggleUserMenu()"><div class="user-badge" style="${badgeStyle}">${badgeContent}</div><div class="user-info"><div class="user-name">${currentUser.name}</div><div class="user-rank">${currentUser.rank}</div></div></div><div class="user-dropdown" id="userDropdown"><div class="dropdown-item" onclick="showPage('dashboard')">📊 Dashboard</div>${roleMenu}<div class="dropdown-item" onclick="window.location.href='mdt.html'">🖥️ MDT System</div><div class="dropdown-item" onclick="viewProfile('${currentUser.username}')">👤 My Profile</div><div class="dropdown-item" onclick="logout()">🚪 Logout</div></div></div><button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>`
+  }else{
+    h.innerHTML=`<button class="btn btn-outline">Transform</button><a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-primary">Join CPD</a><button class="btn btn-login" onclick="showPage('login')" id="loginBtn">Portal Login</button><button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>`
+  }
+}
 
 function toggleUserMenu(){document.getElementById('userDropdown')?.classList.toggle('active')}
 function logout(){currentUser=null;localStorage.removeItem('currentUser');updateHeaderForUser();showPage('home')}
 
-function loadDashboard(){if(!currentUser)return;document.getElementById('dashBadge').textContent=currentUser.callsign?.substring(0,4)||'--';document.getElementById('dashName').textContent=currentUser.name;document.getElementById('dashRank').textContent=currentUser.rank;document.getElementById('dashCallsign').textContent=currentUser.callsign||'Not Assigned';loadDashReports();loadDashUpdates();loadDashInfractions()}
+async function loadDashboard(){
+  if(!currentUser) return;
+  
+  try {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      const response = await fetch(`${API_BASE_URL}/api/officers/${currentUser.username}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const officer = await response.json();
+      
+      // Update dashboard with fresh data
+      if (officer.photo) {
+        const badge = document.getElementById('dashBadge');
+        badge.style.backgroundImage = `url(${officer.photo})`;
+        badge.style.backgroundSize = 'cover';
+        badge.style.backgroundPosition = 'center';
+        badge.textContent = '';
+      } else {
+        document.getElementById('dashBadge').textContent = currentUser.callsign?.substring(0,4) || '--';
+      }
+      
+      document.getElementById('dashName').textContent = officer.name || currentUser.name;
+      document.getElementById('dashRank').textContent = officer.rank || currentUser.rank;
+      document.getElementById('dashCallsign').textContent = officer.callsign || currentUser.callsign || 'Not Assigned';
+    } else {
+      document.getElementById('dashBadge').textContent = currentUser.callsign?.substring(0,4) || '--';
+      document.getElementById('dashName').textContent = currentUser.name;
+      document.getElementById('dashRank').textContent = currentUser.rank;
+      document.getElementById('dashCallsign').textContent = currentUser.callsign || 'Not Assigned';
+    }
+  } catch (error) {
+    console.error('Error loading dashboard:', error);
+    document.getElementById('dashBadge').textContent = currentUser.callsign?.substring(0,4) || '--';
+    document.getElementById('dashName').textContent = currentUser.name;
+    document.getElementById('dashRank').textContent = currentUser.rank;
+    document.getElementById('dashCallsign').textContent = currentUser.callsign || 'Not Assigned';
+  }
+  
+  loadDashReports();
+  loadDashUpdates();
+  loadDashInfractions();
+}
 
 async function loadDashReports(){
   try {
@@ -798,7 +977,278 @@ function supervisorSearchOfficers(){const query=document.getElementById('supervi
 
 function renderOfficerCard(username,officer,isSupervisor=false){const canEdit=currentUser.role==='Admin'||currentUser.role==='Supervisor';return`<div class="officer-card" onclick="viewProfile('${username}')"><div class="officer-card-header"><div><div class="officer-name">${officer.name}</div><span class="rank-badge rank-${officer.role?.toLowerCase()||'officer'}">${officer.rank}</span></div></div><div class="officer-meta"><div class="officer-meta-item"><span class="officer-meta-label">Callsign:</span> ${officer.callsign||'Not Assigned'}</div><div class="officer-meta-item"><span class="officer-meta-label">Role:</span> ${officer.role}</div></div>${canEdit&&!isSupervisor?`<div style="margin-top:1rem;display:flex;gap:.5rem"><button class="btn btn-sm btn-primary" onclick="event.stopPropagation();editOfficer('${username}')">Edit</button><button class="btn btn-sm btn-warning" onclick="event.stopPropagation();openInfractionModal('${username}')">+ Infraction</button>${currentUser.role==='Admin'?`<button class="btn btn-sm btn-danger" onclick="event.stopPropagation();deleteOfficer('${username}')">Delete</button>`:''}</div>`:''}${canEdit&&isSupervisor?`<div style="margin-top:1rem"><button class="btn btn-sm btn-primary" onclick="event.stopPropagation();editOfficer('${username}')">Edit Callsign/Rank</button></div>`:''}</div>`}
 
-function viewProfile(username){const officers=DB.getOfficers();const officer=officers[username];if(!officer)return;document.getElementById('profileBadge').textContent=officer.callsign?.substring(0,4)||'--';document.getElementById('profileName').textContent=officer.name;document.getElementById('profileRank').textContent=officer.rank;document.getElementById('profileCallsign').textContent=officer.callsign||'Not Assigned';document.getElementById('profileRankBadge').textContent=officer.rank;document.getElementById('profileRankBadge').className='rank-badge rank-'+officer.role.toLowerCase();document.getElementById('profileDept').textContent=officer.dept||'Patrol';const inf=officer.infractions||[];document.getElementById('profileInfractionsList').innerHTML=inf.length?inf.map(i=>`<div class="infraction-item"><div class="infraction-header"><span class="infraction-reason">${i.reason}</span><span class="infraction-date">${i.date}</span></div><div class="infraction-details">${i.notes||''}</div><div class="infraction-issuer">Issued by: ${i.issuedBy}</div></div>`).join(''):'<div class="empty-state" style="color:#059669">No infractions on record</div>';showPage('profile')}
+async function viewProfile(username){
+  try {
+    const token = localStorage.getItem('authToken');
+    if (!token) return;
+    
+    const response = await fetch(`${API_BASE_URL}/api/officers/${username}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const officer = await response.json();
+    
+    if (!officer) return;
+    
+    // Store username for edit check
+    document.getElementById('profileName').dataset.username = username;
+    
+    // Set banner
+    if (officer.bannerPhoto) {
+      document.getElementById('profileBanner').src = officer.bannerPhoto;
+      document.getElementById('profileBanner').style.display = 'block';
+    } else {
+      document.getElementById('profileBanner').style.display = 'none';
+    }
+    
+    // Set badge/photo
+    if (officer.photo) {
+      document.getElementById('profilePhoto').src = officer.photo;
+      document.getElementById('profilePhoto').style.display = 'block';
+      document.getElementById('profileBadge').style.display = 'none';
+    } else {
+      document.getElementById('profilePhoto').style.display = 'none';
+      document.getElementById('profileBadge').style.display = 'flex';
+      document.getElementById('profileBadge').textContent = officer.callsign?.substring(0,4) || '--';
+    }
+    
+    // Set basic info
+    document.getElementById('profileName').textContent = officer.name;
+    document.getElementById('profileRank').textContent = officer.rank;
+    document.getElementById('profileCallsign').textContent = officer.callsign || 'Not Assigned';
+    document.getElementById('profileRankBadge').textContent = officer.rank;
+    document.getElementById('profileRankBadge').className = 'rank-badge rank-' + officer.role.toLowerCase();
+    document.getElementById('profileDept').textContent = officer.department || 'Patrol';
+    document.getElementById('profileYears').textContent = officer.yearsOfService || '0';
+    document.getElementById('profileBadgeNum').textContent = officer.badgeNumber || officer.callsign || '-';
+    document.getElementById('profileJoinDate').textContent = officer.joinDate || 'Not recorded';
+    
+    // Set profile details
+    document.getElementById('profileEmail').textContent = officer.email || 'Not provided';
+    document.getElementById('profilePhone').textContent = officer.phone || 'Not provided';
+    document.getElementById('profileBio').textContent = officer.bio || 'No bio provided';
+    document.getElementById('profileEmergency').textContent = officer.emergencyContact || 'Not provided';
+    
+    // Set certifications
+    const certs = officer.certifications && officer.certifications.length > 0 ?
+      officer.certifications.map(cert => `<div style="background:#f8fafc;padding:.75rem 1rem;border-radius:6px;border-left:3px solid #0284c7">${cert}</div>`).join('') :
+      '<div class="empty-state">None listed</div>';
+    document.getElementById('profileCertifications').innerHTML = certs;
+    
+    // Set commendations
+    const commends = officer.commendations && officer.commendations.length > 0 ?
+      officer.commendations.map(commend => `<div style="background:#fef3c7;padding:.75rem 1rem;border-radius:6px;border-left:3px solid #d97706">${commend}</div>`).join('') :
+      '<div class="empty-state">None listed</div>';
+    document.getElementById('profileCommendations').innerHTML = commends;
+    
+    // Set infractions
+    const inf = officer.infractions || [];
+    document.getElementById('profileInfractionsList').innerHTML = inf.length ? 
+      inf.map(i => `
+        <div class="infraction-item">
+          <div class="infraction-header">
+            <span class="infraction-reason">${i.reason}</span>
+            <span class="infraction-date">${i.date}</span>
+          </div>
+          <div class="infraction-details">${i.notes || ''}</div>
+          <div class="infraction-issuer">Issued by: ${i.issuedBy}</div>
+        </div>
+      `).join('') : 
+      '<div class="empty-state" style="color:#059669">No infractions on record</div>';
+    
+    showPage('profile');
+  } catch (error) {
+    console.error('Error loading profile:', error);
+  }
+}
+
+// Upload profile photo
+async function uploadProfilePhoto() {
+  const file = document.getElementById('profilePhotoInput').files[0];
+  if (!file) return;
+  
+  const viewedUsername = document.getElementById('profileName').dataset.username;
+  
+  if (currentUser.username !== viewedUsername && currentUser.role !== 'Admin') {
+    alert('You can only edit your own photo');
+    return;
+  }
+  
+  const reader = new FileReader();
+  reader.onload = async function(e) {
+    const photoData = e.target.result;
+    
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      alert('Please login first');
+      return;
+    }
+    
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/officers/${viewedUsername}/photo`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ photo: photoData })
+      });
+      
+      if (!response.ok) throw new Error('Failed to upload photo');
+      
+      // Update display
+      document.getElementById('profilePhoto').src = photoData;
+      document.getElementById('profilePhoto').style.display = 'block';
+      document.getElementById('profileBadge').style.display = 'none';
+      
+      // Update header badge if it's the current user's profile
+      if (viewedUsername === currentUser.username) {
+        await updateHeaderForUser();
+        await loadDashboard();
+      }
+      
+      alert('Photo updated!');
+    } catch (error) {
+      console.error('Error uploading photo:', error);
+      alert('Error uploading photo');
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+// Upload banner photo
+async function uploadBanner() {
+  const file = document.getElementById('bannerInput').files[0];
+  if (!file) return;
+  
+  const viewedUsername = document.getElementById('profileName').dataset.username;
+  
+  if (currentUser.username !== viewedUsername && currentUser.role !== 'Admin') {
+    alert('You can only edit your own profile');
+    return;
+  }
+  
+  const reader = new FileReader();
+  reader.onload = async function(e) {
+    const bannerData = e.target.result;
+    
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      alert('Please login first');
+      return;
+    }
+    
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/officers/${viewedUsername}/profile`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ bannerPhoto: bannerData })
+      });
+      
+      if (!response.ok) throw new Error('Failed to upload banner');
+      
+      // Update display
+      const bannerEl = document.getElementById('profileBanner');
+      bannerEl.src = bannerData;
+      bannerEl.style.display = 'block';
+      
+      alert('Banner updated!');
+    } catch (error) {
+      console.error('Error uploading banner:', error);
+      alert('Error uploading banner');
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+// Open edit profile modal
+async function openEditProfile() {
+  const viewedUsername = document.getElementById('profileName').dataset.username;
+  
+  if (currentUser.username !== viewedUsername && currentUser.role !== 'Admin') {
+    alert('You can only edit your own profile');
+    return;
+  }
+  
+  // Populate form with current values
+  const bio = document.getElementById('profileBio').textContent;
+  const years = document.getElementById('profileYears').textContent;
+  const dept = document.getElementById('profileDept').textContent;
+  const email = document.getElementById('profileEmail').textContent;
+  const phone = document.getElementById('profilePhone').textContent;
+  const emergency = document.getElementById('profileEmergency').textContent;
+  
+  document.getElementById('editBio').value = bio !== 'No bio provided' ? bio : '';
+  document.getElementById('editYears').value = years || '0';
+  document.getElementById('editDepartment').value = dept || 'Patrol';
+  document.getElementById('editEmail').value = email !== 'Not provided' ? email : '';
+  document.getElementById('editPhone').value = phone !== 'Not provided' ? phone : '';
+  document.getElementById('editEmergency').value = emergency !== 'Not provided' ? emergency : '';
+  
+  // Get certifications and commendations from displayed data
+  const token = localStorage.getItem('authToken');
+  const viewedUsername = document.getElementById('profileName').dataset.username;
+  
+  // Fetch to get array data
+  fetch(`${API_BASE_URL}/api/officers/${viewedUsername}/profile`, {
+    headers: { 'Authorization': `Bearer ${token}` }
+  })
+  .then(res => res.json())
+  .then(officer => {
+    document.getElementById('editCerts').value = officer.certifications ? officer.certifications.join(', ') : '';
+    document.getElementById('editCommendations').value = officer.commendations ? officer.commendations.join(', ') : '';
+  });
+  
+  openModal('editProfileModal');
+}
+
+// Save profile changes
+async function saveProfile(e) {
+  e.preventDefault();
+  
+  const token = localStorage.getItem('authToken');
+  if (!token) {
+    alert('Please login first');
+    return false;
+  }
+  
+  const viewedUsername = document.getElementById('profileName').dataset.username;
+  
+  const profileData = {
+    bio: document.getElementById('editBio').value,
+    yearsOfService: parseInt(document.getElementById('editYears').value) || 0,
+    department: document.getElementById('editDepartment').value,
+    email: document.getElementById('editEmail').value,
+    phone: document.getElementById('editPhone').value,
+    emergencyContact: document.getElementById('editEmergency').value,
+    certifications: document.getElementById('editCerts').value.split(',').map(c => c.trim()).filter(c => c),
+    commendations: document.getElementById('editCommendations').value.split(',').map(c => c.trim()).filter(c => c)
+  };
+  
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/officers/${viewedUsername}/profile`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(profileData)
+    });
+    
+    if (!response.ok) throw new Error('Failed to update profile');
+    
+    closeModal('editProfileModal');
+    alert('Profile updated!');
+    viewProfile(viewedUsername);
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    alert('Error updating profile');
+  }
+  
+  return false;
+}
 
 async function loadAdminPanel(){
   if(currentUser?.role !== 'Admin') return;
