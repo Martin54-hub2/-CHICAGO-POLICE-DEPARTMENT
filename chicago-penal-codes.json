@@ -1,0 +1,182 @@
+[
+  {
+    "code": "720 ILCS 5/9-1",
+    "title": "First Degree Murder",
+    "description": "A person commits first degree murder when they kill an individual without lawful justification",
+    "category": "Violent Crimes",
+    "jailTime": "Life in prison",
+    "fine": 0,
+    "severity": "Felony"
+  },
+  {
+    "code": "720 ILCS 5/12-2",
+    "title": "Aggravated Assault",
+    "description": "Commits an assault while armed with a dangerous weapon or causes bodily harm",
+    "category": "Violent Crimes",
+    "jailTime": "1-3 years",
+    "fine": 25000,
+    "severity": "Felony"
+  },
+  {
+    "code": "720 ILCS 5/12-3.2",
+    "title": "Domestic Battery",
+    "description": "Intentionally causes bodily harm to any family or household member",
+    "category": "Violent Crimes",
+    "jailTime": "0-1 year",
+    "fine": 2500,
+    "severity": "Misdemeanor"
+  },
+  {
+    "code": "720 ILCS 5/18-1",
+    "title": "Robbery",
+    "description": "Takes property from the person or presence of another by the use of force or by threatening use of force",
+    "category": "Theft",
+    "jailTime": "4-15 years",
+    "fine": 25000,
+    "severity": "Felony"
+  },
+  {
+    "code": "720 ILCS 5/18-2",
+    "title": "Armed Robbery",
+    "description": "Commits robbery while armed with a dangerous weapon",
+    "category": "Violent Crimes",
+    "jailTime": "6-30 years",
+    "fine": 25000,
+    "severity": "Felony"
+  },
+  {
+    "code": "720 ILCS 5/16-1",
+    "title": "Theft",
+    "description": "Knowingly obtains or exerts unauthorized control over property of the owner",
+    "category": "Theft",
+    "jailTime": "0-3 years",
+    "fine": 25000,
+    "severity": "Felony"
+  },
+  {
+    "code": "720 ILCS 5/19-1",
+    "title": "Burglary",
+    "description": "Without authority knowingly enters or remains within a building with intent to commit a felony or theft",
+    "category": "Property Crimes",
+    "jailTime": "4-15 years",
+    "fine": 25000,
+    "severity": "Felony"
+  },
+  {
+    "code": "720 ILCS 550/4",
+    "title": "Possession of Cannabis (30g-100g)",
+    "description": "Unlawful possession of cannabis over 30 grams but less than 100 grams",
+    "category": "Drug Offenses",
+    "jailTime": "0-1 year",
+    "fine": 2500,
+    "severity": "Misdemeanor"
+  },
+  {
+    "code": "720 ILCS 570/402",
+    "title": "Possession of Controlled Substance",
+    "description": "Unlawful possession of a controlled substance",
+    "category": "Drug Offenses",
+    "jailTime": "1-3 years",
+    "fine": 25000,
+    "severity": "Felony"
+  },
+  {
+    "code": "625 ILCS 5/11-501",
+    "title": "Driving Under the Influence (DUI)",
+    "description": "Operating a vehicle while under the influence of alcohol or drugs",
+    "category": "Traffic Offenses",
+    "jailTime": "0-1 year",
+    "fine": 2500,
+    "severity": "Misdemeanor"
+  },
+  {
+    "code": "625 ILCS 5/11-503",
+    "title": "Reckless Driving",
+    "description": "Driving with willful or wanton disregard for the safety of persons or property",
+    "category": "Traffic Offenses",
+    "jailTime": "0-1 year",
+    "fine": 2500,
+    "severity": "Misdemeanor"
+  },
+  {
+    "code": "625 ILCS 5/6-303",
+    "title": "Driving with Suspended License",
+    "description": "Driving while license is suspended or revoked",
+    "category": "Traffic Offenses",
+    "jailTime": "0-1 year",
+    "fine": 2500,
+    "severity": "Misdemeanor"
+  },
+  {
+    "code": "720 ILCS 5/21-1",
+    "title": "Criminal Damage to Property",
+    "description": "Knowingly damages property of another",
+    "category": "Property Crimes",
+    "jailTime": "0-3 years",
+    "fine": 25000,
+    "severity": "Felony"
+  },
+  {
+    "code": "720 ILCS 5/24-1.1",
+    "title": "Unlawful Use of Weapons",
+    "description": "Carries or possesses a firearm without required permit or in prohibited location",
+    "category": "Weapons Offenses",
+    "jailTime": "1-3 years",
+    "fine": 25000,
+    "severity": "Felony"
+  },
+  {
+    "code": "720 ILCS 5/24-1.6",
+    "title": "Aggravated Unlawful Use of a Weapon",
+    "description": "Carries a loaded, uncased firearm on public way by person without FOID card",
+    "category": "Weapons Offenses",
+    "jailTime": "1-3 years",
+    "fine": 25000,
+    "severity": "Felony"
+  },
+  {
+    "code": "720 ILCS 5/31-1",
+    "title": "Resisting a Peace Officer",
+    "description": "Knowingly resists or obstructs the performance by a peace officer",
+    "category": "Public Order",
+    "jailTime": "0-1 year",
+    "fine": 2500,
+    "severity": "Misdemeanor"
+  },
+  {
+    "code": "720 ILCS 5/26-1",
+    "title": "Disorderly Conduct",
+    "description": "Acts in an unreasonable manner causing alarm or disturbing the peace",
+    "category": "Public Order",
+    "jailTime": "0-1 year",
+    "fine": 2500,
+    "severity": "Misdemeanor"
+  },
+  {
+    "code": "720 ILCS 5/12-7.3",
+    "title": "Stalking",
+    "description": "Follows or places under surveillance another person on at least 2 occasions",
+    "category": "Harassment",
+    "jailTime": "1-3 years",
+    "fine": 25000,
+    "severity": "Felony"
+  },
+  {
+    "code": "720 ILCS 5/12-7.5",
+    "title": "Cyberstalking",
+    "description": "Uses electronic communication to stalk, harass, or intimidate another person",
+    "category": "Harassment",
+    "jailTime": "0-3 years",
+    "fine": 25000,
+    "severity": "Felony"
+  },
+  {
+    "code": "720 ILCS 5/17-1",
+    "title": "Identity Theft",
+    "description": "Uses personal identifying information of another to fraudulently obtain credit, goods, or services",
+    "category": "Fraud",
+    "jailTime": "2-5 years",
+    "fine": 25000,
+    "severity": "Felony"
+  }
+]
