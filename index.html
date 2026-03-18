@@ -818,11 +818,269 @@
 <script>
 const API_BASE_URL = 'https://chicago-police-department-production.up.railway.app';
 
-const DB={init(){if(!localStorage.ccpd_officers)localStorage.ccpd_officers=JSON.stringify({"AdminPannel":{password:"CPD543",name:"System Administrator",callsign:"Admin-1",rank:"Administrator",role:"Admin",infractions:[],createdAt:new Date().toISOString()},"JohnSmith":{password:"officer123",name:"John Smith",callsign:"1-Adam-12",rank:"Officer",role:"Officer",infractions:[],createdAt:new Date().toISOString()},"B.Stafford":{password:"super123",name:"B.Stafford",callsign:"1-King-1",rank:"Superintendent",role:"Admin",infractions:[],createdAt:new Date().toISOString()}});if(!localStorage.ccpd_reports)localStorage.ccpd_reports=JSON.stringify([]);if(!localStorage.ccpd_updates)localStorage.ccpd_updates=JSON.stringify([]);if(!localStorage.ccpd_districts)localStorage.ccpd_districts=JSON.stringify([{id:1,number:'001',name:'Central',streets:['100-500 N State St','1-100 E Madison St','200-400 W Washington Blvd']},{id:2,number:'002',name:'Wentworth',streets:['1-500 S State St','100-300 E Cermak Rd']},{id:3,number:'003',name:'Grand Crossing',streets:['6900-8700 S Cottage Grove Ave']}]);},get(key){return JSON.parse(localStorage.getItem(key)||'{}')},set(key,val){localStorage.setItem(key,JSON.stringify(val))},getOfficers(){return this.get('ccpd_officers')},saveOfficers(o){this.set('ccpd_officers',o)},getReports(){return JSON.parse(localStorage.ccpd_reports||'[]')},saveReports(r){localStorage.ccpd_reports=JSON.stringify(r)},getUpdates(){return JSON.parse(localStorage.ccpd_updates||'[]')},saveUpdates(u){localStorage.ccpd_updates=JSON.stringify(u)},getDistricts(){return JSON.parse(localStorage.ccpd_districts||'[]')},saveDistricts(d){localStorage.ccpd_districts=JSON.stringify(d)}};
-DB.init();
+// API-First Database with localStorage cache
+const DB = {
+  // Authentication
+  async login(username, password) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+      
+      if (!response.ok) throw new Error('Login failed');
+      
+      const data = await response.json();
+      // Cache token and user data
+      localStorage.setItem('authToken', data.token);
+      localStorage.setItem('currentUser', JSON.stringify(data.user));
+      return data;
+    } catch (error) {
+      console.error('[AUTH] Login error:', error);
+      throw error;
+    }
+  },
+  
+  // Get single officer
+  async getOfficer(username) {
+    try {
+      const token = localStorage.getItem('authToken');
+      const response = await fetch(`${API_BASE_URL}/api/officers/${username}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      if (!response.ok) throw new Error('Failed to fetch officer');
+      
+      const officer = await response.json();
+      // Cache in localStorage
+      const cached = JSON.parse(localStorage.getItem('cachedOfficers') || '{}');
+      cached[username] = officer;
+      localStorage.setItem('cachedOfficers', JSON.stringify(cached));
+      return officer;
+    } catch (error) {
+      console.error('[DB] Get officer error:', error);
+      // Fallback to cache
+      const cached = JSON.parse(localStorage.getItem('cachedOfficers') || '{}');
+      return cached[username] || null;
+    }
+  },
+  
+  // Update officer profile
+  async updateOfficer(username, data) {
+    try {
+      const token = localStorage.getItem('authToken');
+      const response = await fetch(`${API_BASE_URL}/api/officers/${username}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+      
+      if (!response.ok) throw new Error('Failed to update officer');
+      
+      const updated = await response.json();
+      // Update cache
+      const cached = JSON.parse(localStorage.getItem('cachedOfficers') || '{}');
+      cached[username] = updated;
+      localStorage.setItem('cachedOfficers', JSON.stringify(cached));
+      return updated;
+    } catch (error) {
+      console.error('[DB] Update officer error:', error);
+      // Update cache anyway
+      const cached = JSON.parse(localStorage.getItem('cachedOfficers') || '{}');
+      cached[username] = { ...cached[username], ...data };
+      localStorage.setItem('cachedOfficers', JSON.stringify(cached));
+      throw error;
+    }
+  },
+  
+  // Upload photo
+  async uploadPhoto(username, photoData) {
+    try {
+      const token = localStorage.getItem('authToken');
+      const response = await fetch(`${API_BASE_URL}/api/officers/${username}/photo`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ photo: photoData })
+      });
+      
+      if (!response.ok) throw new Error('Failed to upload photo');
+      
+      const updated = await response.json();
+      // Update cache
+      const cached = JSON.parse(localStorage.getItem('cachedOfficers') || '{}');
+      if (cached[username]) cached[username].photo = photoData;
+      localStorage.setItem('cachedOfficers', JSON.stringify(cached));
+      return updated;
+    } catch (error) {
+      console.error('[DB] Upload photo error:', error);
+      // Update cache anyway
+      const cached = JSON.parse(localStorage.getItem('cachedOfficers') || '{}');
+      if (cached[username]) cached[username].photo = photoData;
+      localStorage.setItem('cachedOfficers', JSON.stringify(cached));
+      throw error;
+    }
+  },
+  
+  // Upload banner
+  async uploadBanner(username, bannerData) {
+    try {
+      const token = localStorage.getItem('authToken');
+      const response = await fetch(`${API_BASE_URL}/api/officers/${username}/banner`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ banner: bannerData })
+      });
+      
+      if (!response.ok) throw new Error('Failed to upload banner');
+      
+      const updated = await response.json();
+      // Update cache
+      const cached = JSON.parse(localStorage.getItem('cachedOfficers') || '{}');
+      if (cached[username]) cached[username].banner = bannerData;
+      localStorage.setItem('cachedOfficers', JSON.stringify(cached));
+      return updated;
+    } catch (error) {
+      console.error('[DB] Upload banner error:', error);
+      // Update cache anyway
+      const cached = JSON.parse(localStorage.getItem('cachedOfficers') || '{}');
+      if (cached[username]) cached[username].banner = bannerData;
+      localStorage.setItem('cachedOfficers', JSON.stringify(cached));
+      throw error;
+    }
+  },
+  
+  // Add certification
+  async addCertification(username, cert) {
+    try {
+      const token = localStorage.getItem('authToken');
+      const response = await fetch(`${API_BASE_URL}/api/officers/${username}/certifications`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ certification: cert })
+      });
+      
+      if (!response.ok) throw new Error('Failed to add certification');
+      return await response.json();
+    } catch (error) {
+      console.error('[DB] Add certification error:', error);
+      throw error;
+    }
+  },
+  
+  // Remove certification
+  async removeCertification(username, index) {
+    try {
+      const token = localStorage.getItem('authToken');
+      const response = await fetch(`${API_BASE_URL}/api/officers/${username}/certifications/${index}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      if (!response.ok) throw new Error('Failed to remove certification');
+      return await response.json();
+    } catch (error) {
+      console.error('[DB] Remove certification error:', error);
+      throw error;
+    }
+  },
+  
+  // Add commendation
+  async addCommendation(username, commend) {
+    try {
+      const token = localStorage.getItem('authToken');
+      const response = await fetch(`${API_BASE_URL}/api/officers/${username}/commendations`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ commendation: commend })
+      });
+      
+      if (!response.ok) throw new Error('Failed to add commendation');
+      return await response.json();
+    } catch (error) {
+      console.error('[DB] Add commendation error:', error);
+      throw error;
+    }
+  },
+  
+  // Remove commendation
+  async removeCommendation(username, index) {
+    try {
+      const token = localStorage.getItem('authToken');
+      const response = await fetch(`${API_BASE_URL}/api/officers/${username}/commendations/${index}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      if (!response.ok) throw new Error('Failed to remove commendation');
+      return await response.json();
+    } catch (error) {
+      console.error('[DB] Remove commendation error:', error);
+      throw error;
+    }
+  },
+  
+  // Add infraction
+  async addInfraction(username, infraction) {
+    try {
+      const token = localStorage.getItem('authToken');
+      const response = await fetch(`${API_BASE_URL}/api/officers/${username}/infractions`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(infraction)
+      });
+      
+      if (!response.ok) throw new Error('Failed to add infraction');
+      return await response.json();
+    } catch (error) {
+      console.error('[DB] Add infraction error:', error);
+      throw error;
+    }
+  }
+};
+
 let currentUser=null;
 
-function handleLogin(e){e.preventDefault();const u=document.getElementById('usernameInput').value;const p=document.getElementById('passwordInput').value;const officers=DB.getOfficers();if(officers[u]&&officers[u].password===p){currentUser={username:u,...officers[u]};localStorage.currentUser=JSON.stringify(currentUser);updateHeaderForUser();showPage('dashboard');loadDashboard()}else{alert('Invalid credentials')}return false}
+async function handleLogin(e) {
+  e.preventDefault();
+  const username = document.getElementById('usernameInput').value;
+  const password = document.getElementById('passwordInput').value;
+  
+  console.log('[AUTH] Attempting login for:', username);
+  
+  try {
+    const data = await DB.login(username, password);
+    currentUser = { username, ...data.user };
+    
+    console.log('[AUTH] Login successful');
+    await updateHeaderForUser();
+    showPage('dashboard');
+    await loadDashboard();
+  } catch (error) {
+    console.error('[AUTH] Login failed:', error);
+    alert('Invalid credentials or server error. Please try again.');
+  }
+  
+  return false;
+}
 
 async function updateHeaderForUser(){
   const h=document.getElementById('headerActions');
@@ -830,16 +1088,19 @@ async function updateHeaderForUser(){
   if(currentUser){
     const roleMenu=currentUser.role==='Admin'?'<div class="dropdown-item" onclick="showPage(\'admin\')">Admin Panel</div>':currentUser.role==='Supervisor'?'<div class="dropdown-item" onclick="showPage(\'supervisor\')">Supervisor Panel</div>':'';
     
-    // Load officer data from localStorage for photo
+    // Load officer data from cache
     let badgeContent = currentUser.callsign?.substring(0,3) || '--';
     let badgeStyle = '';
     
-    const officers = DB.getOfficers();
-    const officer = officers[currentUser.username];
-    
-    if (officer && officer.photo) {
-      badgeStyle = `background-image:url(${officer.photo});background-size:cover;background-position:center;`;
-      badgeContent = '';
+    try {
+      const officer = await DB.getOfficer(currentUser.username);
+      
+      if (officer && officer.photo) {
+        badgeStyle = `background-image:url(${officer.photo});background-size:cover;background-position:center;`;
+        badgeContent = '';
+      }
+    } catch (error) {
+      console.error('[HEADER] Error loading officer photo:', error);
     }
     
     h.innerHTML=`<button class="btn btn-outline">Transform</button><a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-primary">Join CPD</a><div class="user-menu"><div class="user-btn" onclick="toggleUserMenu()"><div class="user-badge" style="${badgeStyle}">${badgeContent}</div><div class="user-info"><div class="user-name">${currentUser.name}</div><div class="user-rank">${currentUser.rank}</div></div></div><div class="user-dropdown" id="userDropdown"><div class="dropdown-item" onclick="showPage('dashboard')">Dashboard</div>${roleMenu}<div class="dropdown-item" onclick="window.location.href='mdt.html'">MDT System</div><div class="dropdown-item" onclick="logout()">Logout</div></div></div><button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>`
@@ -854,84 +1115,96 @@ function logout(){currentUser=null;localStorage.removeItem('currentUser');update
 async function loadDashboard(){
   if(!currentUser) return;
   
-  const officers = DB.getOfficers();
-  const officer = officers[currentUser.username] || currentUser;
+  console.log('[DASHBOARD] Loading dashboard for:', currentUser.username);
   
-  // Load banner if exists
-  const header = document.getElementById('dashboardHeader');
-  if (officer.banner) {
-    header.style.backgroundImage = `url(${officer.banner})`;
-    header.style.backgroundSize = 'cover';
-    header.style.backgroundPosition = 'center';
+  try {
+    // Fetch fresh data from API
+    const officer = await DB.getOfficer(currentUser.username);
+    
+    if (!officer) {
+      console.error('[DASHBOARD] Officer not found');
+      return;
+    }
+    
+    // Load banner if exists
+    const header = document.getElementById('dashboardHeader');
+    if (officer.banner) {
+      header.style.backgroundImage = `url(${officer.banner})`;
+      header.style.backgroundSize = 'cover';
+      header.style.backgroundPosition = 'center';
+    }
+    
+    // Handle photo
+    if (officer.photo) {
+      document.getElementById('dashPhoto').src = officer.photo;
+      document.getElementById('dashPhoto').style.display = 'block';
+      document.getElementById('dashBadge').style.display = 'none';
+    } else {
+      document.getElementById('dashBadge').textContent = officer.callsign?.substring(0,4) || '--';
+      document.getElementById('dashBadge').style.display = 'flex';
+      document.getElementById('dashPhoto').style.display = 'none';
+    }
+    
+    document.getElementById('dashName').textContent = officer.name || currentUser.name;
+    document.getElementById('dashRank').textContent = officer.rank || currentUser.rank;
+    document.getElementById('dashCallsign').textContent = officer.callsign || currentUser.callsign || 'Not Assigned';
+    
+    // AUTO-CALCULATE Days of Service
+    if (officer.createdAt) {
+      const created = new Date(officer.createdAt);
+      const now = new Date();
+      const days = Math.floor((now - created) / (1000 * 60 * 60 * 24));
+      document.getElementById('dashDays').textContent = days;
+    } else {
+      document.getElementById('dashDays').textContent = 0;
+    }
+    
+    // Show bio
+    document.getElementById('dashBio').textContent = officer.bio || 'No bio provided';
+    
+    // Load certifications
+    const certsContainer = document.getElementById('dashCertsContainer');
+    const certs = officer.certifications || [];
+    if (certs.length === 0) {
+      certsContainer.innerHTML = '<div class="empty-state" style="padding:2rem;color:#94a3b8;text-align:center">None listed</div>';
+    } else {
+      const canRemove = currentUser.role === 'Admin' || currentUser.role === 'Supervisor';
+      certsContainer.innerHTML = certs.map((cert, index) => 
+        `<div class="list-item" style="padding:.75rem 1rem;background:#f8fafc;border-left:3px solid #0ea5e9;border-radius:4px;margin-bottom:.5rem;display:flex;justify-content:space-between;align-items:center">
+          <span>${cert}</span>
+          ${canRemove ? `<button class="btn btn-sm btn-danger" onclick="removeDashItem('cert', ${index})" style="opacity:0.7;padding:.25rem .5rem;font-size:.75rem">Remove</button>` : ''}
+        </div>`
+      ).join('');
+    }
+    
+    // Load commendations
+    const commendsContainer = document.getElementById('dashCommendsContainer');
+    const commends = officer.commendations || [];
+    if (commends.length === 0) {
+      commendsContainer.innerHTML = '<div class="empty-state" style="padding:2rem;color:#94a3b8;text-align:center">None listed</div>';
+    } else {
+      const canRemove = currentUser.role === 'Admin' || currentUser.role === 'Supervisor';
+      commendsContainer.innerHTML = commends.map((com, index) => 
+        `<div class="list-item" style="padding:.75rem 1rem;background:#fffbeb;border-left:3px solid#f59e0b;border-radius:4px;margin-bottom:.5rem;display:flex;justify-content:space-between;align-items:center">
+          <span>${com}</span>
+          ${canRemove ? `<button class="btn btn-sm btn-danger" onclick="removeDashItem('commend', ${index})" style="opacity:0.7;padding:.25rem .5rem;font-size:.75rem">Remove</button>` : ''}
+        </div>`
+      ).join('');
+    }
+    
+    // Show supervisor buttons
+    if (currentUser.role === 'Admin' || currentUser.role === 'Supervisor') {
+      document.getElementById('dashAddCertBtn').style.display = 'inline-block';
+      document.getElementById('dashAddCommendBtn').style.display = 'inline-block';
+    }
+    
+    loadDashReports();
+    loadDashUpdates();
+    loadDashInfractions(officer);
+  } catch (error) {
+    console.error('[DASHBOARD] Load error:', error);
+    alert('Error loading dashboard. Please refresh the page.');
   }
-  
-  // Handle photo
-  if (officer.photo) {
-    document.getElementById('dashPhoto').src = officer.photo;
-    document.getElementById('dashPhoto').style.display = 'block';
-    document.getElementById('dashBadge').style.display = 'none';
-  } else {
-    document.getElementById('dashBadge').textContent = currentUser.callsign?.substring(0,4) || '--';
-    document.getElementById('dashBadge').style.display = 'flex';
-    document.getElementById('dashPhoto').style.display = 'none';
-  }
-  
-  document.getElementById('dashName').textContent = officer.name || currentUser.name;
-  document.getElementById('dashRank').textContent = officer.rank || currentUser.rank;
-  document.getElementById('dashCallsign').textContent = officer.callsign || currentUser.callsign || 'Not Assigned';
-  
-  // AUTO-CALCULATE Days of Service
-  if (officer.createdAt) {
-    const created = new Date(officer.createdAt);
-    const now = new Date();
-    const days = Math.floor((now - created) / (1000 * 60 * 60 * 24));
-    document.getElementById('dashDays').textContent = days;
-  } else {
-    document.getElementById('dashDays').textContent = 0;
-  }
-  
-  // Show bio
-  document.getElementById('dashBio').textContent = officer.bio || 'No bio provided';
-  
-  // Load certifications
-  const certsContainer = document.getElementById('dashCertsContainer');
-  const certs = officer.certifications || [];
-  if (certs.length === 0) {
-    certsContainer.innerHTML = '<div class="empty-state" style="padding:2rem;color:#94a3b8;text-align:center">None listed</div>';
-  } else {
-    const canRemove = currentUser.role === 'Admin' || currentUser.role === 'Supervisor';
-    certsContainer.innerHTML = certs.map((cert, index) => 
-      `<div class="list-item" style="padding:.75rem 1rem;background:#f8fafc;border-left:3px solid #0ea5e9;border-radius:4px;margin-bottom:.5rem;display:flex;justify-content:space-between;align-items:center">
-        <span>${cert}</span>
-        ${canRemove ? `<button class="btn btn-sm btn-danger" onclick="removeDashItem('cert', ${index})" style="opacity:0.7;padding:.25rem .5rem;font-size:.75rem">Remove</button>` : ''}
-      </div>`
-    ).join('');
-  }
-  
-  // Load commendations
-  const commendsContainer = document.getElementById('dashCommendsContainer');
-  const commends = officer.commendations || [];
-  if (commends.length === 0) {
-    commendsContainer.innerHTML = '<div class="empty-state" style="padding:2rem;color:#94a3b8;text-align:center">None listed</div>';
-  } else {
-    const canRemove = currentUser.role === 'Admin' || currentUser.role === 'Supervisor';
-    commendsContainer.innerHTML = commends.map((com, index) => 
-      `<div class="list-item" style="padding:.75rem 1rem;background:#fffbeb;border-left:3px solid#f59e0b;border-radius:4px;margin-bottom:.5rem;display:flex;justify-content:space-between;align-items:center">
-        <span>${com}</span>
-        ${canRemove ? `<button class="btn btn-sm btn-danger" onclick="removeDashItem('commend', ${index})" style="opacity:0.7;padding:.25rem .5rem;font-size:.75rem">Remove</button>` : ''}
-      </div>`
-    ).join('');
-  }
-  
-  // Show supervisor buttons
-  if (currentUser.role === 'Admin' || currentUser.role === 'Supervisor') {
-    document.getElementById('dashAddCertBtn').style.display = 'inline-block';
-    document.getElementById('dashAddCommendBtn').style.display = 'inline-block';
-  }
-  
-  loadDashReports();
-  loadDashUpdates();
-  loadDashInfractions();
 }
 
 async function loadDashReports(){
@@ -985,90 +1258,110 @@ async function loadDashUpdates(){
   }
 }
 
-function loadDashInfractions(){const officers=DB.getOfficers();const officer=officers[currentUser.username];const inf=officer?.infractions||[];const c=document.getElementById('dashInfractionsList');c.innerHTML=inf.length?inf.map(i=>`<div class="infraction-item"><div class="infraction-header"><span class="infraction-reason">${i.reason}</span><span class="infraction-date">${i.date}</span></div><div class="infraction-details">${i.notes||'No additional notes'}</div><div class="infraction-issuer">Issued by: ${i.issuedBy}</div></div>`).join(''):'<div class="empty-state" style="color:#059669">No infractions on record</div>'}
+function loadDashInfractions(officer){
+  const inf=officer?.infractions||[];
+  const c=document.getElementById('dashInfractionsList');
+  c.innerHTML=inf.length?inf.map(i=>`<div class="infraction-item"><div class="infraction-header"><span class="infraction-reason">${i.reason}</span><span class="infraction-date">${i.date}</span></div><div class="infraction-details">${i.notes||'No additional notes'}</div><div class="infraction-issuer">Issued by: ${i.issuedBy}</div></div>`).join(''):'<div class="empty-state" style="color:#059669">No infractions on record</div>'
+}
 
 // Dashboard photo upload
-function uploadDashPhoto() {
+async function uploadDashPhoto() {
   const file = document.getElementById('dashPhotoInput').files[0];
   if (!file) return;
   
   console.log('[DASHBOARD] Uploading photo');
   
   const reader = new FileReader();
-  reader.onload = function(e) {
+  reader.onload = async function(e) {
     const photoData = e.target.result;
     
-    const officers = DB.getOfficers();
-    if (!officers[currentUser.username]) {
-      officers[currentUser.username] = {...currentUser};
+    try {
+      await DB.uploadPhoto(currentUser.username, photoData);
+      
+      document.getElementById('dashPhoto').src = photoData;
+      document.getElementById('dashPhoto').style.display = 'block';
+      document.getElementById('dashBadge').style.display = 'none';
+      
+      // Update header too
+      await updateHeaderForUser();
+      
+      console.log('[DASHBOARD] Photo uploaded successfully');
+      alert('Photo updated successfully');
+    } catch (error) {
+      console.error('[DASHBOARD] Photo upload failed:', error);
+      alert('Photo upload failed. Changes saved locally.');
+      
+      // Still update UI
+      document.getElementById('dashPhoto').src = photoData;
+      document.getElementById('dashPhoto').style.display = 'block';
+      document.getElementById('dashBadge').style.display = 'none';
+      await updateHeaderForUser();
     }
-    officers[currentUser.username].photo = photoData;
-    DB.saveOfficers(officers);
-    
-    document.getElementById('dashPhoto').src = photoData;
-    document.getElementById('dashPhoto').style.display = 'block';
-    document.getElementById('dashBadge').style.display = 'none';
-    
-    // Update header too
-    updateHeaderForUser();
-    
-    console.log('[DASHBOARD] Photo uploaded successfully');
-    alert('Photo updated successfully');
   };
   reader.readAsDataURL(file);
 }
 
 // Banner upload
-function uploadBanner() {
+async function uploadBanner() {
   const file = document.getElementById('bannerInput').files[0];
   if (!file) return;
   
   console.log('[DASHBOARD] Uploading banner');
   
   const reader = new FileReader();
-  reader.onload = function(e) {
+  reader.onload = async function(e) {
     const bannerData = e.target.result;
     
-    const officers = DB.getOfficers();
-    if (!officers[currentUser.username]) {
-      officers[currentUser.username] = {...currentUser};
+    try {
+      await DB.uploadBanner(currentUser.username, bannerData);
+      
+      const header = document.getElementById('dashboardHeader');
+      header.style.backgroundImage = `url(${bannerData})`;
+      header.style.backgroundSize = 'cover';
+      header.style.backgroundPosition = 'center';
+      
+      console.log('[DASHBOARD] Banner uploaded successfully');
+      alert('Banner updated successfully');
+    } catch (error) {
+      console.error('[DASHBOARD] Banner upload failed:', error);
+      alert('Banner upload failed. Changes saved locally.');
+      
+      // Still update UI
+      const header = document.getElementById('dashboardHeader');
+      header.style.backgroundImage = `url(${bannerData})`;
+      header.style.backgroundSize = 'cover';
+      header.style.backgroundPosition = 'center';
     }
-    officers[currentUser.username].banner = bannerData;
-    DB.saveOfficers(officers);
-    
-    const header = document.getElementById('dashboardHeader');
-    header.style.backgroundImage = `url(${bannerData})`;
-    header.style.backgroundSize = 'cover';
-    header.style.backgroundPosition = 'center';
-    
-    console.log('[DASHBOARD] Banner uploaded successfully');
-    alert('Banner updated successfully');
   };
   reader.readAsDataURL(file);
 }
 
 // Open dashboard edit modal
-function openDashEditModal() {
-  const officers = DB.getOfficers();
-  const officer = officers[currentUser.username] || currentUser;
-  
-  document.getElementById('dashEditBio').value = officer.bio || '';
-  document.getElementById('dashEditEmail').value = officer.email || '';
-  document.getElementById('dashEditPhone').value = officer.phone || '';
-  
-  // Show department field only for admins
-  if (currentUser.role === 'Admin') {
-    document.getElementById('dashEditDeptGroup').style.display = 'block';
-    document.getElementById('dashEditDept').value = officer.department || officer.dept || 'Patrol';
-  } else {
-    document.getElementById('dashEditDeptGroup').style.display = 'none';
+async function openDashEditModal() {
+  try {
+    const officer = await DB.getOfficer(currentUser.username);
+    
+    document.getElementById('dashEditBio').value = officer.bio || '';
+    document.getElementById('dashEditEmail').value = officer.email || '';
+    document.getElementById('dashEditPhone').value = officer.phone || '';
+    
+    // Show department field only for admins
+    if (currentUser.role === 'Admin') {
+      document.getElementById('dashEditDeptGroup').style.display = 'block';
+      document.getElementById('dashEditDept').value = officer.department || officer.dept || 'Patrol';
+    } else {
+      document.getElementById('dashEditDeptGroup').style.display = 'none';
+    }
+    
+    openModal('dashEditModal');
+  } catch (error) {
+    console.error('[DASHBOARD] Error opening edit modal:', error);
+    alert('Error loading profile data');
   }
-  
-  openModal('dashEditModal');
 }
 
 // Save dashboard profile
-function saveDashProfile(e) {
+async function saveDashProfile(e) {
   e.preventDefault();
   console.log('[DASHBOARD] Saving profile');
   
@@ -1083,20 +1376,19 @@ function saveDashProfile(e) {
     profileData.department = document.getElementById('dashEditDept').value;
   }
   
-  const officers = DB.getOfficers();
-  if (!officers[currentUser.username]) {
-    officers[currentUser.username] = {...currentUser};
+  try {
+    await DB.updateOfficer(currentUser.username, profileData);
+    
+    console.log('[DASHBOARD] Profile saved successfully');
+    closeModal('dashEditModal');
+    alert('Profile updated successfully');
+    await loadDashboard();
+  } catch (error) {
+    console.error('[DASHBOARD] Profile save error:', error);
+    alert('Error saving profile. Changes may be saved locally.');
+    closeModal('dashEditModal');
+    await loadDashboard();
   }
-  officers[currentUser.username] = {
-    ...officers[currentUser.username],
-    ...profileData
-  };
-  DB.saveOfficers(officers);
-  
-  console.log('[DASHBOARD] Profile saved successfully');
-  closeModal('dashEditModal');
-  alert('Profile updated successfully');
-  loadDashboard();
   
   return false;
 }
@@ -1121,44 +1413,45 @@ function openAddItemModal(type) {
 }
 
 // Add item to dashboard
-function addDashItem(e) {
+async function addDashItem(e) {
   e.preventDefault();
   
   const value = document.getElementById('addItemInput').value.trim();
   if (!value) return;
   
-  const officers = DB.getOfficers();
-  if (!officers[currentUser.username]) {
-    officers[currentUser.username] = {...currentUser};
+  try {
+    if (currentDashItemType === 'cert') {
+      await DB.addCertification(currentUser.username, value);
+    } else {
+      await DB.addCommendation(currentUser.username, value);
+    }
+    
+    closeModal('addItemModal');
+    alert(currentDashItemType === 'cert' ? 'Certification added' : 'Commendation added');
+    await loadDashboard();
+  } catch (error) {
+    console.error('[DASHBOARD] Add item error:', error);
+    alert('Error adding item. Please try again.');
   }
-  
-  const fieldName = currentDashItemType === 'cert' ? 'certifications' : 'commendations';
-  
-  if (!officers[currentUser.username][fieldName]) {
-    officers[currentUser.username][fieldName] = [];
-  }
-  
-  officers[currentUser.username][fieldName].push(value);
-  DB.saveOfficers(officers);
-  
-  closeModal('addItemModal');
-  alert(currentDashItemType === 'cert' ? 'Certification added' : 'Commendation added');
-  loadDashboard();
   
   return false;
 }
 
 // Remove item from dashboard
-function removeDashItem(type, index) {
+async function removeDashItem(type, index) {
   if (!confirm('Are you sure you want to remove this item?')) return;
   
-  const officers = DB.getOfficers();
-  const fieldName = type === 'cert' ? 'certifications' : 'commendations';
-  
-  if (officers[currentUser.username] && officers[currentUser.username][fieldName]) {
-    officers[currentUser.username][fieldName].splice(index, 1);
-    DB.saveOfficers(officers);
-    loadDashboard();
+  try {
+    if (type === 'cert') {
+      await DB.removeCertification(currentUser.username, index);
+    } else {
+      await DB.removeCommendation(currentUser.username, index);
+    }
+    
+    await loadDashboard();
+  } catch (error) {
+    console.error('[DASHBOARD] Remove item error:', error);
+    alert('Error removing item. Please try again.');
   }
 }
 
@@ -1684,35 +1977,27 @@ document.addEventListener('DOMContentLoaded', () => {
   }, 1500);
 });
 
-window.addEventListener('load', () => {
+window.addEventListener('load', async () => {
   // Remove loading screen after 1 second
   setTimeout(() => {
     document.body.classList.remove('loading');
     document.getElementById('loadingScreen')?.classList.add('hidden');
   }, 1000);
   
-  // Check if user is logged in (don't wait for async)
-  const saved = localStorage.currentUser;
-  if (saved) {
+  // Check if user is logged in from cache
+  const saved = localStorage.getItem('currentUser');
+  const token = localStorage.getItem('authToken');
+  
+  if (saved && token) {
     currentUser = JSON.parse(saved);
-    // Call async function but don't wait
-    updateHeaderForUser().catch(err => {
-      console.error('Error updating header:', err);
-      // Fallback to basic display with photo check
-      const h = document.getElementById('headerActions');
-      const roleMenu = currentUser.role === 'Admin' ? '<div class="dropdown-item" onclick="showPage(\'admin\')">Admin Panel</div>' : currentUser.role === 'Supervisor' ? '<div class="dropdown-item" onclick="showPage(\'supervisor\')">Supervisor Panel</div>' : '';
-      
-      const officers = DB.getOfficers();
-      const officer = officers[currentUser.username];
-      let badgeContent = currentUser.callsign?.substring(0, 3) || '--';
-      let badgeStyle = '';
-      if (officer && officer.photo) {
-        badgeStyle = `background-image:url(${officer.photo});background-size:cover;background-position:center;`;
-        badgeContent = '';
-      }
-      
-      h.innerHTML = `<button class="btn btn-outline">Transform</button><a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-primary">Join CPD</a><div class="user-menu"><div class="user-btn" onclick="toggleUserMenu()"><div class="user-badge" style="${badgeStyle}">${badgeContent}</div><div class="user-info"><div class="user-name">${currentUser.name}</div><div class="user-rank">${currentUser.rank}</div></div></div><div class="user-dropdown" id="userDropdown"><div class="dropdown-item" onclick="showPage('dashboard')">Dashboard</div>${roleMenu}<div class="dropdown-item" onclick="window.location.href='mdt.html'">MDT System</div><div class="dropdown-item" onclick="logout()">Logout</div></div></div><button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>`;
-    });
+    console.log('[INIT] Restoring session for:', currentUser.username);
+    
+    // Update header
+    try {
+      await updateHeaderForUser();
+    } catch (error) {
+      console.error('[INIT] Error updating header:', error);
+    }
   }
 });
 
