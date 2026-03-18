@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- CACHE BUSTER v20250318-1 FRESH VERSION -->
+<!-- ⚡ VERSION: 2025-03-18-FINAL-NO-ASYNC ⚡ -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -869,16 +869,18 @@ const DB = {
   }
 };
 
+console.log('%c🚨 CPD WEBSITE VERSION: 2025-03-18-FINAL-NO-ASYNC 🚨', 'background: #1e3a8a; color: #fff; font-size: 20px; padding: 10px; font-weight: bold;');
 console.log('[DB] Database object loaded:', typeof DB, typeof DB.getOfficers);
 
 let currentUser=null;
 
-async function handleLogin(e) {
+function handleLogin(e) {
   e.preventDefault();
   const username = document.getElementById('usernameInput').value;
   const password = document.getElementById('passwordInput').value;
   
   console.log('[AUTH] Attempting login for:', username);
+  console.log('[AUTH] VERSION: 2025-03-18-FINAL');
   
   // Initialize officers in localStorage if not exists
   if (!localStorage.getItem('officers')) {
@@ -926,9 +928,9 @@ async function handleLogin(e) {
     localStorage.setItem('currentUser', JSON.stringify(currentUser));
     
     console.log('[AUTH] Login successful');
-    await updateHeaderForUser();
+    updateHeaderForUser();
     showPage('dashboard');
-    await loadDashboard();
+    loadDashboard();
   } else {
     alert('Invalid credentials');
   }
@@ -936,7 +938,7 @@ async function handleLogin(e) {
   return false;
 }
 
-async function updateHeaderForUser(){
+function updateHeaderForUser(){
   const h=document.getElementById('headerActions');
   
   if(currentUser){
@@ -963,74 +965,159 @@ async function updateHeaderForUser(){
 function toggleUserMenu(){document.getElementById('userDropdown')?.classList.toggle('active')}
 function logout(){currentUser=null;localStorage.removeItem('currentUser');updateHeaderForUser();showPage('home')}
 
-async function loadDashboard(){
-  if(!currentUser) return;
+function loadDashboard(){
+  console.log('[DASHBOARD] === Starting loadDashboard ===');
+  console.log('[DASHBOARD] VERSION: 2025-03-18-FINAL');
+  console.log('[DASHBOARD] currentUser:', currentUser);
+  
+  if(!currentUser) {
+    console.error('[DASHBOARD] ERROR: currentUser is null!');
+    alert('Error: Not logged in. Please log in first.');
+    showPage('login');
+    return;
+  }
   
   console.log('[DASHBOARD] Loading dashboard for:', currentUser.username);
   
   try {
-    // Fetch fresh data from API
-    const officer = await DB.getOfficer(currentUser.username);
+    // Get officer data from localStorage
+    console.log('[DASHBOARD] Step 1: Getting officers...');
+    const officers = DB.getOfficers();
+    console.log('[DASHBOARD] Officers found:', Object.keys(officers));
     
-    if (!officer) {
-      console.error('[DASHBOARD] Officer not found');
-      return;
-    }
+    const officer = officers[currentUser.username] || currentUser;
+    console.log('[DASHBOARD] Current officer:', officer);
     
     // Load banner if exists
-    const header = document.getElementById('dashboardHeader');
-    if (officer.banner) {
-      header.style.backgroundImage = `url(${officer.banner})`;
-      header.style.backgroundSize = 'cover';
-      header.style.backgroundPosition = 'center';
-    }
+    console.log('[DASHBOARD] Step 2: Loading banner...');
+    try {
+      const header = document.getElementById('dashboardHeader');
+      if (header && officer.banner) {
+        header.style.backgroundImage = `url(${officer.banner})`;
+        header.style.backgroundSize = 'cover';
+        header.style.backgroundPosition = 'center';
+      }
+    } catch(e) { console.error('[DASHBOARD] Banner error:', e); }
     
     // Handle photo
-    if (officer.photo) {
-      document.getElementById('dashPhoto').src = officer.photo;
-      document.getElementById('dashPhoto').style.display = 'block';
-      document.getElementById('dashBadge').style.display = 'none';
-    } else {
-      document.getElementById('dashBadge').textContent = officer.callsign?.substring(0,4) || '--';
-      document.getElementById('dashBadge').style.display = 'flex';
-      document.getElementById('dashPhoto').style.display = 'none';
-    }
+    console.log('[DASHBOARD] Step 3: Loading photo...');
+    try {
+      const dashPhoto = document.getElementById('dashPhoto');
+      const dashBadge = document.getElementById('dashBadge');
+      
+      if (dashPhoto && dashBadge) {
+        if (officer.photo) {
+          dashPhoto.src = officer.photo;
+          dashPhoto.style.display = 'block';
+          dashBadge.style.display = 'none';
+        } else {
+          dashBadge.textContent = officer.callsign?.substring(0,4) || '--';
+          dashBadge.style.display = 'flex';
+          dashPhoto.style.display = 'none';
+        }
+      }
+    } catch(e) { console.error('[DASHBOARD] Photo error:', e); }
     
-    document.getElementById('dashName').textContent = officer.name || currentUser.name;
-    document.getElementById('dashRank').textContent = officer.rank || currentUser.rank;
-    document.getElementById('dashCallsign').textContent = officer.callsign || currentUser.callsign || 'Not Assigned';
-    
-    // AUTO-CALCULATE Days of Service
-    if (officer.createdAt) {
-      const created = new Date(officer.createdAt);
-      const now = new Date();
-      const days = Math.floor((now - created) / (1000 * 60 * 60 * 24));
-      document.getElementById('dashDays').textContent = days;
-    } else {
-      document.getElementById('dashDays').textContent = 0;
-    }
-    
-    // Show bio
-    document.getElementById('dashBio').textContent = officer.bio || 'No bio provided';
+    // Update officer info
+    console.log('[DASHBOARD] Step 4: Updating officer info...');
+    try {
+      const dashName = document.getElementById('dashName');
+      const dashRank = document.getElementById('dashRank');
+      const dashCallsign = document.getElementById('dashCallsign');
+      const dashDays = document.getElementById('dashDays');
+      const dashBio = document.getElementById('dashBio');
+      
+      if (dashName) dashName.textContent = officer.name || currentUser.name;
+      if (dashRank) dashRank.textContent = officer.rank || currentUser.rank;
+      if (dashCallsign) dashCallsign.textContent = officer.callsign || currentUser.callsign || 'Not Assigned';
+      
+      // AUTO-CALCULATE Days of Service
+      if (dashDays) {
+        if (officer.createdAt) {
+          const created = new Date(officer.createdAt);
+          const now = new Date();
+          const days = Math.floor((now - created) / (1000 * 60 * 60 * 24));
+          dashDays.textContent = days;
+        } else {
+          dashDays.textContent = 0;
+        }
+      }
+      
+      // Show bio
+      if (dashBio) {
+        dashBio.textContent = officer.bio || 'No bio provided';
+      }
+    } catch(e) { console.error('[DASHBOARD] Info update error:', e); }
     
     // Load certifications
-    const certsContainer = document.getElementById('dashCertsContainer');
-    const certs = officer.certifications || [];
-    if (certs.length === 0) {
-      certsContainer.innerHTML = '<div class="empty-state" style="padding:2rem;color:#94a3b8;text-align:center">None listed</div>';
-    } else {
-      const canRemove = currentUser.role === 'Admin' || currentUser.role === 'Supervisor';
-      certsContainer.innerHTML = certs.map((cert, index) => 
-        `<div class="list-item" style="padding:.75rem 1rem;background:#f8fafc;border-left:3px solid #0ea5e9;border-radius:4px;margin-bottom:.5rem;display:flex;justify-content:space-between;align-items:center">
-          <span>${cert}</span>
-          ${canRemove ? `<button class="btn btn-sm btn-danger" onclick="removeDashItem('cert', ${index})" style="opacity:0.7;padding:.25rem .5rem;font-size:.75rem">Remove</button>` : ''}
-        </div>`
-      ).join('');
-    }
+    console.log('[DASHBOARD] Step 5: Loading certifications...');
+    try {
+      const certsContainer = document.getElementById('dashCertsContainer');
+      if (certsContainer) {
+        const certs = officer.certifications || [];
+        if (certs.length === 0) {
+          certsContainer.innerHTML = '<div class="empty-state" style="padding:2rem;color:#94a3b8;text-align:center">None listed</div>';
+        } else {
+          const canRemove = currentUser.role === 'Admin' || currentUser.role === 'Supervisor';
+          certsContainer.innerHTML = certs.map((cert, index) => 
+            `<div class="list-item" style="padding:.75rem 1rem;background:#f8fafc;border-left:3px solid #0ea5e9;border-radius:4px;margin-bottom:.5rem;display:flex;justify-content:space-between;align-items:center">
+              <span>${cert}</span>
+              ${canRemove ? `<button class="btn btn-sm btn-danger" onclick="removeDashItem('cert', ${index})" style="opacity:0.7;padding:.25rem .5rem;font-size:.75rem">Remove</button>` : ''}
+            </div>`
+          ).join('');
+        }
+      }
+    } catch(e) { console.error('[DASHBOARD] Certifications error:', e); }
     
     // Load commendations
-    const commendsContainer = document.getElementById('dashCommendsContainer');
-    const commends = officer.commendations || [];
+    console.log('[DASHBOARD] Step 6: Loading commendations...');
+    try {
+      const commendsContainer = document.getElementById('dashCommendsContainer');
+      if (commendsContainer) {
+        const commends = officer.commendations || [];
+        if (commends.length === 0) {
+          commendsContainer.innerHTML = '<div class="empty-state" style="padding:2rem;color:#94a3b8;text-align:center">None listed</div>';
+        } else {
+          const canRemove = currentUser.role === 'Admin' || currentUser.role === 'Supervisor';
+          commendsContainer.innerHTML = commends.map((com, index) => 
+            `<div class="list-item" style="padding:.75rem 1rem;background:#fffbeb;border-left:3px solid#f59e0b;border-radius:4px;margin-bottom:.5rem;display:flex;justify-content:space-between;align-items:center">
+              <span>${com}</span>
+              ${canRemove ? `<button class="btn btn-sm btn-danger" onclick="removeDashItem('commend', ${index})" style="opacity:0.7;padding:.25rem .5rem;font-size:.75rem">Remove</button>` : ''}
+            </div>`
+          ).join('');
+        }
+      }
+    } catch(e) { console.error('[DASHBOARD] Commendations error:', e); }
+    
+    // Show supervisor buttons
+    console.log('[DASHBOARD] Step 7: Setting supervisor buttons...');
+    try {
+      const dashAddCertBtn = document.getElementById('dashAddCertBtn');
+      const dashAddCommendBtn = document.getElementById('dashAddCommendBtn');
+      
+      if (currentUser.role === 'Admin' || currentUser.role === 'Supervisor') {
+        if (dashAddCertBtn) dashAddCertBtn.style.display = 'inline-block';
+        if (dashAddCommendBtn) dashAddCommendBtn.style.display = 'inline-block';
+      }
+    } catch(e) { console.error('[DASHBOARD] Supervisor buttons error:', e); }
+    
+    // Load other sections
+    console.log('[DASHBOARD] Step 8: Loading other sections...');
+    try {
+      loadDashReports();
+      loadDashUpdates();
+      loadDashInfractions();
+    } catch(e) { console.error('[DASHBOARD] Other sections error:', e); }
+    
+    console.log('[DASHBOARD] === Dashboard loaded successfully ===');
+  } catch (error) {
+    console.error('[DASHBOARD] === FATAL ERROR ===');
+    console.error('[DASHBOARD] Error:', error);
+    console.error('[DASHBOARD] Stack:', error.stack);
+    console.error('[DASHBOARD] Message:', error.message);
+    alert('Error loading dashboard: ' + error.message + '\n\nCheck console for details (Press F12)');
+  }
+}
     if (commends.length === 0) {
       commendsContainer.innerHTML = '<div class="empty-state" style="padding:2rem;color:#94a3b8;text-align:center">None listed</div>';
     } else {
@@ -1058,118 +1145,99 @@ async function loadDashboard(){
   }
 }
 
-async function loadDashReports(){
+function loadDashReports(){
   try {
-    const token = localStorage.getItem('authToken');
-    if (!token) return;
-    
-    const response = await fetch(`${API_BASE_URL}/api/reports/officer/${currentUser.username}`, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-    const reports = await response.json();
-    
     const c = document.getElementById('dashReportsList');
-    c.innerHTML = reports.length ? reports.slice(0, 5).map(r => `
-      <div class="report-item">
-        <div class="report-header">
-          <span class="report-id">#${r.id}</span>
-          <span class="status-badge status-${r.status}">${r.status}</span>
-        </div>
-        <div class="report-date">${r.date}</div>
-        <div class="report-type">${r.type}</div>
-      </div>
-    `).join('') : '<div class="empty-state">No reports filed</div>';
+    if (!c) return;
+    c.innerHTML = '<div class="empty-state">No reports filed</div>';
   } catch (error) {
-    console.error('Error loading reports:', error);
-    document.getElementById('dashReportsList').innerHTML = '<div class="empty-state">Error loading reports</div>';
+    console.error('[DASHBOARD] Error loading reports:', error);
   }
 }
 
-async function loadDashUpdates(){
+function loadDashUpdates(){
   try {
-    const token = localStorage.getItem('authToken');
-    if (!token) return;
-    
-    const response = await fetch(`${API_BASE_URL}/api/updates`, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-    const updates = await response.json();
-    
     const c = document.getElementById('dashUpdatesList');
-    c.innerHTML = updates.length ? updates.slice(0, 3).map(u => `
-      <div class="update-item">
-        <strong>${u.title}</strong><br>
-        <small>${u.date}</small>
-        <p>${u.content}</p>
-      </div>
-    `).join('') : '<div class="empty-state">No updates</div>';
+    if (!c) return;
+    c.innerHTML = '<div class="empty-state">No updates</div>';
   } catch (error) {
-    console.error('Error loading updates:', error);
-    document.getElementById('dashUpdatesList').innerHTML = '<div class="empty-state">No updates</div>';
+    console.error('[DASHBOARD] Error loading updates:', error);
   }
 }
 
-function loadDashInfractions(officer){
-  const inf=officer?.infractions||[];
-  const c=document.getElementById('dashInfractionsList');
-  c.innerHTML=inf.length?inf.map(i=>`<div class="infraction-item"><div class="infraction-header"><span class="infraction-reason">${i.reason}</span><span class="infraction-date">${i.date}</span></div><div class="infraction-details">${i.notes||'No additional notes'}</div><div class="infraction-issuer">Issued by: ${i.issuedBy}</div></div>`).join(''):'<div class="empty-state" style="color:#059669">No infractions on record</div>'
+function loadDashInfractions(){
+  try {
+    const officers = DB.getOfficers();
+    const officer = officers[currentUser.username] || currentUser;
+    const inf = officer?.infractions || [];
+    const c = document.getElementById('dashInfractionsList');
+    if (!c) return;
+    c.innerHTML = inf.length ? inf.map(i=>`<div class="infraction-item"><div class="infraction-header"><span class="infraction-reason">${i.reason}</span><span class="infraction-date">${i.date}</span></div><div class="infraction-details">${i.notes||'No additional notes'}</div><div class="infraction-issuer">Issued by: ${i.issuedBy}</div></div>`).join('') : '<div class="empty-state" style="color:#059669">No infractions on record</div>';
+  } catch (error) {
+    console.error('[DASHBOARD] Error loading infractions:', error);
+  }
 }
 
 // Dashboard photo upload
-async function uploadDashPhoto() {
+function uploadDashPhoto() {
   const file = document.getElementById('dashPhotoInput').files[0];
   if (!file) return;
   
   console.log('[DASHBOARD] Uploading photo');
   
   const reader = new FileReader();
-  reader.onload = async function(e) {
+  reader.onload = function(e) {
     const photoData = e.target.result;
     
-    try {
-      await DB.uploadPhoto(currentUser.username, photoData);
-      
-      document.getElementById('dashPhoto').src = photoData;
-      document.getElementById('dashPhoto').style.display = 'block';
-      document.getElementById('dashBadge').style.display = 'none';
-      
-      // Update header too
-      await updateHeaderForUser();
-      
-      console.log('[DASHBOARD] Photo uploaded successfully');
-      alert('Photo updated successfully');
-    } catch (error) {
-      console.error('[DASHBOARD] Photo upload failed:', error);
-      alert('Photo upload failed. Changes saved locally.');
-      
-      // Still update UI
-      document.getElementById('dashPhoto').src = photoData;
-      document.getElementById('dashPhoto').style.display = 'block';
-      document.getElementById('dashBadge').style.display = 'none';
-      await updateHeaderForUser();
+    const officers = DB.getOfficers();
+    if (!officers[currentUser.username]) {
+      officers[currentUser.username] = {...currentUser};
     }
+    officers[currentUser.username].photo = photoData;
+    DB.saveOfficers(officers);
+    
+    document.getElementById('dashPhoto').src = photoData;
+    document.getElementById('dashPhoto').style.display = 'block';
+    document.getElementById('dashBadge').style.display = 'none';
+    
+    updateHeaderForUser();
+    
+    console.log('[DASHBOARD] Photo uploaded successfully');
+    alert('Photo updated successfully');
   };
   reader.readAsDataURL(file);
 }
 
 // Banner upload
-async function uploadBanner() {
+function uploadBanner() {
   const file = document.getElementById('bannerInput').files[0];
   if (!file) return;
   
   console.log('[DASHBOARD] Uploading banner');
   
   const reader = new FileReader();
-  reader.onload = async function(e) {
+  reader.onload = function(e) {
     const bannerData = e.target.result;
     
-    try {
-      await DB.uploadBanner(currentUser.username, bannerData);
-      
-      const header = document.getElementById('dashboardHeader');
+    const officers = DB.getOfficers();
+    if (!officers[currentUser.username]) {
+      officers[currentUser.username] = {...currentUser};
+    }
+    officers[currentUser.username].banner = bannerData;
+    DB.saveOfficers(officers);
+    
+    const header = document.getElementById('dashboardHeader');
+    if (header) {
       header.style.backgroundImage = `url(${bannerData})`;
       header.style.backgroundSize = 'cover';
       header.style.backgroundPosition = 'center';
+    }
+    
+    console.log('[DASHBOARD] Banner uploaded successfully');
+    alert('Banner updated successfully');
+  };
+  reader.readAsDataURL(file);
+}
       
       console.log('[DASHBOARD] Banner uploaded successfully');
       alert('Banner updated successfully');
@@ -1188,31 +1256,27 @@ async function uploadBanner() {
 }
 
 // Open dashboard edit modal
-async function openDashEditModal() {
-  try {
-    const officer = await DB.getOfficer(currentUser.username);
-    
-    document.getElementById('dashEditBio').value = officer.bio || '';
-    document.getElementById('dashEditEmail').value = officer.email || '';
-    document.getElementById('dashEditPhone').value = officer.phone || '';
-    
-    // Show department field only for admins
-    if (currentUser.role === 'Admin') {
-      document.getElementById('dashEditDeptGroup').style.display = 'block';
-      document.getElementById('dashEditDept').value = officer.department || officer.dept || 'Patrol';
-    } else {
-      document.getElementById('dashEditDeptGroup').style.display = 'none';
-    }
-    
-    openModal('dashEditModal');
-  } catch (error) {
-    console.error('[DASHBOARD] Error opening edit modal:', error);
-    alert('Error loading profile data');
+function openDashEditModal() {
+  const officers = DB.getOfficers();
+  const officer = officers[currentUser.username] || currentUser;
+  
+  document.getElementById('dashEditBio').value = officer.bio || '';
+  document.getElementById('dashEditEmail').value = officer.email || '';
+  document.getElementById('dashEditPhone').value = officer.phone || '';
+  
+  // Show department field only for admins
+  if (currentUser.role === 'Admin') {
+    document.getElementById('dashEditDeptGroup').style.display = 'block';
+    document.getElementById('dashEditDept').value = officer.department || officer.dept || 'Patrol';
+  } else {
+    document.getElementById('dashEditDeptGroup').style.display = 'none';
   }
+  
+  openModal('dashEditModal');
 }
 
 // Save dashboard profile
-async function saveDashProfile(e) {
+function saveDashProfile(e) {
   e.preventDefault();
   console.log('[DASHBOARD] Saving profile');
   
@@ -1227,19 +1291,20 @@ async function saveDashProfile(e) {
     profileData.department = document.getElementById('dashEditDept').value;
   }
   
-  try {
-    await DB.updateOfficer(currentUser.username, profileData);
-    
-    console.log('[DASHBOARD] Profile saved successfully');
-    closeModal('dashEditModal');
-    alert('Profile updated successfully');
-    await loadDashboard();
-  } catch (error) {
-    console.error('[DASHBOARD] Profile save error:', error);
-    alert('Error saving profile. Changes may be saved locally.');
-    closeModal('dashEditModal');
-    await loadDashboard();
+  const officers = DB.getOfficers();
+  if (!officers[currentUser.username]) {
+    officers[currentUser.username] = {...currentUser};
   }
+  officers[currentUser.username] = {
+    ...officers[currentUser.username],
+    ...profileData
+  };
+  DB.saveOfficers(officers);
+  
+  console.log('[DASHBOARD] Profile saved successfully');
+  closeModal('dashEditModal');
+  alert('Profile updated successfully');
+  loadDashboard();
   
   return false;
 }
@@ -1264,45 +1329,44 @@ function openAddItemModal(type) {
 }
 
 // Add item to dashboard
-async function addDashItem(e) {
+function addDashItem(e) {
   e.preventDefault();
   
   const value = document.getElementById('addItemInput').value.trim();
   if (!value) return;
   
-  try {
-    if (currentDashItemType === 'cert') {
-      await DB.addCertification(currentUser.username, value);
-    } else {
-      await DB.addCommendation(currentUser.username, value);
-    }
-    
-    closeModal('addItemModal');
-    alert(currentDashItemType === 'cert' ? 'Certification added' : 'Commendation added');
-    await loadDashboard();
-  } catch (error) {
-    console.error('[DASHBOARD] Add item error:', error);
-    alert('Error adding item. Please try again.');
+  const officers = DB.getOfficers();
+  if (!officers[currentUser.username]) {
+    officers[currentUser.username] = {...currentUser};
   }
+  
+  const fieldName = currentDashItemType === 'cert' ? 'certifications' : 'commendations';
+  
+  if (!officers[currentUser.username][fieldName]) {
+    officers[currentUser.username][fieldName] = [];
+  }
+  
+  officers[currentUser.username][fieldName].push(value);
+  DB.saveOfficers(officers);
+  
+  closeModal('addItemModal');
+  alert(currentDashItemType === 'cert' ? 'Certification added' : 'Commendation added');
+  loadDashboard();
   
   return false;
 }
 
 // Remove item from dashboard
-async function removeDashItem(type, index) {
+function removeDashItem(type, index) {
   if (!confirm('Are you sure you want to remove this item?')) return;
   
-  try {
-    if (type === 'cert') {
-      await DB.removeCertification(currentUser.username, index);
-    } else {
-      await DB.removeCommendation(currentUser.username, index);
-    }
-    
-    await loadDashboard();
-  } catch (error) {
-    console.error('[DASHBOARD] Remove item error:', error);
-    alert('Error removing item. Please try again.');
+  const officers = DB.getOfficers();
+  const fieldName = type === 'cert' ? 'certifications' : 'commendations';
+  
+  if (officers[currentUser.username] && officers[currentUser.username][fieldName]) {
+    officers[currentUser.username][fieldName].splice(index, 1);
+    DB.saveOfficers(officers);
+    loadDashboard();
   }
 }
 
