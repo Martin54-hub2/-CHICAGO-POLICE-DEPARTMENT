@@ -111,177 +111,222 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <script>
-// Database
-const NewsDB={
-  init(){
-    if(!localStorage.ccpd_news){
-      localStorage.ccpd_news=JSON.stringify([
-        {
-          id:1,
-          title:'Community Alert – 12 & 18th Districts – Armed Robberies (P26-3-009A)',
-          content:'The Chicago Police Department is alerting residents in the 12th and 18th Districts about a series of armed robberies. Suspects have targeted victims walking alone during evening hours. Officers have increased patrols in affected areas. Residents are urged to remain vigilant, walk in groups when possible, and report suspicious activity immediately.',
-          image:'',
-          date:'March 17, 2026',
-          author:'CPD Communications'
-        }
-      ]);
-    }
-  },
-  getPosts(){return JSON.parse(localStorage.ccpd_news||'[]')},
-  savePosts(posts){localStorage.ccpd_news=JSON.stringify(posts)}
-};
-NewsDB.init();
+// Backend API URL
+const API_URL = 'https://chicago-police-department-production.up.railway.app/api';
+
+// Get auth token
+function getAuthToken() {
+  return localStorage.getItem('authToken');
+}
 
 // Check if user is admin
-let isAdmin=false;
-const savedUser=localStorage.currentUser;
-if(savedUser){
-  const user=JSON.parse(savedUser);
-  isAdmin=user.role==='Admin';
-  if(isAdmin){
-    document.getElementById('adminSection').style.display='block';
+let isAdmin = false;
+const savedUser = localStorage.currentUser;
+if (savedUser) {
+  const user = JSON.parse(savedUser);
+  isAdmin = user.role === 'Admin';
+  if (isAdmin) {
+    document.getElementById('adminSection').style.display = 'block';
   }
 }
 
-// Load posts
-function loadPosts(){
-  const posts=NewsDB.getPosts();
-  const grid=document.getElementById('newsGrid');
+// Load posts from API
+async function loadPosts() {
+  const grid = document.getElementById('newsGrid');
+  grid.innerHTML = '<div class="empty-state">Loading...</div>';
   
-  if(posts.length===0){
-    grid.innerHTML='<div class="empty-state">No news posts yet</div>';
-    return;
-  }
-  
-  grid.innerHTML=posts.sort((a,b)=>b.id-a.id).map(post=>`
-    <div class="news-card">
-      ${post.image?`<img src="${post.image}" class="news-image" alt="${post.title}">`:'<div class="news-image"></div>'}
-      <div class="news-content">
-        <div class="news-date">${post.date}</div>
-        <h3 class="news-title">${post.title}</h3>
-        <p class="news-excerpt">${post.content.substring(0,150)}${post.content.length>150?'...':''}</p>
-        ${isAdmin?`
-          <div class="news-admin">
-            <button class="btn btn-sm btn-primary" onclick="editPost(${post.id})">Edit</button>
-            <button class="btn btn-sm btn-danger" onclick="deletePost(${post.id})">Delete</button>
-          </div>
-        `:''}
+  try {
+    const response = await fetch(`${API_URL}/news`);
+    const posts = await response.json();
+    
+    if (!Array.isArray(posts) || posts.length === 0) {
+      grid.innerHTML = '<div class="empty-state">No news posts yet</div>';
+      return;
+    }
+    
+    grid.innerHTML = posts.map(post => `
+      <div class="news-card">
+        ${post.image ? `<img src="${post.image}" class="news-image" alt="${post.title}">` : '<div class="news-image"></div>'}
+        <div class="news-content">
+          <div class="news-date">${post.date}</div>
+          <h3 class="news-title">${post.title}</h3>
+          <p class="news-excerpt">${post.content.substring(0, 150)}${post.content.length > 150 ? '...' : ''}</p>
+          ${isAdmin ? `
+            <div class="news-admin">
+              <button class="btn btn-sm btn-primary" onclick="editPost('${post._id}')">Edit</button>
+              <button class="btn btn-sm btn-danger" onclick="deletePost('${post._id}')">Delete</button>
+            </div>
+          ` : ''}
+        </div>
       </div>
-    </div>
-  `).join('');
+    `).join('');
+  } catch (error) {
+    console.error('Error loading posts:', error);
+    grid.innerHTML = '<div class="empty-state">Error loading posts. Please try again.</div>';
+  }
 }
 
 // Modal functions
-function openCreateModal(){
-  document.getElementById('modalTitle').textContent='Create News Post';
-  document.getElementById('postId').value='';
-  document.getElementById('postTitle').value='';
-  document.getElementById('postContent').value='';
-  document.getElementById('postImage').value='';
-  document.getElementById('imagePreview').style.display='none';
+function openCreateModal() {
+  document.getElementById('modalTitle').textContent = 'Create News Post';
+  document.getElementById('postId').value = '';
+  document.getElementById('postTitle').value = '';
+  document.getElementById('postContent').value = '';
+  document.getElementById('postImage').value = '';
+  document.getElementById('imagePreview').style.display = 'none';
   document.getElementById('postModal').classList.add('active');
 }
 
-function editPost(id){
-  const posts=NewsDB.getPosts();
-  const post=posts.find(p=>p.id===id);
-  if(!post)return;
-  
-  document.getElementById('modalTitle').textContent='Edit News Post';
-  document.getElementById('postId').value=post.id;
-  document.getElementById('postTitle').value=post.title;
-  document.getElementById('postContent').value=post.content;
-  document.getElementById('postImage').value='';
-  
-  if(post.image){
-    document.getElementById('imagePreview').src=post.image;
-    document.getElementById('imagePreview').style.display='block';
-  }else{
-    document.getElementById('imagePreview').style.display='none';
+async function editPost(id) {
+  try {
+    const response = await fetch(`${API_URL}/news`);
+    const posts = await response.json();
+    const post = posts.find(p => p._id === id);
+    
+    if (!post) return;
+    
+    document.getElementById('modalTitle').textContent = 'Edit News Post';
+    document.getElementById('postId').value = post._id;
+    document.getElementById('postTitle').value = post.title;
+    document.getElementById('postContent').value = post.content;
+    document.getElementById('postImage').value = '';
+    
+    if (post.image) {
+      document.getElementById('imagePreview').src = post.image;
+      document.getElementById('imagePreview').style.display = 'block';
+    } else {
+      document.getElementById('imagePreview').style.display = 'none';
+    }
+    
+    document.getElementById('postModal').classList.add('active');
+  } catch (error) {
+    console.error('Error loading post:', error);
+    alert('Error loading post');
   }
-  
-  document.getElementById('postModal').classList.add('active');
 }
 
-function closeModal(){
+function closeModal() {
   document.getElementById('postModal').classList.remove('active');
 }
 
-function previewImage(){
-  const file=document.getElementById('postImage').files[0];
-  if(!file)return;
+function previewImage() {
+  const file = document.getElementById('postImage').files[0];
+  if (!file) return;
   
-  const reader=new FileReader();
-  reader.onload=function(e){
-    document.getElementById('imagePreview').src=e.target.result;
-    document.getElementById('imagePreview').style.display='block';
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    document.getElementById('imagePreview').src = e.target.result;
+    document.getElementById('imagePreview').style.display = 'block';
   };
   reader.readAsDataURL(file);
 }
 
-function savePost(e){
+async function savePost(e) {
   e.preventDefault();
   
-  const id=document.getElementById('postId').value;
-  const title=document.getElementById('postTitle').value;
-  const content=document.getElementById('postContent').value;
-  const imageFile=document.getElementById('postImage').files[0];
+  const token = getAuthToken();
+  if (!token) {
+    alert('Please login first');
+    return false;
+  }
   
-  const posts=NewsDB.getPosts();
-  const savedUser=localStorage.currentUser;
-  const user=savedUser?JSON.parse(savedUser):{name:'Admin'};
+  const id = document.getElementById('postId').value;
+  const title = document.getElementById('postTitle').value;
+  const content = document.getElementById('postContent').value;
+  const imageFile = document.getElementById('postImage').files[0];
   
-  const processPost=(imageData)=>{
-    if(id){
-      // Edit existing
-      const index=posts.findIndex(p=>p.id==id);
-      if(index!==-1){
-        posts[index]={
-          ...posts[index],
-          title,
-          content,
-          image:imageData||posts[index].image
-        };
-      }
-    }else{
-      // Create new
-      posts.push({
-        id:Date.now(),
+  const processPost = async (imageData) => {
+    try {
+      const postData = {
         title,
         content,
-        image:imageData||'',
-        date:new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}),
-        author:user.name
-      });
+        ...(imageData && { image: imageData })
+      };
+      
+      let response;
+      if (id) {
+        // Update existing post
+        response = await fetch(`${API_URL}/news/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(postData)
+        });
+      } else {
+        // Create new post
+        response = await fetch(`${API_URL}/news`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(postData)
+        });
+      }
+      
+      if (!response.ok) {
+        throw new Error('Failed to save post');
+      }
+      
+      closeModal();
+      loadPosts();
+    } catch (error) {
+      console.error('Error saving post:', error);
+      alert('Error saving post. Please try again.');
     }
-    
-    NewsDB.savePosts(posts);
-    closeModal();
-    loadPosts();
   };
   
-  if(imageFile){
-    const reader=new FileReader();
-    reader.onload=function(e){
+  if (imageFile) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
       processPost(e.target.result);
     };
     reader.readAsDataURL(imageFile);
-  }else{
-    processPost(null);
+  } else {
+    // If editing and no new image selected, get the existing image
+    if (id) {
+      const existingImage = document.getElementById('imagePreview').src;
+      processPost(existingImage.startsWith('data:') ? existingImage : null);
+    } else {
+      processPost(null);
+    }
   }
   
   return false;
 }
 
-function deletePost(id){
-  if(!confirm('Delete this post?'))return;
-  const posts=NewsDB.getPosts().filter(p=>p.id!==id);
-  NewsDB.savePosts(posts);
-  loadPosts();
+async function deletePost(id) {
+  if (!confirm('Delete this post?')) return;
+  
+  const token = getAuthToken();
+  if (!token) {
+    alert('Please login first');
+    return;
+  }
+  
+  try {
+    const response = await fetch(`${API_URL}/news/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to delete post');
+    }
+    
+    loadPosts();
+  } catch (error) {
+    console.error('Error deleting post:', error);
+    alert('Error deleting post. Please try again.');
+  }
 }
 
 // Load on page load
-window.addEventListener('load',loadPosts);
+window.addEventListener('load', loadPosts);
 </script>
 
 </body>
