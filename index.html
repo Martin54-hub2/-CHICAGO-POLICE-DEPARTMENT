@@ -747,7 +747,7 @@ async function updateHeaderForUser(){
   const h=document.getElementById('headerActions');
   
   if(currentUser){
-    const roleMenu=currentUser.role==='Admin'?'<div class="dropdown-item" onclick="showPage(\'admin\')">⚙️ Admin Panel</div>':currentUser.role==='Supervisor'?'<div class="dropdown-item" onclick="showPage(\'supervisor\')">👮 Supervisor Panel</div>':'';
+    const roleMenu=currentUser.role==='Admin'?'<div class="dropdown-item" onclick="showPage(\'admin\')">Admin Panel</div>':currentUser.role==='Supervisor'?'<div class="dropdown-item" onclick="showPage(\'supervisor\')">Supervisor Panel</div>':'';
     
     // Fetch officer data for photo
     let badgeContent = currentUser.callsign?.substring(0,3) || '--';
@@ -770,7 +770,7 @@ async function updateHeaderForUser(){
       console.error('Error loading officer photo:', error);
     }
     
-    h.innerHTML=`<button class="btn btn-outline">Transform</button><a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-primary">Join CPD</a><div class="user-menu"><div class="user-btn" onclick="toggleUserMenu()"><div class="user-badge" style="${badgeStyle}">${badgeContent}</div><div class="user-info"><div class="user-name">${currentUser.name}</div><div class="user-rank">${currentUser.rank}</div></div></div><div class="user-dropdown" id="userDropdown"><div class="dropdown-item" onclick="showPage('dashboard')">📊 Dashboard</div>${roleMenu}<div class="dropdown-item" onclick="window.location.href='mdt.html'">🖥️ MDT System</div><div class="dropdown-item" onclick="window.location.href='profiles.html'">👤 My Profile</div><div class="dropdown-item" onclick="logout()">🚪 Logout</div></div></div><button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>`
+    h.innerHTML=`<button class="btn btn-outline">Transform</button><a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-primary">Join CPD</a><div class="user-menu"><div class="user-btn" onclick="toggleUserMenu()"><div class="user-badge" style="${badgeStyle}">${badgeContent}</div><div class="user-info"><div class="user-name">${currentUser.name}</div><div class="user-rank">${currentUser.rank}</div></div></div><div class="user-dropdown" id="userDropdown"><div class="dropdown-item" onclick="showPage('dashboard')">Dashboard</div>${roleMenu}<div class="dropdown-item" onclick="window.location.href='mdt.html'">MDT System</div><div class="dropdown-item" onclick="window.location.href='profiles.html'">My Profile</div><div class="dropdown-item" onclick="logout()">Logout</div></div></div><button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>`
   }else{
     h.innerHTML=`<button class="btn btn-outline">Transform</button><a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-primary">Join CPD</a><button class="btn btn-login" onclick="showPage('login')" id="loginBtn">Portal Login</button><button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>`
   }
@@ -1413,8 +1413,8 @@ window.addEventListener('load', () => {
       console.error('Error updating header:', err);
       // Fallback to basic display
       const h = document.getElementById('headerActions');
-      const roleMenu = currentUser.role === 'Admin' ? '<div class="dropdown-item" onclick="showPage(\'admin\')">⚙️ Admin Panel</div>' : currentUser.role === 'Supervisor' ? '<div class="dropdown-item" onclick="showPage(\'supervisor\')">👮 Supervisor Panel</div>' : '';
-      h.innerHTML = `<button class="btn btn-outline">Transform</button><a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-primary">Join CPD</a><div class="user-menu"><div class="user-btn" onclick="toggleUserMenu()"><div class="user-badge">${currentUser.callsign?.substring(0, 3) || '--'}</div><div class="user-info"><div class="user-name">${currentUser.name}</div><div class="user-rank">${currentUser.rank}</div></div></div><div class="user-dropdown" id="userDropdown"><div class="dropdown-item" onclick="showPage('dashboard')">📊 Dashboard</div>${roleMenu}<div class="dropdown-item" onclick="window.location.href='mdt.html'">🖥️ MDT System</div><div class="dropdown-item" onclick="window.location.href='profiles.html'">👤 My Profile</div><div class="dropdown-item" onclick="logout()">🚪 Logout</div></div></div><button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>`;
+      const roleMenu = currentUser.role === 'Admin' ? '<div class="dropdown-item" onclick="showPage(\'admin\')">Admin Panel</div>' : currentUser.role === 'Supervisor' ? '<div class="dropdown-item" onclick="showPage(\'supervisor\')">Supervisor Panel</div>' : '';
+      h.innerHTML = `<button class="btn btn-outline">Transform</button><a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-primary">Join CPD</a><div class="user-menu"><div class="user-btn" onclick="toggleUserMenu()"><div class="user-badge">${currentUser.callsign?.substring(0, 3) || '--'}</div><div class="user-info"><div class="user-name">${currentUser.name}</div><div class="user-rank">${currentUser.rank}</div></div></div><div class="user-dropdown" id="userDropdown"><div class="dropdown-item" onclick="showPage('dashboard')">Dashboard</div>${roleMenu}<div class="dropdown-item" onclick="window.location.href='mdt.html'">MDT System</div><div class="dropdown-item" onclick="window.location.href='profiles.html'">My Profile</div><div class="dropdown-item" onclick="logout()">Logout</div></div></div><button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>`;
     });
   }
 });
