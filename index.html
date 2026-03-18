@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chicago City Police Department</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <style>
         * {
             margin: 0;
@@ -12,24 +13,166 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #f8f9fa;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: #f5f5f5;
             min-height: 100vh;
         }
 
-        /* Header Styles */
+        /* Modern Loading Screen with City Skyline */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1e40af 0%, #0284c7 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* City Skyline Animation */
+        .city-skyline {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 200px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 4px;
+            padding: 0 2rem;
+            opacity: 0.3;
+        }
+
+        .building {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px 2px 0 0;
+            animation: buildingGrow 1.5s ease-out forwards;
+            position: relative;
+        }
+
+        .building::before {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .building:nth-child(1) { width: 40px; height: 120px; animation-delay: 0s; }
+        .building:nth-child(2) { width: 50px; height: 160px; animation-delay: 0.1s; }
+        .building:nth-child(3) { width: 35px; height: 100px; animation-delay: 0.2s; }
+        .building:nth-child(4) { width: 60px; height: 180px; animation-delay: 0.3s; }
+        .building:nth-child(5) { width: 45px; height: 140px; animation-delay: 0.4s; }
+        .building:nth-child(6) { width: 55px; height: 150px; animation-delay: 0.5s; }
+        .building:nth-child(7) { width: 40px; height: 110px; animation-delay: 0.6s; }
+        .building:nth-child(8) { width: 50px; height: 170px; animation-delay: 0.7s; }
+
+        @keyframes buildingGrow {
+            from { transform: scaleY(0); opacity: 0; }
+            to { transform: scaleY(1); opacity: 1; }
+        }
+
+        .loading-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .loading-badge {
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .logo-box {
+            width: 60px;
+            height: 60px;
+            background: #0284c7;
+            border-radius: 6px;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo-star {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 35px;
+            height: 35px;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            background: #dc2626;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .loading-text {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        body.loading .header,
+        body.loading .page,
+        body.loading .footer {
+            display: none;
+        }
+
+        /* Header */
         .header {
             background: white;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             position: sticky;
             top: 0;
             z-index: 1000;
         }
 
-        .header-content {
+        .header-top {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 1rem 2rem;
+            padding: 1.25rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -38,30 +181,37 @@
         .logo-section {
             display: flex;
             align-items: center;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
             gap: 1rem;
-            text-decoration: none;
             cursor: pointer;
+            text-decoration: none;
         }
 
-        .logo-badge {
-            width: 50px;
-            height: 50px;
-            background-image: url('badge-logo.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
+        .header-logo-box {
+            width: 42px;
+            height: 42px;
+            background: #0284c7;
+            border-radius: 4px;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .header-logo-star {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 24px;
+            height: 24px;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            background: #dc2626;
         }
 
         .logo-text {
-            font-size: 1.1rem;
+            font-size: 1.5rem;
             font-weight: 700;
-            color: #1a1a1a;
+            color: #2c3e50;
             letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
 
         .header-actions {
@@ -71,10 +221,10 @@
         }
 
         .btn {
-            padding: 0.75rem 1.75rem;
+            padding: 0.625rem 1.5rem;
             border: none;
             border-radius: 4px;
-            font-size: 0.9rem;
+            font-size: 0.875rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -83,35 +233,32 @@
         }
 
         .btn-outline {
-            background: transparent;
+            background: white;
             border: 2px solid #d1d5db;
             color: #374151;
         }
 
         .btn-outline:hover {
-            border-color: #1e40af;
-            color: #1e40af;
-        }
-
-        .btn-join {
-            background: #1e40af;
-            color: white;
-        }
-
-        .btn-join:hover {
-            background: #1e3a8a;
+            border-color: #0284c7;
+            color: #0284c7;
         }
 
         .btn-primary {
-            background: #1e40af;
+            background: #0284c7;
             color: white;
-            font-size: 0.875rem;
-            padding: 0.625rem 1.5rem;
         }
 
         .btn-primary:hover {
-            background: #1e3a8a;
-            transform: translateY(-1px);
+            background: #0369a1;
+        }
+
+        .btn-login {
+            background: #2c3e50;
+            color: white;
+        }
+
+        .btn-login:hover {
+            background: #34495e;
         }
 
         .mobile-menu-btn {
@@ -123,34 +270,36 @@
             color: #374151;
         }
 
+        /* Navigation */
         .navigation {
+            background: white;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .nav-content {
             max-width: 1400px;
             margin: 0 auto;
             padding: 0 2rem;
             display: flex;
             gap: 2.5rem;
-            border-top: 1px solid #e5e7eb;
         }
 
         .nav-link {
-            padding: 1.25rem 0;
-            background: none;
-            border: none;
-            font-size: 0.95rem;
-            font-weight: 500;
+            padding: 1rem 0;
             color: #374151;
-            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
             position: relative;
             transition: color 0.2s ease;
-            text-decoration: none;
         }
 
         .nav-link:hover {
-            color: #1e40af;
+            color: #0284c7;
         }
 
         .nav-link.active {
-            color: #1e40af;
+            color: #0284c7;
         }
 
         .nav-link.active::after {
@@ -160,41 +309,26 @@
             left: 0;
             right: 0;
             height: 3px;
-            background: #1e40af;
+            background: #0284c7;
         }
 
-        /* Hero Section */
-        .hero-section {
-            height: 350px;
-            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
+        /* Page Title Bar */
+        .page-title-bar {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-bottom: 1px solid #e5e7eb;
         }
 
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: url('data:image/svg+xml,<svg width="80" height="80" xmlns="http://www.w3.org/2000/svg"><rect width="80" height="80" fill="none"/><circle cx="2" cy="2" r="1.5" fill="rgba(255,255,255,0.08)"/></svg>');
-            opacity: 0.5;
+        .page-title-content {
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            text-align: center;
-            padding: 0 2rem;
-        }
-
-        .hero-title {
-            font-size: 3.5rem;
-            font-weight: 600;
-            color: white;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-            letter-spacing: -0.5px;
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 0;
         }
 
         /* Content Wrapper */
@@ -208,44 +342,29 @@
         .cards-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: repeat(2, 280px);
-            gap: 1.25rem;
+            gap: 1.5rem;
         }
 
         .card {
             border-radius: 8px;
             overflow: hidden;
             position: relative;
+            min-height: 280px;
             display: flex;
             align-items: flex-end;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             cursor: pointer;
         }
 
         .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
 
-        .card-join {
-            grid-column: 1 / 3;
-            grid-row: 1 / 3;
-        }
-
-        .card-superintendent {
-            grid-column: 3 / 4;
-            grid-row: 1 / 2;
-        }
-
-        .card-crimes {
-            grid-column: 3 / 4;
-            grid-row: 2 / 3;
-        }
-
-        .card-documents {
-            grid-column: 1 / 2;
-            grid-row: 3 / 4;
+        .card-large {
+            grid-column: span 2;
+            min-height: 400px;
         }
 
         .card-bg {
@@ -259,7 +378,7 @@
         .card-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0.2) 100%);
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.3) 60%, transparent 100%);
             z-index: 1;
         }
 
@@ -272,17 +391,212 @@
         }
 
         .card-title {
-            font-size: 1.875rem;
+            font-size: 2rem;
             font-weight: 700;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
             line-height: 1.2;
         }
 
         .card-description {
-            font-size: 0.95rem;
+            font-size: 1rem;
             line-height: 1.6;
             margin-bottom: 1.5rem;
             opacity: 0.95;
+        }
+
+        /* Login Portal */
+        .login-container {
+            min-height: calc(100vh - 200px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 2rem;
+        }
+
+        .login-box {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 3rem;
+            max-width: 450px;
+            width: 100%;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-logo {
+            width: 80px;
+            height: 80px;
+            background: #0284c7;
+            border-radius: 8px;
+            margin: 0 auto 1.5rem;
+            position: relative;
+        }
+
+        .login-logo-star {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 45px;
+            height: 45px;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            background: #dc2626;
+        }
+
+        .login-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-subtitle {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #0284c7;
+        }
+
+        .btn-login-submit {
+            width: 100%;
+            padding: 0.875rem;
+            background: #0284c7;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .btn-login-submit:hover {
+            background: #0369a1;
+        }
+
+        .login-footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .login-footer a {
+            color: #0284c7;
+            text-decoration: none;
+        }
+
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Service Cards */
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .service-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .service-card h3 {
+            font-size: 1.25rem;
+            color: #2c3e50;
+            margin-bottom: 0.75rem;
+        }
+
+        .service-card p {
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Leadership Grid */
+        .leadership-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .leadership-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .rank-badge {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            font-weight: 700;
+        }
+
+        .leadership-card h3 {
+            font-size: 1.1rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .leadership-card .position {
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .leadership-card .status {
+            color: #9ca3af;
+            font-size: 0.85rem;
+            font-style: italic;
         }
 
         /* Page Content */
@@ -294,151 +608,27 @@
             display: block;
         }
 
-        .page-hero {
-            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
-            padding: 3rem 2rem;
-            text-align: center;
-            color: white;
-        }
-
-        .page-hero h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
         .page-content {
             max-width: 1200px;
             margin: 0 auto;
         }
 
         .page-content h2 {
-            font-size: 2rem;
-            color: #1a1a1a;
+            font-size: 1.875rem;
+            color: #2c3e50;
             margin-bottom: 1rem;
-        }
-
-        .page-content h3 {
-            font-size: 1.5rem;
-            color: #1a1a1a;
-            margin-bottom: 0.75rem;
         }
 
         .page-content p {
             color: #4b5563;
             line-height: 1.8;
-            font-size: 1.05rem;
+            font-size: 1rem;
             margin-bottom: 1.5rem;
-        }
-
-        /* Service Cards */
-        .service-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .service-card {
-            background: white;
-            padding: 2.5rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .service-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-        }
-
-        .service-card h3 {
-            font-size: 1.5rem;
-            color: #1a1a1a;
-            margin-bottom: 1rem;
-        }
-
-        .service-card p {
-            color: #6b7280;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-        }
-
-        /* Document Cards */
-        .document-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            margin-bottom: 1.5rem;
-            border-left: 4px solid #1e40af;
-        }
-
-        .document-card h3 {
-            font-size: 1.5rem;
-            color: #1a1a1a;
-            margin-bottom: 0.75rem;
-        }
-
-        .document-card p {
-            color: #6b7280;
-            line-height: 1.6;
-            margin-bottom: 1rem;
-        }
-
-        /* Leadership Cards */
-        .leadership-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .leadership-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            text-align: center;
-        }
-
-        .rank-badge {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
-            border-radius: 50%;
-            margin: 0 auto 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            color: white;
-            font-weight: 700;
-        }
-
-        .leadership-card h3 {
-            font-size: 1.25rem;
-            color: #1a1a1a;
-            margin-bottom: 0.5rem;
-        }
-
-        .leadership-card .position {
-            color: #6b7280;
-            font-size: 0.95rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .leadership-card .status {
-            color: #9ca3af;
-            font-size: 0.875rem;
-            font-style: italic;
         }
 
         /* Footer */
         .footer {
-            background: #1a1a1a;
+            background: #2c3e50;
             color: white;
             padding: 3rem 2rem 1.5rem;
             margin-top: 4rem;
@@ -460,29 +650,29 @@
         }
 
         .footer-section p {
-            color: #9ca3af;
+            color: #cbd5e1;
             line-height: 1.6;
         }
 
         .footer-section a {
             display: block;
-            color: #9ca3af;
+            color: #cbd5e1;
             text-decoration: none;
             margin-bottom: 0.75rem;
             transition: color 0.2s ease;
         }
 
         .footer-section a:hover {
-            color: #1e40af;
+            color: #0284c7;
         }
 
         .footer-bottom {
             max-width: 1400px;
             margin: 0 auto;
             padding-top: 2rem;
-            border-top: 1px solid #374151;
+            border-top: 1px solid #475569;
             text-align: center;
-            color: #9ca3af;
+            color: #cbd5e1;
             font-size: 0.9rem;
         }
 
@@ -490,23 +680,16 @@
         @media (max-width: 1024px) {
             .cards-grid {
                 grid-template-columns: repeat(2, 1fr);
-                grid-template-rows: auto;
             }
 
-            .card-join {
-                grid-column: 1 / 3;
-            }
-
-            .card-superintendent,
-            .card-crimes,
-            .card-documents {
-                grid-column: auto;
+            .card-large {
+                grid-column: span 2;
             }
         }
 
         @media (max-width: 768px) {
             .logo-text {
-                font-size: 0.9rem;
+                font-size: 1rem;
             }
 
             .header-actions .btn-outline {
@@ -517,14 +700,14 @@
                 display: block;
             }
 
-            .navigation {
+            .nav-content {
                 display: none;
                 flex-direction: column;
                 gap: 0;
                 padding: 0;
             }
 
-            .navigation.mobile-open {
+            .nav-content.mobile-open {
                 display: flex;
             }
 
@@ -533,91 +716,97 @@
                 border-top: 1px solid #e5e7eb;
             }
 
-            .hero-title {
-                font-size: 2.5rem;
-            }
-
             .cards-grid {
                 grid-template-columns: 1fr;
             }
 
-            .card-join {
+            .card-large {
                 grid-column: 1;
             }
 
-            .page-hero h1 {
-                font-size: 2rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .header-content {
-                padding: 1rem;
-            }
-
-            .content-wrapper {
-                padding: 2rem 1rem;
-            }
-
-            .hero-title {
+            .page-title {
                 font-size: 2rem;
             }
 
-            .card-title {
-                font-size: 1.5rem;
+            .city-skyline {
+                height: 150px;
             }
 
-            .logo-text {
-                font-size: 0.75rem;
+            .building {
+                transform: scale(0.7);
             }
         }
     </style>
 </head>
-<body>
+<body class="loading">
+    <!-- Modern Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="city-skyline">
+            <div class="building"></div>
+            <div class="building"></div>
+            <div class="building"></div>
+            <div class="building"></div>
+            <div class="building"></div>
+            <div class="building"></div>
+            <div class="building"></div>
+            <div class="building"></div>
+        </div>
+        <div class="loading-content">
+            <div class="loading-badge">
+                <div class="logo-box">
+                    <div class="logo-star"></div>
+                </div>
+            </div>
+            <div class="loading-text">Chicago City Police</div>
+            <div class="loading-spinner"></div>
+        </div>
+    </div>
+
     <!-- Header -->
     <header class="header">
-        <div class="header-content">
-            <div class="logo-section">
-                <div class="logo" onclick="showPage('home')">
-                    <div class="logo-badge"></div>
-                    <span class="logo-text">CHICAGO CITY POLICE DEPARTMENT</span>
+        <div class="header-top">
+            <div class="logo-section" onclick="showPage('home')">
+                <div class="header-logo-box">
+                    <div class="header-logo-star"></div>
                 </div>
+                <span class="logo-text">Chicago Police Department</span>
             </div>
 
             <div class="header-actions">
                 <button class="btn btn-outline">Transform</button>
-                <a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-join">Join CCPD</a>
+                <a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-primary">Join CPD</a>
+                <button class="btn btn-login" onclick="showPage('login')">Portal Login</button>
                 <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
             </div>
         </div>
 
-        <nav class="navigation" id="navigation">
-            <a href="#" class="nav-link" onclick="showPage('news'); return false;">News & Media</a>
-            <a href="#" class="nav-link" onclick="showPage('service'); return false;">Get Service</a>
-            <a href="#" class="nav-link" onclick="showPage('community'); return false;">Community Policing</a>
-            <a href="#" class="nav-link" onclick="showPage('inside'); return false;">Inside CCPD</a>
-            <a href="#" class="nav-link" onclick="showPage('documents'); return false;">Documents</a>
+        <nav class="navigation">
+            <div class="nav-content" id="navigation">
+                <a href="#" class="nav-link" onclick="showPage('news'); return false;">News & Media</a>
+                <a href="#" class="nav-link" onclick="showPage('service'); return false;">Get Service</a>
+                <a href="#" class="nav-link" onclick="showPage('community'); return false;">Community Policing</a>
+                <a href="#" class="nav-link" onclick="showPage('inside'); return false;">Inside CCPD</a>
+                <a href="#" class="nav-link" onclick="showPage('documents'); return false;">Documents</a>
+            </div>
         </nav>
     </header>
 
     <!-- Home Page -->
     <div id="home-page" class="page active">
-        <!-- Hero Section -->
-        <div class="hero-section">
-            <div class="hero-content">
-                <h1 class="hero-title">We serve and protect.</h1>
+        <div class="page-title-bar">
+            <div class="page-title-content">
+                <h1 class="page-title">We serve and protect.</h1>
             </div>
         </div>
 
-        <!-- Main Content Grid -->
         <div class="content-wrapper">
             <div class="cards-grid">
-                <!-- Join CCPD Card -->
-                <div class="card card-join" onclick="window.open('https://discord.gg/7vQEJnaD', '_blank')">
+                <!-- Join CPD Card -->
+                <div class="card card-large" onclick="window.open('https://discord.gg/7vQEJnaD', '_blank')">
                     <div class="card-bg" style="background-image: url('join-bg.jpg')"></div>
                     <div class="card-overlay"></div>
                     <div class="card-content">
-                        <h2 class="card-title">Join CCPD</h2>
+                        <h2 class="card-title">Join CPD</h2>
                         <p class="card-description">
                             Make a difference within your community and help the people of Chicago City.
                             Answer the call to serve those in need and begin building a better tomorrow today.
@@ -628,38 +817,53 @@
                     </div>
                 </div>
 
-                <!-- Superintendent Card -->
-                <div class="card card-superintendent" onclick="showPage('leadership')">
+                <!-- Superintendent -->
+                <div class="card" onclick="showPage('leadership')">
                     <div class="card-bg" style="background-image: url('super-bg.jpg')"></div>
                     <div class="card-overlay"></div>
                     <div class="card-content">
-                        <h2 class="card-title">Department Leadership</h2>
+                        <h2 class="card-title">Superintendent Larry Snelling</h2>
                         <button class="btn btn-primary" onclick="showPage('leadership'); event.stopPropagation()">
-                            Meet the Team
+                            Learn About Us
                         </button>
                     </div>
                 </div>
 
-                <!-- Help Solve Crimes Card -->
-                <div class="card card-crimes" onclick="showPage('community')">
+                <!-- Help Solve Crimes -->
+                <div class="card" onclick="showPage('community')">
                     <div class="card-bg" style="background-image: url('crimes-bg.jpg')"></div>
                     <div class="card-overlay"></div>
                     <div class="card-content">
                         <h2 class="card-title">Help Solve Crimes</h2>
                         <p class="card-description">Identify subjects on the video page.</p>
                         <button class="btn btn-primary" onclick="showPage('community'); event.stopPropagation()">
-                            Learn More
+                            Watch Videos
                         </button>
                     </div>
                 </div>
 
-                <!-- Documents Card -->
-                <div class="card card-documents" onclick="showPage('documents')">
+                <!-- Use of Force -->
+                <div class="card card-large" onclick="showPage('use-of-force')">
+                    <div class="card-bg" style="background-image: url('policy-bg.jpg')"></div>
+                    <div class="card-overlay"></div>
+                    <div class="card-content">
+                        <h2 class="card-title">Use of Force Policy Reform</h2>
+                        <p class="card-description">
+                            Policies dictate Department members' ability to use force.
+                        </p>
+                        <button class="btn btn-primary" onclick="showPage('use-of-force'); event.stopPropagation()">
+                            Read More
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Documents -->
+                <div class="card" onclick="showPage('documents')">
                     <div class="card-bg" style="background-color: #1e40af;"></div>
                     <div class="card-overlay"></div>
                     <div class="card-content">
-                        <h2 class="card-title">Documents & Policies</h2>
-                        <p class="card-description">Access department policies, procedures, and public documents.</p>
+                        <h2 class="card-title">Documents</h2>
+                        <p class="card-description">Access department policies and public records.</p>
                         <button class="btn btn-primary" onclick="showPage('documents'); event.stopPropagation()">
                             View Documents
                         </button>
@@ -669,317 +873,41 @@
         </div>
     </div>
 
-    <!-- News & Media Page -->
-    <div id="news-page" class="page">
-        <div class="page-hero">
-            <h1>News & Media</h1>
-        </div>
-        <div class="content-wrapper">
-            <div class="page-content">
-                <h2>Latest Updates</h2>
-                <p>Stay informed with the latest news and announcements from Chicago City Police Department.</p>
-                
-                <div class="service-grid">
-                    <div class="service-card">
-                        <h3>Press Releases</h3>
-                        <p>Official department announcements and press statements.</p>
+    <!-- Login Portal Page -->
+    <div id="login-page" class="page">
+        <div class="login-container">
+            <div class="login-box">
+                <div class="login-header">
+                    <div class="login-logo">
+                        <div class="login-logo-star"></div>
                     </div>
-                    <div class="service-card">
-                        <h3>Media Gallery</h3>
-                        <p>Photos and videos from department events and activities.</p>
+                    <h2 class="login-title">Officer Portal</h2>
+                    <p class="login-subtitle">Chicago City Police Department</p>
+                </div>
+
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label class="form-label">Badge Number</label>
+                        <input type="text" class="form-input" placeholder="Enter your badge number" required>
                     </div>
-                    <div class="service-card">
-                        <h3>Social Media</h3>
-                        <p>Follow us on social media for real-time updates.</p>
+
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" placeholder="Enter your password" required>
                     </div>
+
+                    <button type="submit" class="btn-login-submit">Sign In</button>
+                </form>
+
+                <div class="login-footer">
+                    <p>Forgot your password? <a href="#" onclick="alert('Please contact IT Support'); return false;">Reset Password</a></p>
+                    <p style="margin-top: 1rem;">Need access? <a href="https://discord.gg/7vQEJnaD" target="_blank">Apply to Join CCPD</a></p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Get Service Page -->
-    <div id="service-page" class="page">
-        <div class="page-hero">
-            <h1>Get Service</h1>
-        </div>
-        <div class="content-wrapper">
-            <div class="page-content">
-                <div class="service-grid">
-                    <div class="service-card">
-                        <h3>File a Report</h3>
-                        <p>Report a crime or incident to our department.</p>
-                        <a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-primary">File Report</a>
-                    </div>
-                    <div class="service-card">
-                        <h3>Request Records</h3>
-                        <p>Access public records and police reports.</p>
-                        <button class="btn btn-primary" onclick="showPage('documents')">View Records</button>
-                    </div>
-                    <div class="service-card">
-                        <h3>Civilian Resources</h3>
-                        <p>Connect with community programs and support services.</p>
-                        <button class="btn btn-primary" onclick="showPage('resources')">View Resources</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Community Policing Page -->
-    <div id="community-page" class="page">
-        <div class="page-hero">
-            <h1>Community Policing</h1>
-        </div>
-        <div class="content-wrapper">
-            <div class="page-content">
-                <h2>Building Stronger Communities</h2>
-                <p>Chicago City Police Department is committed to working alongside community members to create safer neighborhoods through trust, transparency, and collaboration.</p>
-                
-                <h2 style="margin-top: 3rem;">Help Solve Crimes</h2>
-                <p>Your tips and information can help solve crimes and bring justice to victims. If you have any information about criminal activity, please contact us immediately.</p>
-                
-                <div class="service-grid" style="margin-top: 2rem;">
-                    <div class="service-card">
-                        <h3>Submit a Tip</h3>
-                        <p>Anonymously report information about criminal activity.</p>
-                        <a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-primary">Submit Tip</a>
-                    </div>
-                    <div class="service-card">
-                        <h3>Neighborhood Watch</h3>
-                        <p>Join your local neighborhood watch program.</p>
-                        <button class="btn btn-primary">Join Program</button>
-                    </div>
-                    <div class="service-card">
-                        <h3>Youth Programs</h3>
-                        <p>Engaging with young people through mentorship.</p>
-                        <button class="btn btn-primary">Learn More</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Inside CCPD / Leadership Page -->
-    <div id="inside-page" class="page">
-        <div class="page-hero">
-            <h1>Inside CCPD</h1>
-        </div>
-        <div class="content-wrapper">
-            <div class="page-content">
-                <h2>About Our Department</h2>
-                <p>Learn about the structure, leadership, and operations of Chicago City Police Department.</p>
-                
-                <div class="service-grid" style="margin-top: 2rem;">
-                    <div class="service-card">
-                        <h3>Department Leadership</h3>
-                        <p>Meet the leadership team guiding our mission.</p>
-                        <button class="btn btn-primary" onclick="showPage('leadership')">View Leadership</button>
-                    </div>
-                    <div class="service-card">
-                        <h3>Departments & Units</h3>
-                        <p>Explore specialized units and divisions.</p>
-                        <button class="btn btn-primary">Learn More</button>
-                    </div>
-                    <div class="service-card">
-                        <h3>Our Mission</h3>
-                        <p>Understanding our values and commitment.</p>
-                        <button class="btn btn-primary">Read More</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Leadership Page -->
-    <div id="leadership-page" class="page">
-        <div class="page-hero">
-            <h1>Department Leadership</h1>
-        </div>
-        <div class="content-wrapper">
-            <div class="page-content">
-                <h2>Command Staff</h2>
-                <p>Meet the leadership team guiding Chicago City Police Department's mission.</p>
-                
-                <div class="leadership-grid">
-                    <div class="leadership-card">
-                        <div class="rank-badge">SC</div>
-                        <h3>Superintendent</h3>
-                        <p class="position">Chief of Department</p>
-                        <p class="status">Position Available</p>
-                    </div>
-                    
-                    <div class="leadership-card">
-                        <div class="rank-badge">DC</div>
-                        <h3>Deputy Chief</h3>
-                        <p class="position">Operations Command</p>
-                        <p class="status">Position Available</p>
-                    </div>
-                    
-                    <div class="leadership-card">
-                        <div class="rank-badge">DC</div>
-                        <h3>Deputy Chief</h3>
-                        <p class="position">Administration</p>
-                        <p class="status">Position Available</p>
-                    </div>
-                    
-                    <div class="leadership-card">
-                        <div class="rank-badge">CM</div>
-                        <h3>Commander</h3>
-                        <p class="position">Patrol Division</p>
-                        <p class="status">Position Available</p>
-                    </div>
-                    
-                    <div class="leadership-card">
-                        <div class="rank-badge">CM</div>
-                        <h3>Commander</h3>
-                        <p class="position">Detective Division</p>
-                        <p class="status">Position Available</p>
-                    </div>
-                    
-                    <div class="leadership-card">
-                        <div class="rank-badge">CM</div>
-                        <h3>Commander</h3>
-                        <p class="position">Special Operations</p>
-                        <p class="status">Position Available</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Documents Page -->
-    <div id="documents-page" class="page">
-        <div class="page-hero">
-            <h1>Documents & Policies</h1>
-        </div>
-        <div class="content-wrapper">
-            <div class="page-content">
-                <h2>Department Policies & Procedures</h2>
-                <p>Access official department documents, policies, and public information.</p>
-                
-                <div class="document-card">
-                    <h3>Use of Force Policies</h3>
-                    <p>Our department is committed to constitutional policing and the protection of civil rights. We continuously review and update our policies to reflect best practices and community input.</p>
-                    <button class="btn btn-primary" onclick="showPage('use-of-force')">Read Full Policy</button>
-                </div>
-                
-                <div class="document-card">
-                    <h3>Training & Standards</h3>
-                    <p>Every officer undergoes rigorous training in de-escalation, crisis intervention, and community-oriented policing principles.</p>
-                    <button class="btn btn-primary" onclick="showPage('training')">View Training Standards</button>
-                </div>
-                
-                <div class="document-card">
-                    <h3>Department General Orders</h3>
-                    <p>Official rules and regulations governing department operations and officer conduct.</p>
-                    <button class="btn btn-primary">View Orders</button>
-                </div>
-                
-                <div class="document-card">
-                    <h3>Public Records Requests</h3>
-                    <p>Information on how to request public records and department documents.</p>
-                    <button class="btn btn-primary">Request Records</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Use of Force Policy Page -->
-    <div id="use-of-force-page" class="page">
-        <div class="page-hero">
-            <h1>Use of Force Policies</h1>
-        </div>
-        <div class="content-wrapper">
-            <div class="page-content">
-                <h2>Constitutional Policing Standards</h2>
-                <p>Policies dictate Department members' ability to use force. Chicago City Police Department is committed to constitutional policing and the protection of civil rights.</p>
-                
-                <h3>Core Principles</h3>
-                <p>Our use of force policies are built on the following core principles:</p>
-                <ul style="color: #4b5563; line-height: 1.8; margin-left: 2rem; margin-bottom: 2rem;">
-                    <li>Sanctity of human life</li>
-                    <li>De-escalation when possible</li>
-                    <li>Proportional response</li>
-                    <li>Accountability and transparency</li>
-                    <li>Ongoing training and review</li>
-                </ul>
-                
-                <h3>Policy Overview</h3>
-                <p>All officers are trained to use only the force necessary to accomplish lawful objectives. We continuously review and update our policies to reflect best practices, legal standards, and community input.</p>
-                
-                <button class="btn btn-primary" onclick="showPage('documents')">Back to Documents</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Training & Standards Page -->
-    <div id="training-page" class="page">
-        <div class="page-hero">
-            <h1>Training & Standards</h1>
-        </div>
-        <div class="content-wrapper">
-            <div class="page-content">
-                <h2>Officer Training Programs</h2>
-                <p>Every officer undergoes rigorous training in de-escalation, crisis intervention, and community-oriented policing principles.</p>
-                
-                <h3>Academy Training</h3>
-                <p>All recruits complete comprehensive academy training covering:</p>
-                <ul style="color: #4b5563; line-height: 1.8; margin-left: 2rem; margin-bottom: 2rem;">
-                    <li>Constitutional law and civil rights</li>
-                    <li>De-escalation techniques</li>
-                    <li>Crisis intervention</li>
-                    <li>Community policing strategies</li>
-                    <li>Physical fitness and defensive tactics</li>
-                    <li>Firearms training and safety</li>
-                </ul>
-                
-                <h3>Continuing Education</h3>
-                <p>Officers participate in ongoing training throughout their careers, including annual recertification and specialized courses in emerging law enforcement practices.</p>
-                
-                <button class="btn btn-primary" onclick="showPage('documents')">Back to Documents</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Civilian Resources Page -->
-    <div id="resources-page" class="page">
-        <div class="page-hero">
-            <h1>Civilian Resources</h1>
-        </div>
-        <div class="content-wrapper">
-            <div class="page-content">
-                <h2>Community Support Services</h2>
-                <p>Connect with programs and resources designed to support our community members.</p>
-                
-                <div class="service-grid">
-                    <div class="service-card">
-                        <h3>Victim Services</h3>
-                        <p>Support and resources for crime victims and their families.</p>
-                        <button class="btn btn-primary">Learn More</button>
-                    </div>
-                    
-                    <div class="service-card">
-                        <h3>Community Programs</h3>
-                        <p>Youth programs, senior services, and neighborhood initiatives.</p>
-                        <button class="btn btn-primary">View Programs</button>
-                    </div>
-                    
-                    <div class="service-card">
-                        <h3>Public Safety Tips</h3>
-                        <p>Crime prevention tips and safety resources for residents.</p>
-                        <button class="btn btn-primary">Get Tips</button>
-                    </div>
-                    
-                    <div class="service-card">
-                        <h3>Emergency Contacts</h3>
-                        <p>Important phone numbers and emergency contact information.</p>
-                        <button class="btn btn-primary">View Contacts</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    <!-- Additional pages would continue here -->
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-content">
@@ -1006,23 +934,27 @@
     </footer>
 
     <script>
+        // Loading screen
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.body.classList.remove('loading');
+                document.getElementById('loadingScreen').classList.add('hidden');
+            }, 2000);
+        });
+
         function showPage(pageId) {
-            // Hide all pages
             const pages = document.querySelectorAll('.page');
             pages.forEach(page => page.classList.remove('active'));
             
-            // Show selected page
             const selectedPage = document.getElementById(pageId + '-page');
             if (selectedPage) {
                 selectedPage.classList.add('active');
                 window.scrollTo(0, 0);
             }
             
-            // Update navigation active state
             const navLinks = document.querySelectorAll('.nav-link');
             navLinks.forEach(link => link.classList.remove('active'));
             
-            // Close mobile menu
             const nav = document.getElementById('navigation');
             nav.classList.remove('mobile-open');
         }
@@ -1032,10 +964,11 @@
             nav.classList.toggle('mobile-open');
         }
 
-        // Set home page as default
-        window.addEventListener('DOMContentLoaded', () => {
-            showPage('home');
-        });
+        function handleLogin(event) {
+            event.preventDefault();
+            alert('This is a demonstration portal. In production, this would connect to your authentication system.');
+            return false;
+        }
     </script>
 </body>
 </html>
