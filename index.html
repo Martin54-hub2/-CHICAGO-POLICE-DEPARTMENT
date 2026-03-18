@@ -770,7 +770,7 @@ async function updateHeaderForUser(){
       console.error('Error loading officer photo:', error);
     }
     
-    h.innerHTML=`<button class="btn btn-outline">Transform</button><a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-primary">Join CPD</a><div class="user-menu"><div class="user-btn" onclick="toggleUserMenu()"><div class="user-badge" style="${badgeStyle}">${badgeContent}</div><div class="user-info"><div class="user-name">${currentUser.name}</div><div class="user-rank">${currentUser.rank}</div></div></div><div class="user-dropdown" id="userDropdown"><div class="dropdown-item" onclick="showPage('dashboard')">📊 Dashboard</div>${roleMenu}<div class="dropdown-item" onclick="window.location.href='mdt.html'">🖥️ MDT System</div><div class="dropdown-item" onclick="viewProfile('${currentUser.username}')">👤 My Profile</div><div class="dropdown-item" onclick="logout()">🚪 Logout</div></div></div><button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>`
+    h.innerHTML=`<button class="btn btn-outline">Transform</button><a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-primary">Join CPD</a><div class="user-menu"><div class="user-btn" onclick="toggleUserMenu()"><div class="user-badge" style="${badgeStyle}">${badgeContent}</div><div class="user-info"><div class="user-name">${currentUser.name}</div><div class="user-rank">${currentUser.rank}</div></div></div><div class="user-dropdown" id="userDropdown"><div class="dropdown-item" onclick="showPage('dashboard')">📊 Dashboard</div>${roleMenu}<div class="dropdown-item" onclick="window.location.href='mdt.html'">🖥️ MDT System</div><div class="dropdown-item" onclick="window.location.href='profiles.html'">👤 My Profile</div><div class="dropdown-item" onclick="logout()">🚪 Logout</div></div></div><button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>`
   }else{
     h.innerHTML=`<button class="btn btn-outline">Transform</button><a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-primary">Join CPD</a><button class="btn btn-login" onclick="showPage('login')" id="loginBtn">Portal Login</button><button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>`
   }
@@ -975,7 +975,7 @@ function searchOfficers(){const query=document.getElementById('officerSearch').v
 
 function supervisorSearchOfficers(){const query=document.getElementById('supervisorSearch').value.toLowerCase();const officers=DB.getOfficers();const results=Object.keys(officers).filter(u=>{const o=officers[u];return u.toLowerCase().includes(query)||o.name.toLowerCase().includes(query)||(o.callsign||'').toLowerCase().includes(query)});const c=document.getElementById('supervisorResults');c.innerHTML=results.length?results.map(u=>renderOfficerCard(u,officers[u],true)).join(''):'<div class="empty-state">No officers found</div>'}
 
-function renderOfficerCard(username,officer,isSupervisor=false){const canEdit=currentUser.role==='Admin'||currentUser.role==='Supervisor';return`<div class="officer-card" onclick="viewProfile('${username}')"><div class="officer-card-header"><div><div class="officer-name">${officer.name}</div><span class="rank-badge rank-${officer.role?.toLowerCase()||'officer'}">${officer.rank}</span></div></div><div class="officer-meta"><div class="officer-meta-item"><span class="officer-meta-label">Callsign:</span> ${officer.callsign||'Not Assigned'}</div><div class="officer-meta-item"><span class="officer-meta-label">Role:</span> ${officer.role}</div></div>${canEdit&&!isSupervisor?`<div style="margin-top:1rem;display:flex;gap:.5rem"><button class="btn btn-sm btn-primary" onclick="event.stopPropagation();editOfficer('${username}')">Edit</button><button class="btn btn-sm btn-warning" onclick="event.stopPropagation();openInfractionModal('${username}')">+ Infraction</button>${currentUser.role==='Admin'?`<button class="btn btn-sm btn-danger" onclick="event.stopPropagation();deleteOfficer('${username}')">Delete</button>`:''}</div>`:''}${canEdit&&isSupervisor?`<div style="margin-top:1rem"><button class="btn btn-sm btn-primary" onclick="event.stopPropagation();editOfficer('${username}')">Edit Callsign/Rank</button></div>`:''}</div>`}
+function renderOfficerCard(username,officer,isSupervisor=false){const canEdit=currentUser.role==='Admin'||currentUser.role==='Supervisor';return`<div class="officer-card" onclick="window.location.href='profiles.html?user=${username}'"><div class="officer-card-header"><div><div class="officer-name">${officer.name}</div><span class="rank-badge rank-${officer.role?.toLowerCase()||'officer'}">${officer.rank}</span></div></div><div class="officer-meta"><div class="officer-meta-item"><span class="officer-meta-label">Callsign:</span> ${officer.callsign||'Not Assigned'}</div><div class="officer-meta-item"><span class="officer-meta-label">Role:</span> ${officer.role}</div></div>${canEdit&&!isSupervisor?`<div style="margin-top:1rem;display:flex;gap:.5rem"><button class="btn btn-sm btn-primary" onclick="event.stopPropagation();editOfficer('${username}')">Edit</button><button class="btn btn-sm btn-warning" onclick="event.stopPropagation();openInfractionModal('${username}')">+ Infraction</button>${currentUser.role==='Admin'?`<button class="btn btn-sm btn-danger" onclick="event.stopPropagation();deleteOfficer('${username}')">Delete</button>`:''}</div>`:''}${canEdit&&isSupervisor?`<div style="margin-top:1rem"><button class="btn btn-sm btn-primary" onclick="event.stopPropagation();editOfficer('${username}')">Edit Callsign/Rank</button></div>`:''}</div>`}
 
 async function viewProfile(username){
   try {
@@ -1081,12 +1081,20 @@ async function viewProfile(username){
 
 // Upload profile photo
 async function uploadProfilePhoto() {
+  console.log('📸 uploadProfilePhoto called');
   const file = document.getElementById('profilePhotoInput').files[0];
-  if (!file) return;
+  if (!file) {
+    console.log('❌ No file selected');
+    return;
+  }
+  
+  console.log('✅ File selected:', file.name, file.size, 'bytes');
   
   const viewedUsername = document.getElementById('profileName').dataset.username;
+  console.log('👤 Uploading for:', viewedUsername);
   
   if (currentUser.username !== viewedUsername && currentUser.role !== 'Admin') {
+    console.log('❌ Permission denied');
     alert('You can only edit your own photo');
     return;
   }
@@ -1094,14 +1102,25 @@ async function uploadProfilePhoto() {
   const reader = new FileReader();
   reader.onload = async function(e) {
     const photoData = e.target.result;
+    console.log('📦 Photo data loaded, size:', photoData.length, 'chars');
     
     const token = localStorage.getItem('authToken');
     
     try {
-      // Try API first
+      // Save to localStorage FIRST
+      const officers = DB.getOfficers();
+      if (officers[viewedUsername]) {
+        officers[viewedUsername].photo = photoData;
+        DB.saveOfficers(officers);
+        console.log('✅ Saved photo to localStorage');
+      } else {
+        console.error('❌ User not found in localStorage');
+      }
+      
+      // Try API if token exists
       if (token) {
         try {
-          const response = await fetch(`${API_BASE_URL}/api/officers/${viewedUsername}/photo`, {
+          await fetch(`${API_BASE_URL}/api/officers/${viewedUsername}/photo`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
@@ -1109,33 +1128,30 @@ async function uploadProfilePhoto() {
             },
             body: JSON.stringify({ photo: photoData })
           });
+          console.log('✅ Also saved to API');
         } catch (apiError) {
-          console.log('API failed, using localStorage');
+          console.log('⚠️ API failed, but localStorage worked');
         }
-      }
-      
-      // Save to localStorage
-      const officers = DB.getOfficers();
-      if (officers[viewedUsername]) {
-        officers[viewedUsername].photo = photoData;
-        DB.saveOfficers(officers);
       }
       
       // Update display
       document.getElementById('profilePhoto').src = photoData;
       document.getElementById('profilePhoto').style.display = 'block';
       document.getElementById('profileBadge').style.display = 'none';
+      console.log('✅ Updated display');
       
       // Update header badge if it's the current user's profile
       if (viewedUsername === currentUser.username) {
         await updateHeaderForUser();
         await loadDashboard();
+        console.log('✅ Updated header and dashboard');
       }
       
       alert('Photo updated!');
+      console.log('🎉 Photo upload complete!');
     } catch (error) {
-      console.error('Error uploading photo:', error);
-      alert('Error uploading photo. Please try again.');
+      console.error('❌ Error uploading photo:', error);
+      alert('Error uploading photo. Check console.');
     }
   };
   reader.readAsDataURL(file);
@@ -1259,14 +1275,13 @@ async function openEditProfile() {
 // Save profile changes
 async function saveProfile(e) {
   e.preventDefault();
+  console.log('💾 saveProfile called');
   
   const token = localStorage.getItem('authToken');
-  if (!token) {
-    alert('Please login first');
-    return false;
-  }
-  
   const viewedUsername = document.getElementById('profileName').dataset.username;
+  
+  console.log('📝 Saving for user:', viewedUsername);
+  console.log('🔑 Has token:', !!token);
   
   const profileData = {
     bio: document.getElementById('editBio').value,
@@ -1279,39 +1294,50 @@ async function saveProfile(e) {
     commendations: document.getElementById('editCommendations').value.split(',').map(c => c.trim()).filter(c => c)
   };
   
+  console.log('📦 Data to save:', profileData);
+  
   try {
-    // Try API first
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/officers/${viewedUsername}/profile`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(profileData)
-      });
-      
-      if (!response.ok) throw new Error('API failed');
-    } catch (apiError) {
-      console.log('API failed, saving to localStorage');
+    // ALWAYS save to localStorage FIRST
+    const officers = DB.getOfficers();
+    console.log('👥 Officers:', Object.keys(officers));
+    
+    if (!officers[viewedUsername]) {
+      console.error('❌ User not in localStorage!');
+      alert('Error: Profile not found. Please login again.');
+      return false;
     }
     
-    // Also save to localStorage
-    const officers = DB.getOfficers();
-    if (officers[viewedUsername]) {
-      officers[viewedUsername] = {
-        ...officers[viewedUsername],
-        ...profileData
-      };
-      DB.saveOfficers(officers);
+    officers[viewedUsername] = {
+      ...officers[viewedUsername],
+      ...profileData
+    };
+    DB.saveOfficers(officers);
+    console.log('✅ Saved to localStorage!');
+    
+    // Try API if token exists
+    if (token) {
+      try {
+        await fetch(`${API_BASE_URL}/api/officers/${viewedUsername}/profile`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(profileData)
+        });
+        console.log('✅ Also saved to API');
+      } catch (apiError) {
+        console.log('⚠️ API failed, but localStorage worked');
+      }
     }
     
     closeModal('editProfileModal');
+    console.log('🎉 Profile saved successfully!');
     alert('Profile updated!');
     viewProfile(viewedUsername);
   } catch (error) {
-    console.error('Error updating profile:', error);
-    alert('Error updating profile. Please try again.');
+    console.error('❌ ERROR:', error);
+    alert('Error saving profile. Check console.');
   }
   
   return false;
@@ -1388,7 +1414,7 @@ window.addEventListener('load', () => {
       // Fallback to basic display
       const h = document.getElementById('headerActions');
       const roleMenu = currentUser.role === 'Admin' ? '<div class="dropdown-item" onclick="showPage(\'admin\')">⚙️ Admin Panel</div>' : currentUser.role === 'Supervisor' ? '<div class="dropdown-item" onclick="showPage(\'supervisor\')">👮 Supervisor Panel</div>' : '';
-      h.innerHTML = `<button class="btn btn-outline">Transform</button><a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-primary">Join CPD</a><div class="user-menu"><div class="user-btn" onclick="toggleUserMenu()"><div class="user-badge">${currentUser.callsign?.substring(0, 3) || '--'}</div><div class="user-info"><div class="user-name">${currentUser.name}</div><div class="user-rank">${currentUser.rank}</div></div></div><div class="user-dropdown" id="userDropdown"><div class="dropdown-item" onclick="showPage('dashboard')">📊 Dashboard</div>${roleMenu}<div class="dropdown-item" onclick="window.location.href='mdt.html'">🖥️ MDT System</div><div class="dropdown-item" onclick="viewProfile('${currentUser.username}')">👤 My Profile</div><div class="dropdown-item" onclick="logout()">🚪 Logout</div></div></div><button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>`;
+      h.innerHTML = `<button class="btn btn-outline">Transform</button><a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-primary">Join CPD</a><div class="user-menu"><div class="user-btn" onclick="toggleUserMenu()"><div class="user-badge">${currentUser.callsign?.substring(0, 3) || '--'}</div><div class="user-info"><div class="user-name">${currentUser.name}</div><div class="user-rank">${currentUser.rank}</div></div></div><div class="user-dropdown" id="userDropdown"><div class="dropdown-item" onclick="showPage('dashboard')">📊 Dashboard</div>${roleMenu}<div class="dropdown-item" onclick="window.location.href='mdt.html'">🖥️ MDT System</div><div class="dropdown-item" onclick="window.location.href='profiles.html'">👤 My Profile</div><div class="dropdown-item" onclick="logout()">🚪 Logout</div></div></div><button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>`;
     });
   }
 });
