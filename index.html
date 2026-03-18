@@ -11,23 +11,13 @@
 </head>
 <body class="loading">
 
-<div id="loadingScreen" class="loading-screen">
+<div class="loading-screen" id="loadingScreen">
 <div class="city-skyline">
-<div class="building"></div>
-<div class="building"></div>
-<div class="building"></div>
-<div class="building"></div>
-<div class="building"></div>
-<div class="building"></div>
-<div class="building"></div>
-<div class="building"></div>
+<div class="building"></div><div class="building"></div><div class="building"></div><div class="building"></div>
+<div class="building"></div><div class="building"></div><div class="building"></div><div class="building"></div>
 </div>
 <div class="loading-content">
-<div class="loading-badge">
-<div class="logo-box">
-<div class="logo-star"></div>
-</div>
-</div>
+<div class="loading-badge"><div class="logo-box"><div class="logo-star"></div></div></div>
 <div class="loading-text">Chicago City Police</div>
 <div class="loading-spinner"></div>
 </div>
@@ -36,10 +26,8 @@
 <header class="header">
 <div class="header-top">
 <div class="logo-section" onclick="showPage('home')">
-<div class="header-logo-box">
-<div class="header-logo-star"></div>
-</div>
-<div class="logo-text">CCPD</div>
+<div class="header-logo-box"><div class="header-logo-star"></div></div>
+<span class="logo-text">Chicago Police Department</span>
 </div>
 <div class="header-actions" id="headerActions">
 <button class="btn btn-outline">Transform</button>
@@ -50,48 +38,61 @@
 </div>
 <nav class="navigation">
 <div class="nav-content" id="navigation">
-<a href="#" class="nav-link active" onclick="showPage('home');return false">Home</a>
-<a href="#" class="nav-link" onclick="showPage('news');return false">News</a>
+<a href="#" class="nav-link" onclick="showPage('news');return false">News & Media</a>
 <a href="#" class="nav-link" onclick="showPage('service');return false">Get Service</a>
-<a href="#" class="nav-link" onclick="showPage('community');return false">Community</a>
+<a href="#" class="nav-link" onclick="showPage('community');return false">Community Policing</a>
 <a href="#" class="nav-link" onclick="showPage('inside');return false">Inside CCPD</a>
+<a href="#" class="nav-link" onclick="showPage('documents');return false">Documents</a>
 </div>
 </nav>
 </header>
 
 <div id="home-page" class="page active">
+<div class="page-title-bar"><div class="page-title">We serve and protect.</div></div>
 <div class="content-wrapper">
 <div class="cards-grid">
-<div class="card card-large" onclick="showPage('news')">
-<div class="card-bg" style="background-image:linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.5)),url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800')"></div>
+<div class="card card-large" onclick="window.open('https://discord.gg/7vQEJnaD','_blank')">
+<div class="card-bg" style="background-image:url('join-bg.jpg')"></div>
 <div class="card-overlay"></div>
 <div class="card-content">
-<h2 class="card-title">Latest News & Updates</h2>
-<p class="card-description">Stay informed with announcements from the Chicago City Police Department.</p>
+<h2 class="card-title">Join CPD</h2>
+<p class="card-description">Make a difference within your community and help the people of Chicago City. Answer the call to serve those in need and begin building a better tomorrow today.</p>
+<a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-primary" onclick="event.stopPropagation()">Get Started</a>
+</div>
+</div>
+<div class="card" onclick="showPage('leadership')">
+<div class="card-bg" style="background-image:url('super-new.jpg')"></div>
+<div class="card-overlay"></div>
+<div class="card-content">
+<h2 class="card-title">Superintendent B.Stafford</h2>
+<button class="btn btn-primary" onclick="showPage('leadership');event.stopPropagation()">Learn About Us</button>
 </div>
 </div>
 <div class="card" onclick="showPage('community')">
-<div class="card-bg" style="background-image:linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.5)),url('https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=500')"></div>
+<div class="card-bg" style="background-image:url('crimes-bg.jpg')"></div>
 <div class="card-overlay"></div>
 <div class="card-content">
-<h2 class="card-title">Community Outreach</h2>
-<p class="card-description">Building stronger, safer communities together.</p>
+<h2 class="card-title">Help Solve Crimes</h2>
+<p class="card-description">Identify subjects on the video page.</p>
+<button class="btn btn-primary" onclick="showPage('community');event.stopPropagation()">Watch Videos</button>
 </div>
 </div>
-<div class="card" onclick="showPage('service')">
-<div class="card-bg" style="background-image:linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.5)),url('https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=500')"></div>
+<div class="card card-large" onclick="showPage('use-of-force')">
+<div class="card-bg" style="background-image:url('officers-new.jpg')"></div>
 <div class="card-overlay"></div>
 <div class="card-content">
-<h2 class="card-title">File a Report</h2>
-<p class="card-description">Report incidents and request assistance.</p>
+<h2 class="card-title">Use of Force Policy Reform</h2>
+<p class="card-description">Policies dictate Department members' ability to use force.</p>
+<button class="btn btn-primary" onclick="showPage('use-of-force');event.stopPropagation()">Read More</button>
 </div>
 </div>
-<div class="card" onclick="showPage('inside')">
-<div class="card-bg" style="background-image:linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.5)),url('https://images.unsplash.com/photo-1521791136064-7986c2920216?w=500')"></div>
+<div class="card" onclick="showPage('documents')">
+<div class="card-bg" style="background-color:#1e40af"></div>
 <div class="card-overlay"></div>
 <div class="card-content">
-<h2 class="card-title">Inside CCPD</h2>
-<p class="card-description">Learn about our department and mission.</p>
+<h2 class="card-title">Documents</h2>
+<p class="card-description">Access department policies and public records.</p>
+<button class="btn btn-primary" onclick="showPage('documents');event.stopPropagation()">View Documents</button>
 </div>
 </div>
 </div>
@@ -102,25 +103,24 @@
 <div class="login-container">
 <div class="login-box">
 <div class="login-header">
-<div class="login-logo">
-<div class="login-logo-star"></div>
-</div>
-<h1 class="login-title">Officer Portal</h1>
+<div class="login-logo"><div class="login-logo-star"></div></div>
+<h2 class="login-title">Officer Portal</h2>
 <p class="login-subtitle">Chicago City Police Department</p>
 </div>
 <form onsubmit="handleLogin(event)">
 <div class="form-group">
 <label class="form-label">Username</label>
-<input type="text" class="form-input" id="usernameInput" required>
+<input type="text" class="form-input" id="usernameInput" placeholder="Enter username" required>
 </div>
 <div class="form-group">
 <label class="form-label">Password</label>
-<input type="password" class="form-input" id="passwordInput" required>
+<input type="password" class="form-input" id="passwordInput" placeholder="Enter password" required>
 </div>
 <button type="submit" class="btn-login-submit">Sign In</button>
 </form>
 <div class="login-footer">
-<p>For technical support, contact IT Department</p>
+<p>Forgot password? <a href="#" onclick="alert('Contact IT Support');return false">Reset</a></p>
+<p style="margin-top:1rem">Need access? <a href="https://discord.gg/7vQEJnaD" target="_blank">Apply to Join</a></p>
 </div>
 </div>
 </div>
@@ -131,18 +131,19 @@
 <div class="content-wrapper">
 <div class="dashboard-header">
 <div class="officer-info">
-<div class="officer-badge-large" id="dashBadge">--</div>
+<div class="officer-badge-large" id="dashBadge">-</div>
 <div class="officer-details">
 <h2 id="dashName">Officer Name</h2>
 <p><strong>Rank:</strong> <span id="dashRank">-</span></p>
 <p><strong>Callsign:</strong> <span id="dashCallsign">-</span></p>
+<p><strong>Status:</strong> <span style="color:#059669">Active</span></p>
 </div>
 </div>
 </div>
 
 <div class="dashboard-grid">
 <div class="dashboard-card">
-<h3>My Reports <button class="btn btn-sm btn-primary" onclick="openModal('newReportModal')">+ New</button></h3>
+<h3>Recent Reports <button class="btn btn-sm btn-primary" onclick="openModal('newReportModal')">+ File Report</button></h3>
 <div id="dashReportsList"></div>
 </div>
 
@@ -150,11 +151,44 @@
 <h3>Department Updates</h3>
 <div id="dashUpdatesList"></div>
 </div>
+</div>
 
 <div class="dashboard-card">
-<h3>My Infractions</h3>
+<h3>My Infraction Log</h3>
 <div id="dashInfractionsList"></div>
 </div>
+</div>
+</div>
+
+<div id="profile-page" class="page">
+<div class="content-wrapper">
+<div class="profile-header">
+<div class="profile-badge" id="profileBadge">-</div>
+<h1 id="profileName" style="font-size:2rem;margin-bottom:.5rem">Officer Name</h1>
+<span class="rank-badge" id="profileRankBadge">Officer</span>
+<div class="profile-info">
+<div class="profile-info-item">
+<div class="profile-info-label">Callsign</div>
+<div class="profile-info-value" id="profileCallsign">-</div>
+</div>
+<div class="profile-info-item">
+<div class="profile-info-label">Rank</div>
+<div class="profile-info-value" id="profileRank">-</div>
+</div>
+<div class="profile-info-item">
+<div class="profile-info-label">Status</div>
+<div class="profile-info-value">Active</div>
+</div>
+<div class="profile-info-item">
+<div class="profile-info-label">Department</div>
+<div class="profile-info-value" id="profileDept">Patrol</div>
+</div>
+</div>
+</div>
+
+<div class="admin-section">
+<h3>Infraction Log</h3>
+<div id="profileInfractionsList"></div>
 </div>
 </div>
 </div>
@@ -305,39 +339,6 @@
 <h3>Core Principles</h3>
 <p>Sanctity of human life, de-escalation, proportional response, accountability.</p>
 <button class="btn btn-primary" onclick="showPage('documents')">Back to Documents</button>
-</div>
-</div>
-</div>
-
-<div id="profile-page" class="page">
-<div class="page-title-bar"><div class="page-title">Officer Profile</div></div>
-<div class="content-wrapper">
-<div class="profile-header">
-<div class="profile-badge" id="profileBadge">--</div>
-<h2 id="profileName">Officer Name</h2>
-<div class="profile-info">
-<div class="profile-info-item">
-<div class="profile-info-label">Rank</div>
-<div class="profile-info-value" id="profileRank">-</div>
-</div>
-<div class="profile-info-item">
-<div class="profile-info-label">Callsign</div>
-<div class="profile-info-value" id="profileCallsign">-</div>
-</div>
-<div class="profile-info-item">
-<div class="profile-info-label">Role</div>
-<div class="profile-info-value"><span class="rank-badge" id="profileRankBadge">-</span></div>
-</div>
-<div class="profile-info-item">
-<div class="profile-info-label">Department</div>
-<div class="profile-info-value" id="profileDept">-</div>
-</div>
-</div>
-</div>
-
-<div class="dashboard-card">
-<h3>Infractions</h3>
-<div id="profileInfractionsList"></div>
 </div>
 </div>
 </div>
@@ -526,7 +527,6 @@ async function apiCall(endpoint, options = {}) {
             headers: { ...headers, ...options.headers }
         });
         
-        // Handle 401 Unauthorized
         if (response.status === 401) {
             localStorage.removeItem('token');
             currentUser = null;
@@ -549,562 +549,67 @@ async function apiCall(endpoint, options = {}) {
     }
 }
 
-// =============================================
-// STATE MANAGEMENT
-// =============================================
-let currentUser = null;
-let officersCache = {};
+let currentUser=null;
+let officersCache={};
 
-// =============================================
-// AUTHENTICATION
-// =============================================
-async function handleLogin(e) {
-    e.preventDefault();
-    const username = document.getElementById('usernameInput').value;
-    const password = document.getElementById('passwordInput').value;
-    
-    try {
-        const data = await apiCall('/api/auth/login', {
-            method: 'POST',
-            body: JSON.stringify({ username, password })
-        });
-        
-        // Store token
-        localStorage.setItem('token', data.token);
-        
-        // Set current user
-        currentUser = data.user;
-        
-        updateHeaderForUser();
-        showPage('dashboard');
-        loadDashboard();
-    } catch (error) {
-        alert('Invalid credentials');
-    }
-    
-    return false;
-}
+async function handleLogin(e){e.preventDefault();const u=document.getElementById('usernameInput').value;const p=document.getElementById('passwordInput').value;try{const data=await apiCall('/api/auth/login',{method:'POST',body:JSON.stringify({username:u,password:p})});localStorage.setItem('token',data.token);currentUser=data.user;updateHeaderForUser();showPage('dashboard');loadDashboard()}catch(error){alert('Invalid credentials')}return false}
 
-function logout() {
-    currentUser = null;
-    localStorage.removeItem('token');
-    updateHeaderForUser();
-    showPage('home');
-}
+function updateHeaderForUser(){const h=document.getElementById('headerActions');if(currentUser){const roleMenu=currentUser.role==='Admin'?'<div class="dropdown-item" onclick="showPage(\'admin\')">⚙️ Admin Panel</div>':currentUser.role==='Supervisor'?'<div class="dropdown-item" onclick="showPage(\'supervisor\')">👮 Supervisor Panel</div>':'';h.innerHTML=`<button class="btn btn-outline">Transform</button><a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-primary">Join CPD</a><div class="user-menu"><div class="user-btn" onclick="toggleUserMenu()"><div class="user-badge">${currentUser.callsign?.substring(0,3)||'--'}</div><div class="user-info"><div class="user-name">${currentUser.name}</div><div class="user-rank">${currentUser.rank}</div></div></div><div class="user-dropdown" id="userDropdown"><div class="dropdown-item" onclick="showPage('dashboard')">📊 Dashboard</div>${roleMenu}<div class="dropdown-item" onclick="viewProfile('${currentUser.username}')">👤 My Profile</div><div class="dropdown-item" onclick="logout()">🚪 Logout</div></div></div><button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>`}else{h.innerHTML=`<button class="btn btn-outline">Transform</button><a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-primary">Join CPD</a><button class="btn btn-login" onclick="showPage('login')" id="loginBtn">Portal Login</button><button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>`}}
 
-// =============================================
-// OFFICERS API
-// =============================================
-async function loadOfficers() {
-    try {
-        const officers = await apiCall('/api/officers');
-        // Convert array to object for compatibility
-        officersCache = {};
-        officers.forEach(officer => {
-            officersCache[officer.username] = officer;
-        });
-        return officersCache;
-    } catch (error) {
-        console.error('Failed to load officers:', error);
-        return {};
-    }
-}
+function toggleUserMenu(){document.getElementById('userDropdown')?.classList.toggle('active')}
+function logout(){currentUser=null;localStorage.removeItem('token');updateHeaderForUser();showPage('home')}
 
-async function addOfficer(e) {
-    e.preventDefault();
-    if (currentUser.role !== 'Admin') {
-        alert('Admin only');
-        return false;
-    }
-    
-    const form = e.target;
-    const officerData = {
-        username: form.username.value,
-        password: form.password.value,
-        name: form.name.value,
-        callsign: form.callsign.value || '',
-        rank: form.rank.value,
-        role: form.role.value
-    };
-    
-    try {
-        await apiCall('/api/officers', {
-            method: 'POST',
-            body: JSON.stringify(officerData)
-        });
-        
-        closeModal('addOfficerModal');
-        form.reset();
-        alert('Officer added!');
-        await loadAdminPanel();
-    } catch (error) {
-        alert(error.message || 'Failed to add officer');
-    }
-    
-    return false;
-}
+async function loadOfficers(){try{const officers=await apiCall('/api/officers');officersCache={};officers.forEach(officer=>{officersCache[officer.username]=officer});return officersCache}catch(error){console.error('Failed to load officers:',error);return{}}}
 
-async function updateOfficer(e) {
-    e.preventDefault();
-    const username = document.getElementById('editUsername').value;
-    
-    const updateData = {
-        name: document.getElementById('editName').value,
-        callsign: document.getElementById('editCallsign').value,
-        rank: document.getElementById('editRank').value
-    };
-    
-    if (currentUser.role === 'Admin') {
-        updateData.role = document.getElementById('editRole').value;
-    }
-    
-    try {
-        await apiCall(`/api/officers/${username}`, {
-            method: 'PUT',
-            body: JSON.stringify(updateData)
-        });
-        
-        // If updating own profile, refresh current user
-        if (currentUser.username === username) {
-            currentUser = { ...currentUser, ...updateData };
-            updateHeaderForUser();
-        }
-        
-        closeModal('editOfficerModal');
-        alert('Officer updated!');
-        await loadAdminPanel();
-        await loadSupervisorPanel();
-    } catch (error) {
-        alert(error.message || 'Failed to update officer');
-    }
-    
-    return false;
-}
+async function loadDashboard(){if(!currentUser)return;document.getElementById('dashBadge').textContent=currentUser.callsign?.substring(0,4)||'--';document.getElementById('dashName').textContent=currentUser.name;document.getElementById('dashRank').textContent=currentUser.rank;document.getElementById('dashCallsign').textContent=currentUser.callsign||'Not Assigned';await loadDashReports();await loadDashUpdates();await loadDashInfractions()}
 
-async function deleteOfficer(username) {
-    if (!confirm('Delete this officer?')) return;
-    
-    try {
-        await apiCall(`/api/officers/${username}`, {
-            method: 'DELETE'
-        });
-        
-        await loadAdminPanel();
-        await loadSupervisorPanel();
-    } catch (error) {
-        alert(error.message || 'Failed to delete officer');
-    }
-}
+async function loadDashReports(){try{const reports=await apiCall('/api/reports');const myReports=reports.filter(r=>r.username===currentUser.username).slice(0,5);const c=document.getElementById('dashReportsList');c.innerHTML=myReports.length?myReports.map(r=>`<div class="report-item"><div class="report-header"><span class="report-id">#${r.id||r._id}</span><span class="status-badge status-${r.status}">${r.status}</span></div><div class="report-date">${new Date(r.date).toLocaleString()}</div><div class="report-type">${r.type}</div></div>`).join(''):'<div class="empty-state">No reports filed</div>'}catch(error){console.error('Failed to load reports:',error)}}
 
-// =============================================
-// REPORTS API
-// =============================================
-async function submitReport(e) {
-    e.preventDefault();
-    const form = e.target;
-    
-    const reportData = {
-        type: form.querySelector('select').value,
-        location: form.querySelectorAll('input')[0].value,
-        description: form.querySelector('textarea').value
-    };
-    
-    try {
-        await apiCall('/api/reports', {
-            method: 'POST',
-            body: JSON.stringify(reportData)
-        });
-        
-        closeModal('newReportModal');
-        form.reset();
-        alert('Report filed!');
-        await loadDashReports();
-    } catch (error) {
-        alert(error.message || 'Failed to file report');
-    }
-    
-    return false;
-}
+async function loadDashUpdates(){try{const updates=await apiCall('/api/updates');const c=document.getElementById('dashUpdatesList');c.innerHTML=updates.length?updates.slice(0,3).map(u=>`<div class="update-item"><strong>${u.title}</strong><br><small>${new Date(u.date).toLocaleDateString()} - ${u.author}</small><p>${u.content}</p></div>`).join(''):'<div class="empty-state">No updates</div>'}catch(error){console.error('Failed to load updates:',error)}}
 
-async function loadDashReports() {
-    try {
-        const reports = await apiCall('/api/reports');
-        const myReports = reports.filter(r => r.username === currentUser.username).slice(0, 5);
-        const c = document.getElementById('dashReportsList');
-        c.innerHTML = myReports.length
-            ? myReports.map(r => `<div class="report-item"><div class="report-header"><span class="report-id">#${r.id || r._id}</span><span class="status-badge status-${r.status}">${r.status}</span></div><div class="report-date">${new Date(r.date).toLocaleString()}</div><div class="report-type">${r.type}</div></div>`).join('')
-            : '<div class="empty-state">No reports filed</div>';
-    } catch (error) {
-        console.error('Failed to load reports:', error);
-    }
-}
+async function loadDashInfractions(){try{const officers=await loadOfficers();const officer=officers[currentUser.username];const inf=officer?.infractions||[];const c=document.getElementById('dashInfractionsList');c.innerHTML=inf.length?inf.map(i=>`<div class="infraction-item"><div class="infraction-header"><span class="infraction-reason">${i.reason}</span><span class="infraction-date">${new Date(i.date).toLocaleString()}</span></div><div class="infraction-details">${i.notes||'No additional notes'}</div><div class="infraction-issuer">Issued by: ${i.issuedBy}</div></div>`).join(''):'<div class="empty-state" style="color:#059669">No infractions on record</div>'}catch(error){console.error('Failed to load infractions:',error)}}
 
-// =============================================
-// UPDATES API
-// =============================================
-async function postUpdate(e) {
-    e.preventDefault();
-    if (currentUser.role !== 'Admin') {
-        alert('Only Admins can post updates');
-        return false;
-    }
-    
-    const form = e.target;
-    const updateData = {
-        title: form.querySelector('input').value,
-        content: form.querySelector('textarea').value
-    };
-    
-    try {
-        await apiCall('/api/updates', {
-            method: 'POST',
-            body: JSON.stringify(updateData)
-        });
-        
-        form.reset();
-        alert('Update posted!');
-        await loadAdminPanel();
-    } catch (error) {
-        alert(error.message || 'Failed to post update');
-    }
-    
-    return false;
-}
+async function submitReport(e){e.preventDefault();const form=e.target;const reportData={type:form.querySelector('select').value,location:form.querySelectorAll('input')[0].value,description:form.querySelector('textarea').value};try{await apiCall('/api/reports',{method:'POST',body:JSON.stringify(reportData)});closeModal('newReportModal');form.reset();alert('Report filed!');await loadDashReports()}catch(error){alert(error.message||'Failed to file report')}return false}
 
-async function loadDashUpdates() {
-    try {
-        const updates = await apiCall('/api/updates');
-        const c = document.getElementById('dashUpdatesList');
-        c.innerHTML = updates.length
-            ? updates.slice(0, 3).map(u => `<div class="update-item"><strong>${u.title}</strong><br><small>${new Date(u.date).toLocaleDateString()} - ${u.author}</small><p>${u.content}</p></div>`).join('')
-            : '<div class="empty-state">No updates</div>';
-    } catch (error) {
-        console.error('Failed to load updates:', error);
-    }
-}
+async function postUpdate(e){e.preventDefault();if(currentUser.role!=='Admin'){alert('Only Admins can post updates');return false}const form=e.target;const updateData={title:form.querySelector('input').value,content:form.querySelector('textarea').value};try{await apiCall('/api/updates',{method:'POST',body:JSON.stringify(updateData)});form.reset();alert('Update posted!');await loadAdminPanel()}catch(error){alert(error.message||'Failed to post update')}return false}
 
-async function loadNewsPage() {
-    try {
-        const updates = await apiCall('/api/updates');
-        document.getElementById('newsUpdatesList').innerHTML = updates.length
-            ? updates.map(u => `<div class="update-item"><strong>${u.title}</strong><br><small>${new Date(u.date).toLocaleDateString()} - ${u.author}</small><p>${u.content}</p></div>`).join('')
-            : '<div class="empty-state">No updates</div>';
-    } catch (error) {
-        console.error('Failed to load news:', error);
-    }
-}
+async function addOfficer(e){e.preventDefault();if(currentUser.role!=='Admin'){alert('Admin only');return false}const form=e.target;const officerData={username:form.username.value,password:form.password.value,name:form.name.value,callsign:form.callsign.value||'',rank:form.rank.value,role:form.role.value};try{await apiCall('/api/officers',{method:'POST',body:JSON.stringify(officerData)});closeModal('addOfficerModal');form.reset();alert('Officer added!');await loadAdminPanel()}catch(error){alert(error.message||'Failed to add officer')}return false}
 
-// =============================================
-// INFRACTIONS API
-// =============================================
-async function addInfraction(e) {
-    e.preventDefault();
-    if (currentUser.role !== 'Admin' && currentUser.role !== 'Supervisor') {
-        alert('Supervisor/Admin only');
-        return false;
-    }
-    
-    const username = document.getElementById('infractionUsername').value;
-    const form = e.target;
-    
-    const infractionData = {
-        reason: form.querySelector('input').value,
-        notes: form.querySelector('textarea').value || ''
-    };
-    
-    try {
-        await apiCall(`/api/officers/${username}/infractions`, {
-            method: 'POST',
-            body: JSON.stringify(infractionData)
-        });
-        
-        closeModal('addInfractionModal');
-        form.reset();
-        alert('Infraction added');
-        await viewProfile(username);
-    } catch (error) {
-        alert(error.message || 'Failed to add infraction');
-    }
-    
-    return false;
-}
+async function updateOfficer(e){e.preventDefault();const username=document.getElementById('editUsername').value;const updateData={name:document.getElementById('editName').value,callsign:document.getElementById('editCallsign').value,rank:document.getElementById('editRank').value};if(currentUser.role==='Admin'){updateData.role=document.getElementById('editRole').value}try{await apiCall(`/api/officers/${username}`,{method:'PUT',body:JSON.stringify(updateData)});if(currentUser.username===username){currentUser={...currentUser,...updateData};updateHeaderForUser()}closeModal('editOfficerModal');alert('Officer updated!');await loadAdminPanel();await loadSupervisorPanel()}catch(error){alert(error.message||'Failed to update officer')}return false}
 
-async function loadDashInfractions() {
-    try {
-        const officers = await loadOfficers();
-        const officer = officers[currentUser.username];
-        const inf = officer?.infractions || [];
-        const c = document.getElementById('dashInfractionsList');
-        c.innerHTML = inf.length
-            ? inf.map(i => `<div class="infraction-item"><div class="infraction-header"><span class="infraction-reason">${i.reason}</span><span class="infraction-date">${new Date(i.date).toLocaleString()}</span></div><div class="infraction-details">${i.notes || 'No additional notes'}</div><div class="infraction-issuer">Issued by: ${i.issuedBy}</div></div>`).join('')
-            : '<div class="empty-state" style="color:#059669">No infractions on record</div>';
-    } catch (error) {
-        console.error('Failed to load infractions:', error);
-    }
-}
+function editOfficer(username){const officer=officersCache[username];if(!officer)return;document.getElementById('editUsername').value=username;document.getElementById('editName').value=officer.name;document.getElementById('editCallsign').value=officer.callsign||'';document.getElementById('editRank').value=officer.rank;if(currentUser.role==='Admin'){document.getElementById('editRole').value=officer.role;document.getElementById('editRoleGroup').style.display='block'}else{document.getElementById('editRoleGroup').style.display='none'}openModal('editOfficerModal')}
 
-// =============================================
-// DASHBOARD
-// =============================================
-async function loadDashboard() {
-    if (!currentUser) return;
-    
-    document.getElementById('dashBadge').textContent = currentUser.callsign?.substring(0, 4) || '--';
-    document.getElementById('dashName').textContent = currentUser.name;
-    document.getElementById('dashRank').textContent = currentUser.rank;
-    document.getElementById('dashCallsign').textContent = currentUser.callsign || 'Not Assigned';
-    
-    await loadDashReports();
-    await loadDashUpdates();
-    await loadDashInfractions();
-}
+async function addInfraction(e){e.preventDefault();if(currentUser.role!=='Admin'&&currentUser.role!=='Supervisor'){alert('Supervisor/Admin only');return false}const username=document.getElementById('infractionUsername').value;const form=e.target;const infractionData={reason:form.querySelector('input').value,notes:form.querySelector('textarea').value||''};try{await apiCall(`/api/officers/${username}/infractions`,{method:'POST',body:JSON.stringify(infractionData)});closeModal('addInfractionModal');form.reset();alert('Infraction added');await viewProfile(username)}catch(error){alert(error.message||'Failed to add infraction')}return false}
 
-// =============================================
-// ADMIN PANEL
-// =============================================
-async function loadAdminPanel() {
-    if (currentUser?.role !== 'Admin') return;
-    
-    try {
-        const officers = await loadOfficers();
-        document.getElementById('allOfficersList').innerHTML = Object.keys(officers)
-            .map(u => renderOfficerCard(u, officers[u]))
-            .join('');
-        
-        const reports = await apiCall('/api/reports');
-        document.getElementById('allReportsList').innerHTML = reports.length
-            ? reports.map(r => `<div class="report-item"><div class="report-header"><span class="report-id">#${r.id || r._id}</span><span class="status-badge status-${r.status}">${r.status}</span></div><div class="report-date">${new Date(r.date).toLocaleString()} - ${r.officerName}</div><div class="report-type">${r.type}</div></div>`).join('')
-            : '<div class="empty-state">No reports</div>';
-    } catch (error) {
-        console.error('Failed to load admin panel:', error);
-    }
-}
+function openInfractionModal(username){document.getElementById('infractionUsername').value=username;openModal('addInfractionModal')}
 
-// =============================================
-// SUPERVISOR PANEL
-// =============================================
-async function loadSupervisorPanel() {
-    if (currentUser?.role !== 'Supervisor' && currentUser?.role !== 'Admin') return;
-    
-    try {
-        const officers = await loadOfficers();
-        document.getElementById('supervisorOfficersList').innerHTML = Object.keys(officers)
-            .map(u => renderOfficerCard(u, officers[u], true))
-            .join('');
-    } catch (error) {
-        console.error('Failed to load supervisor panel:', error);
-    }
-}
+async function deleteOfficer(username){if(!confirm('Delete this officer?'))return;try{await apiCall(`/api/officers/${username}`,{method:'DELETE'});await loadAdminPanel();await loadSupervisorPanel()}catch(error){alert(error.message||'Failed to delete officer')}}
 
-// =============================================
-// SEARCH FUNCTIONS
-// =============================================
-async function searchOfficers() {
-    const query = document.getElementById('officerSearch').value.toLowerCase();
-    const officers = await loadOfficers();
-    
-    const results = Object.keys(officers).filter(u => {
-        const o = officers[u];
-        return u.toLowerCase().includes(query) ||
-               o.name.toLowerCase().includes(query) ||
-               (o.callsign || '').toLowerCase().includes(query);
-    });
-    
-    const c = document.getElementById('searchResults');
-    c.innerHTML = results.length
-        ? results.map(u => renderOfficerCard(u, officers[u])).join('')
-        : '<div class="empty-state">No officers found</div>';
-}
+async function searchOfficers(){const query=document.getElementById('officerSearch').value.toLowerCase();const officers=await loadOfficers();const results=Object.keys(officers).filter(u=>{const o=officers[u];return u.toLowerCase().includes(query)||o.name.toLowerCase().includes(query)||(o.callsign||'').toLowerCase().includes(query)});const c=document.getElementById('searchResults');c.innerHTML=results.length?results.map(u=>renderOfficerCard(u,officers[u])).join(''):'<div class="empty-state">No officers found</div>'}
 
-async function supervisorSearchOfficers() {
-    const query = document.getElementById('supervisorSearch').value.toLowerCase();
-    const officers = await loadOfficers();
-    
-    const results = Object.keys(officers).filter(u => {
-        const o = officers[u];
-        return u.toLowerCase().includes(query) ||
-               o.name.toLowerCase().includes(query) ||
-               (o.callsign || '').toLowerCase().includes(query);
-    });
-    
-    const c = document.getElementById('supervisorResults');
-    c.innerHTML = results.length
-        ? results.map(u => renderOfficerCard(u, officers[u], true)).join('')
-        : '<div class="empty-state">No officers found</div>';
-}
+async function supervisorSearchOfficers(){const query=document.getElementById('supervisorSearch').value.toLowerCase();const officers=await loadOfficers();const results=Object.keys(officers).filter(u=>{const o=officers[u];return u.toLowerCase().includes(query)||o.name.toLowerCase().includes(query)||(o.callsign||'').toLowerCase().includes(query)});const c=document.getElementById('supervisorResults');c.innerHTML=results.length?results.map(u=>renderOfficerCard(u,officers[u],true)).join(''):'<div class="empty-state">No officers found</div>'}
 
-// =============================================
-// PROFILE & UI HELPERS
-// =============================================
-async function viewProfile(username) {
-    const officers = await loadOfficers();
-    const officer = officers[username];
-    if (!officer) return;
-    
-    document.getElementById('profileBadge').textContent = officer.callsign?.substring(0, 4) || '--';
-    document.getElementById('profileName').textContent = officer.name;
-    document.getElementById('profileRank').textContent = officer.rank;
-    document.getElementById('profileCallsign').textContent = officer.callsign || 'Not Assigned';
-    document.getElementById('profileRankBadge').textContent = officer.rank;
-    document.getElementById('profileRankBadge').className = 'rank-badge rank-' + officer.role.toLowerCase();
-    document.getElementById('profileDept').textContent = officer.dept || 'Patrol';
-    
-    const inf = officer.infractions || [];
-    document.getElementById('profileInfractionsList').innerHTML = inf.length
-        ? inf.map(i => `<div class="infraction-item"><div class="infraction-header"><span class="infraction-reason">${i.reason}</span><span class="infraction-date">${new Date(i.date).toLocaleString()}</span></div><div class="infraction-details">${i.notes || ''}</div><div class="infraction-issuer">Issued by: ${i.issuedBy}</div></div>`).join('')
-        : '<div class="empty-state" style="color:#059669">No infractions on record</div>';
-    
-    showPage('profile');
-}
+function renderOfficerCard(username,officer,isSupervisor=false){const canEdit=currentUser.role==='Admin'||currentUser.role==='Supervisor';return`<div class="officer-card" onclick="viewProfile('${username}')"><div class="officer-card-header"><div><div class="officer-name">${officer.name}</div><span class="rank-badge rank-${officer.role?.toLowerCase()||'officer'}">${officer.rank}</span></div></div><div class="officer-meta"><div class="officer-meta-item"><span class="officer-meta-label">Callsign:</span> ${officer.callsign||'Not Assigned'}</div><div class="officer-meta-item"><span class="officer-meta-label">Role:</span> ${officer.role}</div></div>${canEdit&&!isSupervisor?`<div style="margin-top:1rem;display:flex;gap:.5rem"><button class="btn btn-sm btn-primary" onclick="event.stopPropagation();editOfficer('${username}')">Edit</button><button class="btn btn-sm btn-warning" onclick="event.stopPropagation();openInfractionModal('${username}')">+ Infraction</button>${currentUser.role==='Admin'?`<button class="btn btn-sm btn-danger" onclick="event.stopPropagation();deleteOfficer('${username}')">Delete</button>`:''}</div>`:''}${canEdit&&isSupervisor?`<div style="margin-top:1rem"><button class="btn btn-sm btn-primary" onclick="event.stopPropagation();editOfficer('${username}')">Edit Callsign/Rank</button></div>`:''}</div>`}
 
-function editOfficer(username) {
-    const officer = officersCache[username];
-    if (!officer) return;
-    
-    document.getElementById('editUsername').value = username;
-    document.getElementById('editName').value = officer.name;
-    document.getElementById('editCallsign').value = officer.callsign || '';
-    document.getElementById('editRank').value = officer.rank;
-    
-    if (currentUser.role === 'Admin') {
-        document.getElementById('editRole').value = officer.role;
-        document.getElementById('editRoleGroup').style.display = 'block';
-    } else {
-        document.getElementById('editRoleGroup').style.display = 'none';
-    }
-    
-    openModal('editOfficerModal');
-}
+async function viewProfile(username){const officers=await loadOfficers();const officer=officers[username];if(!officer)return;document.getElementById('profileBadge').textContent=officer.callsign?.substring(0,4)||'--';document.getElementById('profileName').textContent=officer.name;document.getElementById('profileRank').textContent=officer.rank;document.getElementById('profileCallsign').textContent=officer.callsign||'Not Assigned';document.getElementById('profileRankBadge').textContent=officer.rank;document.getElementById('profileRankBadge').className='rank-badge rank-'+officer.role.toLowerCase();document.getElementById('profileDept').textContent=officer.dept||'Patrol';const inf=officer.infractions||[];document.getElementById('profileInfractionsList').innerHTML=inf.length?inf.map(i=>`<div class="infraction-item"><div class="infraction-header"><span class="infraction-reason">${i.reason}</span><span class="infraction-date">${new Date(i.date).toLocaleString()}</span></div><div class="infraction-details">${i.notes||''}</div><div class="infraction-issuer">Issued by: ${i.issuedBy}</div></div>`).join(''):'<div class="empty-state" style="color:#059669">No infractions on record</div>';showPage('profile')}
 
-function openInfractionModal(username) {
-    document.getElementById('infractionUsername').value = username;
-    openModal('addInfractionModal');
-}
+async function loadAdminPanel(){if(currentUser?.role!=='Admin')return;try{const officers=await loadOfficers();document.getElementById('allOfficersList').innerHTML=Object.keys(officers).map(u=>renderOfficerCard(u,officers[u])).join('');const reports=await apiCall('/api/reports');document.getElementById('allReportsList').innerHTML=reports.length?reports.map(r=>`<div class="report-item"><div class="report-header"><span class="report-id">#${r.id||r._id}</span><span class="status-badge status-${r.status}">${r.status}</span></div><div class="report-date">${new Date(r.date).toLocaleString()} - ${r.officerName}</div><div class="report-type">${r.type}</div></div>`).join(''):'<div class="empty-state">No reports</div>'}catch(error){console.error('Failed to load admin panel:',error)}}
 
-function renderOfficerCard(username, officer, isSupervisor = false) {
-    const canEdit = currentUser.role === 'Admin' || currentUser.role === 'Supervisor';
-    return `<div class="officer-card" onclick="viewProfile('${username}')">
-        <div class="officer-card-header">
-            <div>
-                <div class="officer-name">${officer.name}</div>
-                <span class="rank-badge rank-${officer.role?.toLowerCase() || 'officer'}">${officer.rank}</span>
-            </div>
-        </div>
-        <div class="officer-meta">
-            <div class="officer-meta-item"><span class="officer-meta-label">Callsign:</span> ${officer.callsign || 'Not Assigned'}</div>
-            <div class="officer-meta-item"><span class="officer-meta-label">Role:</span> ${officer.role}</div>
-        </div>
-        ${canEdit && !isSupervisor ? `<div style="margin-top:1rem;display:flex;gap:.5rem">
-            <button class="btn btn-sm btn-primary" onclick="event.stopPropagation();editOfficer('${username}')">Edit</button>
-            <button class="btn btn-sm btn-warning" onclick="event.stopPropagation();openInfractionModal('${username}')">+ Infraction</button>
-            ${currentUser.role === 'Admin' ? `<button class="btn btn-sm btn-danger" onclick="event.stopPropagation();deleteOfficer('${username}')">Delete</button>` : ''}
-        </div>` : ''}
-        ${canEdit && isSupervisor ? `<div style="margin-top:1rem">
-            <button class="btn btn-sm btn-primary" onclick="event.stopPropagation();editOfficer('${username}')">Edit Callsign/Rank</button>
-        </div>` : ''}
-    </div>`;
-}
+async function loadSupervisorPanel(){if(currentUser?.role!=='Supervisor'&&currentUser?.role!=='Admin')return;try{const officers=await loadOfficers();document.getElementById('supervisorOfficersList').innerHTML=Object.keys(officers).map(u=>renderOfficerCard(u,officers[u],true)).join('')}catch(error){console.error('Failed to load supervisor panel:',error)}}
 
-function updateHeaderForUser() {
-    const h = document.getElementById('headerActions');
-    if (currentUser) {
-        const roleMenu = currentUser.role === 'Admin'
-            ? '<div class="dropdown-item" onclick="showPage(\'admin\')">⚙️ Admin Panel</div>'
-            : currentUser.role === 'Supervisor'
-            ? '<div class="dropdown-item" onclick="showPage(\'supervisor\')">👮 Supervisor Panel</div>'
-            : '';
-        h.innerHTML = `<button class="btn btn-outline">Transform</button>
-            <a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-primary">Join CPD</a>
-            <div class="user-menu">
-                <div class="user-btn" onclick="toggleUserMenu()">
-                    <div class="user-badge">${currentUser.callsign?.substring(0, 3) || '--'}</div>
-                    <div class="user-info">
-                        <div class="user-name">${currentUser.name}</div>
-                        <div class="user-rank">${currentUser.rank}</div>
-                    </div>
-                </div>
-                <div class="user-dropdown" id="userDropdown">
-                    <div class="dropdown-item" onclick="showPage('dashboard')">📊 Dashboard</div>
-                    ${roleMenu}
-                    <div class="dropdown-item" onclick="viewProfile('${currentUser.username}')">👤 My Profile</div>
-                    <div class="dropdown-item" onclick="logout()">🚪 Logout</div>
-                </div>
-            </div>
-            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>`;
-    } else {
-        h.innerHTML = `<button class="btn btn-outline">Transform</button>
-            <a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-primary">Join CPD</a>
-            <button class="btn btn-login" onclick="showPage('login')" id="loginBtn">Portal Login</button>
-            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>`;
-    }
-}
+async function loadNewsPage(){try{const updates=await apiCall('/api/updates');document.getElementById('newsUpdatesList').innerHTML=updates.length?updates.map(u=>`<div class="update-item"><strong>${u.title}</strong><br><small>${new Date(u.date).toLocaleDateString()} - ${u.author}</small><p>${u.content}</p></div>`).join(''):'<div class="empty-state">No updates</div>'}catch(error){console.error('Failed to load news:',error)}}
 
-function toggleUserMenu() {
-    document.getElementById('userDropdown')?.classList.toggle('active');
-}
+function openModal(id){document.getElementById(id).classList.add('active')}
+function closeModal(id){document.getElementById(id).classList.remove('active')}
 
-// =============================================
-// MODAL & PAGE NAVIGATION
-// =============================================
-function openModal(id) {
-    document.getElementById(id).classList.add('active');
-}
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));const page=document.getElementById(id+'-page');if(page){page.classList.add('active');window.scrollTo(0,0)}document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));document.getElementById('navigation').classList.remove('mobile-open');if(id==='dashboard'&&currentUser)loadDashboard();if(id==='admin'&&currentUser?.role==='Admin')loadAdminPanel();if(id==='supervisor'&&(currentUser?.role==='Supervisor'||currentUser?.role==='Admin'))loadSupervisorPanel();if(id==='news')loadNewsPage()}
 
-function closeModal(id) {
-    document.getElementById(id).classList.remove('active');
-}
+function toggleMobileMenu(){document.getElementById('navigation').classList.toggle('mobile-open')}
 
-function showPage(id) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    const page = document.getElementById(id + '-page');
-    if (page) {
-        page.classList.add('active');
-        window.scrollTo(0, 0);
-    }
-    
-    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-    document.getElementById('navigation').classList.remove('mobile-open');
-    
-    if (id === 'dashboard' && currentUser) loadDashboard();
-    if (id === 'admin' && currentUser?.role === 'Admin') loadAdminPanel();
-    if (id === 'supervisor' && (currentUser?.role === 'Supervisor' || currentUser?.role === 'Admin')) loadSupervisorPanel();
-    if (id === 'news') loadNewsPage();
-}
+window.addEventListener('load',()=>{setTimeout(()=>{document.body.classList.remove('loading');document.getElementById('loadingScreen').classList.add('hidden')},2000)});
 
-function toggleMobileMenu() {
-    document.getElementById('navigation').classList.toggle('mobile-open');
-}
-
-// =============================================
-// INITIALIZATION
-// =============================================
-window.addEventListener('load', () => {
-    setTimeout(() => {
-        document.body.classList.remove('loading');
-        document.getElementById('loadingScreen').classList.add('hidden');
-    }, 2000);
-    
-    // Check for existing token
-    const token = localStorage.getItem('token');
-    if (token) {
-        // Verify token by attempting to load officers
-        apiCall('/api/officers')
-            .then(officers => {
-                // Token is valid, but we need to get user info
-                // The backend should return user info with the officers call or we need a /me endpoint
-                // For now, we'll need to login again
-                localStorage.removeItem('token');
-            })
-            .catch(() => {
-                localStorage.removeItem('token');
-            });
-    }
-});
-
-document.addEventListener('click', e => {
-    if (!e.target.closest('.user-menu'))
-        document.getElementById('userDropdown')?.classList.remove('active');
-});
+document.addEventListener('click',e=>{if(!e.target.closest('.user-menu'))document.getElementById('userDropdown')?.classList.remove('active')});
 </script>
 </body>
 </html>
+
