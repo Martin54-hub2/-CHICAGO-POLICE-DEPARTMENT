@@ -1189,9 +1189,8 @@ async function openEditProfile() {
   
   // Get certifications and commendations from displayed data
   const token = localStorage.getItem('authToken');
-  const viewedUsername = document.getElementById('profileName').dataset.username;
   
-  // Fetch to get array data
+  // Fetch to get array data (viewedUsername already declared above)
   fetch(`${API_BASE_URL}/api/officers/${viewedUsername}/profile`, {
     headers: { 'Authorization': `Bearer ${token}` }
   })
@@ -1293,12 +1292,23 @@ function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.
 
 function toggleMobileMenu(){document.getElementById('navigation').classList.toggle('mobile-open')}
 
+// Backup: Hide loading screen immediately when DOM is ready (in case of errors)
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    const loadingScreen = document.getElementById('loadingScreen');
+    if (loadingScreen) {
+      document.body.classList.remove('loading');
+      loadingScreen.classList.add('hidden');
+    }
+  }, 1500);
+});
+
 window.addEventListener('load', () => {
-  // Remove loading screen after 2 seconds
+  // Remove loading screen after 1 second
   setTimeout(() => {
     document.body.classList.remove('loading');
-    document.getElementById('loadingScreen').classList.add('hidden');
-  }, 2000);
+    document.getElementById('loadingScreen')?.classList.add('hidden');
+  }, 1000);
   
   // Check if user is logged in (don't wait for async)
   const saved = localStorage.currentUser;
