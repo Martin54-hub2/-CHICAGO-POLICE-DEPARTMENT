@@ -228,23 +228,28 @@
 <div id="dashboard-page" class="page">
 <div class="page-title-bar"><div class="page-title">Officer Dashboard</div></div>
 <div class="content-wrapper">
-<div class="dashboard-header">
+<div class="dashboard-header" id="dashboardHeader" style="background:linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);padding:2rem;border-radius:8px;margin-bottom:2rem;position:relative;overflow:hidden">
+<div style="position:absolute;top:1rem;right:1rem;z-index:10">
+<button class="btn btn-sm" onclick="document.getElementById('bannerInput').click()" style="background:rgba(255,255,255,0.2);color:#fff;border:1px solid rgba(255,255,255,0.3);padding:0.5rem 1rem">Change Banner</button>
+<input type="file" id="bannerInput" accept="image/*" style="display:none" onchange="uploadBanner()">
+</div>
 <div class="officer-info">
 <div style="position:relative;display:inline-block">
-<img id="dashPhoto" src="" style="width:120px;height:120px;border-radius:50%;object-fit:cover;display:none;cursor:pointer;border:3px solid #0ea5e9" onclick="document.getElementById('dashPhotoInput').click()">
-<div class="officer-badge-large" id="dashBadge" onclick="document.getElementById('dashPhotoInput').click()" style="cursor:pointer">-</div>
+<img id="dashPhoto" src="" style="width:120px;height:120px;border-radius:50%;object-fit:cover;display:none;cursor:pointer;border:3px solid #fff" onclick="document.getElementById('dashPhotoInput').click()">
+<div class="officer-badge-large" id="dashBadge" onclick="document.getElementById('dashPhotoInput').click()" style="cursor:pointer;border:3px solid #fff">-</div>
 <input type="file" id="dashPhotoInput" accept="image/*" style="display:none" onchange="uploadDashPhoto()">
 </div>
 <div class="officer-details">
 <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:2rem">
-<div>
-<h2 id="dashName">Officer Name</h2>
+<div style="color:#fff">
+<h2 id="dashName" style="color:#fff;text-shadow:0 2px 4px rgba(0,0,0,0.2)">Officer Name</h2>
 <p><strong>Rank:</strong> <span id="dashRank">-</span></p>
 <p><strong>Callsign:</strong> <span id="dashCallsign">-</span></p>
-<p><strong>Status:</strong> <span style="color:#059669">Active</span></p>
+<p><strong>Status:</strong> <span style="color:#10b981">Active</span></p>
 <p><strong>Days of Service:</strong> <span id="dashDays">0</span></p>
+<p style="margin-top:0.75rem;font-style:italic;opacity:0.9" id="dashBio">No bio provided</p>
 </div>
-<button class="btn btn-primary" onclick="openDashEditModal()">Edit Profile</button>
+<button class="btn btn-primary" onclick="openDashEditModal()" style="background:#fff;color:#1e3a8a">Edit Profile</button>
 </div>
 </div>
 </div>
@@ -385,12 +390,8 @@
 <label class="form-label">Biography</label>
 <textarea class="form-textarea" id="dashEditBio" rows="4" placeholder="Tell us about yourself..."></textarea>
 </div>
-<div class="form-group">
-<label class="form-label">Days of Service</label>
-<input type="number" class="form-input" id="dashEditDays" min="0" placeholder="0">
-</div>
-<div class="form-group">
-<label class="form-label">Department</label>
+<div class="form-group" id="dashEditDeptGroup" style="display:none">
+<label class="form-label">Department (Admin Only)</label>
 <select class="form-input" id="dashEditDept">
 <option value="Patrol">Patrol</option>
 <option value="Detectives">Detectives</option>
@@ -817,7 +818,7 @@
 <script>
 const API_BASE_URL = 'https://chicago-police-department-production.up.railway.app';
 
-const DB={init(){if(!localStorage.ccpd_officers)localStorage.ccpd_officers=JSON.stringify({"AdminPannel":{password:"CPD543",name:"System Administrator",callsign:"Admin-1",rank:"Administrator",role:"Admin",infractions:[]},"JohnSmith":{password:"officer123",name:"John Smith",callsign:"1-Adam-12",rank:"Officer",role:"Officer",infractions:[]},"B.Stafford":{password:"super123",name:"B.Stafford",callsign:"1-King-1",rank:"Superintendent",role:"Admin",infractions:[]}});if(!localStorage.ccpd_reports)localStorage.ccpd_reports=JSON.stringify([]);if(!localStorage.ccpd_updates)localStorage.ccpd_updates=JSON.stringify([]);if(!localStorage.ccpd_districts)localStorage.ccpd_districts=JSON.stringify([{id:1,number:'001',name:'Central',streets:['100-500 N State St','1-100 E Madison St','200-400 W Washington Blvd']},{id:2,number:'002',name:'Wentworth',streets:['1-500 S State St','100-300 E Cermak Rd']},{id:3,number:'003',name:'Grand Crossing',streets:['6900-8700 S Cottage Grove Ave']}]);},get(key){return JSON.parse(localStorage.getItem(key)||'{}')},set(key,val){localStorage.setItem(key,JSON.stringify(val))},getOfficers(){return this.get('ccpd_officers')},saveOfficers(o){this.set('ccpd_officers',o)},getReports(){return JSON.parse(localStorage.ccpd_reports||'[]')},saveReports(r){localStorage.ccpd_reports=JSON.stringify(r)},getUpdates(){return JSON.parse(localStorage.ccpd_updates||'[]')},saveUpdates(u){localStorage.ccpd_updates=JSON.stringify(u)},getDistricts(){return JSON.parse(localStorage.ccpd_districts||'[]')},saveDistricts(d){localStorage.ccpd_districts=JSON.stringify(d)}};
+const DB={init(){if(!localStorage.ccpd_officers)localStorage.ccpd_officers=JSON.stringify({"AdminPannel":{password:"CPD543",name:"System Administrator",callsign:"Admin-1",rank:"Administrator",role:"Admin",infractions:[],createdAt:new Date().toISOString()},"JohnSmith":{password:"officer123",name:"John Smith",callsign:"1-Adam-12",rank:"Officer",role:"Officer",infractions:[],createdAt:new Date().toISOString()},"B.Stafford":{password:"super123",name:"B.Stafford",callsign:"1-King-1",rank:"Superintendent",role:"Admin",infractions:[],createdAt:new Date().toISOString()}});if(!localStorage.ccpd_reports)localStorage.ccpd_reports=JSON.stringify([]);if(!localStorage.ccpd_updates)localStorage.ccpd_updates=JSON.stringify([]);if(!localStorage.ccpd_districts)localStorage.ccpd_districts=JSON.stringify([{id:1,number:'001',name:'Central',streets:['100-500 N State St','1-100 E Madison St','200-400 W Washington Blvd']},{id:2,number:'002',name:'Wentworth',streets:['1-500 S State St','100-300 E Cermak Rd']},{id:3,number:'003',name:'Grand Crossing',streets:['6900-8700 S Cottage Grove Ave']}]);},get(key){return JSON.parse(localStorage.getItem(key)||'{}')},set(key,val){localStorage.setItem(key,JSON.stringify(val))},getOfficers(){return this.get('ccpd_officers')},saveOfficers(o){this.set('ccpd_officers',o)},getReports(){return JSON.parse(localStorage.ccpd_reports||'[]')},saveReports(r){localStorage.ccpd_reports=JSON.stringify(r)},getUpdates(){return JSON.parse(localStorage.ccpd_updates||'[]')},saveUpdates(u){localStorage.ccpd_updates=JSON.stringify(u)},getDistricts(){return JSON.parse(localStorage.ccpd_districts||'[]')},saveDistricts(d){localStorage.ccpd_districts=JSON.stringify(d)}};
 DB.init();
 let currentUser=null;
 
@@ -829,25 +830,16 @@ async function updateHeaderForUser(){
   if(currentUser){
     const roleMenu=currentUser.role==='Admin'?'<div class="dropdown-item" onclick="showPage(\'admin\')">Admin Panel</div>':currentUser.role==='Supervisor'?'<div class="dropdown-item" onclick="showPage(\'supervisor\')">Supervisor Panel</div>':'';
     
-    // Fetch officer data for photo
+    // Load officer data from localStorage for photo
     let badgeContent = currentUser.callsign?.substring(0,3) || '--';
     let badgeStyle = '';
     
-    try {
-      const token = localStorage.getItem('authToken');
-      if (token) {
-        const response = await fetch(`${API_BASE_URL}/api/officers/${currentUser.username}`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const officer = await response.json();
-        
-        if (officer.photo) {
-          badgeStyle = `background-image:url(${officer.photo});background-size:cover;background-position:center;`;
-          badgeContent = '';
-        }
-      }
-    } catch (error) {
-      console.error('Error loading officer photo:', error);
+    const officers = DB.getOfficers();
+    const officer = officers[currentUser.username];
+    
+    if (officer && officer.photo) {
+      badgeStyle = `background-image:url(${officer.photo});background-size:cover;background-position:center;`;
+      badgeContent = '';
     }
     
     h.innerHTML=`<button class="btn btn-outline">Transform</button><a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-primary">Join CPD</a><div class="user-menu"><div class="user-btn" onclick="toggleUserMenu()"><div class="user-badge" style="${badgeStyle}">${badgeContent}</div><div class="user-info"><div class="user-name">${currentUser.name}</div><div class="user-rank">${currentUser.rank}</div></div></div><div class="user-dropdown" id="userDropdown"><div class="dropdown-item" onclick="showPage('dashboard')">Dashboard</div>${roleMenu}<div class="dropdown-item" onclick="window.location.href='mdt.html'">MDT System</div><div class="dropdown-item" onclick="logout()">Logout</div></div></div><button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>`
@@ -865,6 +857,14 @@ async function loadDashboard(){
   const officers = DB.getOfficers();
   const officer = officers[currentUser.username] || currentUser;
   
+  // Load banner if exists
+  const header = document.getElementById('dashboardHeader');
+  if (officer.banner) {
+    header.style.backgroundImage = `url(${officer.banner})`;
+    header.style.backgroundSize = 'cover';
+    header.style.backgroundPosition = 'center';
+  }
+  
   // Handle photo
   if (officer.photo) {
     document.getElementById('dashPhoto').src = officer.photo;
@@ -879,7 +879,19 @@ async function loadDashboard(){
   document.getElementById('dashName').textContent = officer.name || currentUser.name;
   document.getElementById('dashRank').textContent = officer.rank || currentUser.rank;
   document.getElementById('dashCallsign').textContent = officer.callsign || currentUser.callsign || 'Not Assigned';
-  document.getElementById('dashDays').textContent = officer.daysOfService || 0;
+  
+  // AUTO-CALCULATE Days of Service
+  if (officer.createdAt) {
+    const created = new Date(officer.createdAt);
+    const now = new Date();
+    const days = Math.floor((now - created) / (1000 * 60 * 60 * 24));
+    document.getElementById('dashDays').textContent = days;
+  } else {
+    document.getElementById('dashDays').textContent = 0;
+  }
+  
+  // Show bio
+  document.getElementById('dashBio').textContent = officer.bio || 'No bio provided';
   
   // Load certifications
   const certsContainer = document.getElementById('dashCertsContainer');
@@ -1006,16 +1018,51 @@ function uploadDashPhoto() {
   reader.readAsDataURL(file);
 }
 
+// Banner upload
+function uploadBanner() {
+  const file = document.getElementById('bannerInput').files[0];
+  if (!file) return;
+  
+  console.log('[DASHBOARD] Uploading banner');
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const bannerData = e.target.result;
+    
+    const officers = DB.getOfficers();
+    if (!officers[currentUser.username]) {
+      officers[currentUser.username] = {...currentUser};
+    }
+    officers[currentUser.username].banner = bannerData;
+    DB.saveOfficers(officers);
+    
+    const header = document.getElementById('dashboardHeader');
+    header.style.backgroundImage = `url(${bannerData})`;
+    header.style.backgroundSize = 'cover';
+    header.style.backgroundPosition = 'center';
+    
+    console.log('[DASHBOARD] Banner uploaded successfully');
+    alert('Banner updated successfully');
+  };
+  reader.readAsDataURL(file);
+}
+
 // Open dashboard edit modal
 function openDashEditModal() {
   const officers = DB.getOfficers();
   const officer = officers[currentUser.username] || currentUser;
   
   document.getElementById('dashEditBio').value = officer.bio || '';
-  document.getElementById('dashEditDays').value = officer.daysOfService || 0;
-  document.getElementById('dashEditDept').value = officer.department || officer.dept || 'Patrol';
   document.getElementById('dashEditEmail').value = officer.email || '';
   document.getElementById('dashEditPhone').value = officer.phone || '';
+  
+  // Show department field only for admins
+  if (currentUser.role === 'Admin') {
+    document.getElementById('dashEditDeptGroup').style.display = 'block';
+    document.getElementById('dashEditDept').value = officer.department || officer.dept || 'Patrol';
+  } else {
+    document.getElementById('dashEditDeptGroup').style.display = 'none';
+  }
   
   openModal('dashEditModal');
 }
@@ -1027,11 +1074,14 @@ function saveDashProfile(e) {
   
   const profileData = {
     bio: document.getElementById('dashEditBio').value,
-    daysOfService: parseInt(document.getElementById('dashEditDays').value) || 0,
-    department: document.getElementById('dashEditDept').value,
     email: document.getElementById('dashEditEmail').value,
     phone: document.getElementById('dashEditPhone').value
   };
+  
+  // Only admins can change department
+  if (currentUser.role === 'Admin') {
+    profileData.department = document.getElementById('dashEditDept').value;
+  }
   
   const officers = DB.getOfficers();
   if (!officers[currentUser.username]) {
@@ -1648,10 +1698,20 @@ window.addEventListener('load', () => {
     // Call async function but don't wait
     updateHeaderForUser().catch(err => {
       console.error('Error updating header:', err);
-      // Fallback to basic display
+      // Fallback to basic display with photo check
       const h = document.getElementById('headerActions');
       const roleMenu = currentUser.role === 'Admin' ? '<div class="dropdown-item" onclick="showPage(\'admin\')">Admin Panel</div>' : currentUser.role === 'Supervisor' ? '<div class="dropdown-item" onclick="showPage(\'supervisor\')">Supervisor Panel</div>' : '';
-      h.innerHTML = `<button class="btn btn-outline">Transform</button><a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-primary">Join CPD</a><div class="user-menu"><div class="user-btn" onclick="toggleUserMenu()"><div class="user-badge">${currentUser.callsign?.substring(0, 3) || '--'}</div><div class="user-info"><div class="user-name">${currentUser.name}</div><div class="user-rank">${currentUser.rank}</div></div></div><div class="user-dropdown" id="userDropdown"><div class="dropdown-item" onclick="showPage('dashboard')">Dashboard</div>${roleMenu}<div class="dropdown-item" onclick="window.location.href='mdt.html'">MDT System</div><div class="dropdown-item" onclick="logout()">Logout</div></div></div><button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>`;
+      
+      const officers = DB.getOfficers();
+      const officer = officers[currentUser.username];
+      let badgeContent = currentUser.callsign?.substring(0, 3) || '--';
+      let badgeStyle = '';
+      if (officer && officer.photo) {
+        badgeStyle = `background-image:url(${officer.photo});background-size:cover;background-position:center;`;
+        badgeContent = '';
+      }
+      
+      h.innerHTML = `<button class="btn btn-outline">Transform</button><a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-primary">Join CPD</a><div class="user-menu"><div class="user-btn" onclick="toggleUserMenu()"><div class="user-badge" style="${badgeStyle}">${badgeContent}</div><div class="user-info"><div class="user-name">${currentUser.name}</div><div class="user-rank">${currentUser.rank}</div></div></div><div class="user-dropdown" id="userDropdown"><div class="dropdown-item" onclick="showPage('dashboard')">Dashboard</div>${roleMenu}<div class="dropdown-item" onclick="window.location.href='mdt.html'">MDT System</div><div class="dropdown-item" onclick="logout()">Logout</div></div></div><button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>`;
     });
   }
 });
