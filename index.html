@@ -250,6 +250,12 @@
 <h3>Department Updates</h3>
 <div id="dashUpdatesList"></div>
 </div>
+
+<div class="dashboard-card">
+<h3>Mobile Data Terminal</h3>
+<p style="color:#6b7280;margin-bottom:1rem">Access MDT to search suspects, add charges, and manage criminal records.</p>
+<button class="btn btn-primary" onclick="window.location.href='mdt.html'">🖥️ Access MDT</button>
+</div>
 </div>
 
 <div class="dashboard-card">
@@ -333,6 +339,12 @@
 </div>
 
 <div class="admin-section">
+<h3>Mobile Data Terminal (MDT)</h3>
+<p style="color:#6b7280;margin-bottom:1rem">Search suspects, add charges, and manage criminal records.</p>
+<button class="btn btn-primary" onclick="window.location.href='mdt.html'">🖥️ Access MDT</button>
+</div>
+
+<div class="admin-section">
 <h3>All Reports</h3>
 <div id="allReportsList"></div>
 </div>
@@ -355,6 +367,12 @@
 <div class="admin-section">
 <h3>Manage Officers</h3>
 <div class="officer-list" id="supervisorOfficersList"></div>
+</div>
+
+<div class="admin-section">
+<h3>Mobile Data Terminal (MDT)</h3>
+<p style="color:#6b7280;margin-bottom:1rem">Search suspects, add charges, and manage criminal records.</p>
+<button class="btn btn-primary" onclick="window.location.href='mdt.html'">🖥️ Access MDT</button>
 </div>
 </div>
 </div>
@@ -611,6 +629,8 @@
 </footer>
 
 <script>
+const API_BASE_URL = 'https://chicago-police-department-production.up.railway.app';
+
 const DB={init(){if(!localStorage.ccpd_officers)localStorage.ccpd_officers=JSON.stringify({"AdminPannel":{password:"CPD543",name:"System Administrator",callsign:"Admin-1",rank:"Administrator",role:"Admin",infractions:[]},"JohnSmith":{password:"officer123",name:"John Smith",callsign:"1-Adam-12",rank:"Officer",role:"Officer",infractions:[]},"B.Stafford":{password:"super123",name:"B.Stafford",callsign:"1-King-1",rank:"Superintendent",role:"Admin",infractions:[]}});if(!localStorage.ccpd_reports)localStorage.ccpd_reports=JSON.stringify([]);if(!localStorage.ccpd_updates)localStorage.ccpd_updates=JSON.stringify([]);if(!localStorage.ccpd_districts)localStorage.ccpd_districts=JSON.stringify([{id:1,number:'001',name:'Central',streets:['100-500 N State St','1-100 E Madison St','200-400 W Washington Blvd']},{id:2,number:'002',name:'Wentworth',streets:['1-500 S State St','100-300 E Cermak Rd']},{id:3,number:'003',name:'Grand Crossing',streets:['6900-8700 S Cottage Grove Ave']}]);},get(key){return JSON.parse(localStorage.getItem(key)||'{}')},set(key,val){localStorage.setItem(key,JSON.stringify(val))},getOfficers(){return this.get('ccpd_officers')},saveOfficers(o){this.set('ccpd_officers',o)},getReports(){return JSON.parse(localStorage.ccpd_reports||'[]')},saveReports(r){localStorage.ccpd_reports=JSON.stringify(r)},getUpdates(){return JSON.parse(localStorage.ccpd_updates||'[]')},saveUpdates(u){localStorage.ccpd_updates=JSON.stringify(u)},getDistricts(){return JSON.parse(localStorage.ccpd_districts||'[]')},saveDistricts(d){localStorage.ccpd_districts=JSON.stringify(d)}};
 DB.init();
 let currentUser=null;
@@ -624,15 +644,141 @@ function logout(){currentUser=null;localStorage.removeItem('currentUser');update
 
 function loadDashboard(){if(!currentUser)return;document.getElementById('dashBadge').textContent=currentUser.callsign?.substring(0,4)||'--';document.getElementById('dashName').textContent=currentUser.name;document.getElementById('dashRank').textContent=currentUser.rank;document.getElementById('dashCallsign').textContent=currentUser.callsign||'Not Assigned';loadDashReports();loadDashUpdates();loadDashInfractions()}
 
-function loadDashReports(){const reports=DB.getReports().filter(r=>r.username===currentUser.username).slice(0,5);const c=document.getElementById('dashReportsList');c.innerHTML=reports.length?reports.map(r=>`<div class="report-item"><div class="report-header"><span class="report-id">#${r.id}</span><span class="status-badge status-${r.status}">${r.status}</span></div><div class="report-date">${r.date}</div><div class="report-type">${r.type}</div></div>`).join(''):'<div class="empty-state">No reports filed</div>'}
+async function loadDashReports(){
+  try {
+    const token = localStorage.getItem('authToken');
+    if (!token) return;
+    
+    const response = await fetch(`${API_BASE_URL}/api/reports/officer/${currentUser.username}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const reports = await response.json();
+    
+    const c = document.getElementById('dashReportsList');
+    c.innerHTML = reports.length ? reports.slice(0, 5).map(r => `
+      <div class="report-item">
+        <div class="report-header">
+          <span class="report-id">#${r.id}</span>
+          <span class="status-badge status-${r.status}">${r.status}</span>
+        </div>
+        <div class="report-date">${r.date}</div>
+        <div class="report-type">${r.type}</div>
+      </div>
+    `).join('') : '<div class="empty-state">No reports filed</div>';
+  } catch (error) {
+    console.error('Error loading reports:', error);
+    document.getElementById('dashReportsList').innerHTML = '<div class="empty-state">Error loading reports</div>';
+  }
+}
 
-function loadDashUpdates(){const updates=DB.getUpdates().slice(0,3);const c=document.getElementById('dashUpdatesList');c.innerHTML=updates.length?updates.map(u=>`<div class="update-item"><strong>${u.title}</strong><br><small>${u.date}</small><p>${u.content}</p></div>`).join(''):'<div class="empty-state">No updates</div>'}
+async function loadDashUpdates(){
+  try {
+    const token = localStorage.getItem('authToken');
+    if (!token) return;
+    
+    const response = await fetch(`${API_BASE_URL}/api/updates`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const updates = await response.json();
+    
+    const c = document.getElementById('dashUpdatesList');
+    c.innerHTML = updates.length ? updates.slice(0, 3).map(u => `
+      <div class="update-item">
+        <strong>${u.title}</strong><br>
+        <small>${u.date}</small>
+        <p>${u.content}</p>
+      </div>
+    `).join('') : '<div class="empty-state">No updates</div>';
+  } catch (error) {
+    console.error('Error loading updates:', error);
+    document.getElementById('dashUpdatesList').innerHTML = '<div class="empty-state">No updates</div>';
+  }
+}
 
 function loadDashInfractions(){const officers=DB.getOfficers();const officer=officers[currentUser.username];const inf=officer?.infractions||[];const c=document.getElementById('dashInfractionsList');c.innerHTML=inf.length?inf.map(i=>`<div class="infraction-item"><div class="infraction-header"><span class="infraction-reason">${i.reason}</span><span class="infraction-date">${i.date}</span></div><div class="infraction-details">${i.notes||'No additional notes'}</div><div class="infraction-issuer">Issued by: ${i.issuedBy}</div></div>`).join(''):'<div class="empty-state" style="color:#059669">No infractions on record</div>'}
 
-function submitReport(e){e.preventDefault();const form=e.target;const report={id:'R'+Date.now(),date:new Date().toLocaleString(),type:form.querySelector('select').value,location:form.querySelectorAll('input')[0].value,description:form.querySelector('textarea').value,username:currentUser.username,officerName:currentUser.name,status:'pending'};const reports=DB.getReports();reports.unshift(report);DB.saveReports(reports);closeModal('newReportModal');form.reset();loadDashReports();alert('Report filed!');return false}
+async function submitReport(e){
+  e.preventDefault();
+  
+  const token = localStorage.getItem('authToken');
+  if (!token) {
+    alert('Please login first');
+    return false;
+  }
+  
+  const form = e.target;
+  const reportData = {
+    type: form.querySelector('select').value,
+    location: form.querySelectorAll('input')[0].value,
+    description: form.querySelector('textarea').value
+  };
+  
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/reports`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(reportData)
+    });
+    
+    if (!response.ok) throw new Error('Failed to file report');
+    
+    closeModal('newReportModal');
+    form.reset();
+    loadDashReports();
+    alert('Report filed!');
+  } catch (error) {
+    console.error('Error filing report:', error);
+    alert('Error filing report. Please try again.');
+  }
+  
+  return false;
+}
 
-function postUpdate(e){e.preventDefault();if(currentUser.role!=='Admin'){alert('Only Admins can post updates');return false}const form=e.target;const update={title:form.querySelector('input').value,content:form.querySelector('textarea').value,date:new Date().toLocaleDateString(),author:currentUser.name};const updates=DB.getUpdates();updates.unshift(update);DB.saveUpdates(updates);form.reset();alert('Update posted!');loadAdminPanel();return false}
+async function postUpdate(e){
+  e.preventDefault();
+  
+  if(currentUser.role !== 'Admin'){
+    alert('Only Admins can post updates');
+    return false;
+  }
+  
+  const token = localStorage.getItem('authToken');
+  if (!token) {
+    alert('Please login first');
+    return false;
+  }
+  
+  const form = e.target;
+  const updateData = {
+    title: form.querySelector('input').value,
+    content: form.querySelector('textarea').value
+  };
+  
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/updates`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(updateData)
+    });
+    
+    if (!response.ok) throw new Error('Failed to post update');
+    
+    form.reset();
+    alert('Update posted!');
+    loadAdminPanel();
+  } catch (error) {
+    console.error('Error posting update:', error);
+    alert('Error posting update. Please try again.');
+  }
+  
+  return false;
+}
 
 function addOfficer(e){e.preventDefault();if(currentUser.role!=='Admin'){alert('Admin only');return false}const form=e.target;const username=form.username.value;const officers=DB.getOfficers();if(officers[username]){alert('Username exists');return false}officers[username]={password:form.password.value,name:form.name.value,callsign:form.callsign.value||'',rank:form.rank.value,role:form.role.value,infractions:[]};DB.saveOfficers(officers);closeModal('addOfficerModal');form.reset();alert('Officer added!');loadAdminPanel();return false}
 
@@ -654,7 +800,37 @@ function renderOfficerCard(username,officer,isSupervisor=false){const canEdit=cu
 
 function viewProfile(username){const officers=DB.getOfficers();const officer=officers[username];if(!officer)return;document.getElementById('profileBadge').textContent=officer.callsign?.substring(0,4)||'--';document.getElementById('profileName').textContent=officer.name;document.getElementById('profileRank').textContent=officer.rank;document.getElementById('profileCallsign').textContent=officer.callsign||'Not Assigned';document.getElementById('profileRankBadge').textContent=officer.rank;document.getElementById('profileRankBadge').className='rank-badge rank-'+officer.role.toLowerCase();document.getElementById('profileDept').textContent=officer.dept||'Patrol';const inf=officer.infractions||[];document.getElementById('profileInfractionsList').innerHTML=inf.length?inf.map(i=>`<div class="infraction-item"><div class="infraction-header"><span class="infraction-reason">${i.reason}</span><span class="infraction-date">${i.date}</span></div><div class="infraction-details">${i.notes||''}</div><div class="infraction-issuer">Issued by: ${i.issuedBy}</div></div>`).join(''):'<div class="empty-state" style="color:#059669">No infractions on record</div>';showPage('profile')}
 
-function loadAdminPanel(){if(currentUser?.role!=='Admin')return;const officers=DB.getOfficers();document.getElementById('allOfficersList').innerHTML=Object.keys(officers).map(u=>renderOfficerCard(u,officers[u])).join('');const reports=DB.getReports();document.getElementById('allReportsList').innerHTML=reports.length?reports.map(r=>`<div class="report-item"><div class="report-header"><span class="report-id">#${r.id}</span><span class="status-badge status-${r.status}">${r.status}</span></div><div class="report-date">${r.date} - ${r.officerName}</div><div class="report-type">${r.type}</div></div>`).join(''):'<div class="empty-state">No reports</div>'}
+async function loadAdminPanel(){
+  if(currentUser?.role !== 'Admin') return;
+  
+  const officers = DB.getOfficers();
+  document.getElementById('allOfficersList').innerHTML = Object.keys(officers).map(u => renderOfficerCard(u, officers[u])).join('');
+  
+  try {
+    const token = localStorage.getItem('authToken');
+    if (!token) return;
+    
+    const response = await fetch(`${API_BASE_URL}/api/reports`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const reports = await response.json();
+    
+    document.getElementById('allReportsList').innerHTML = reports.length ? 
+      reports.map(r => `
+        <div class="report-item">
+          <div class="report-header">
+            <span class="report-id">#${r.id}</span>
+            <span class="status-badge status-${r.status}">${r.status}</span>
+          </div>
+          <div class="report-date">${r.date} - ${r.officerName}</div>
+          <div class="report-type">${r.type}</div>
+        </div>
+      `).join('') : '<div class="empty-state">No reports</div>';
+  } catch (error) {
+    console.error('Error loading reports:', error);
+    document.getElementById('allReportsList').innerHTML = '<div class="empty-state">Error loading reports</div>';
+  }
+}
 
 function loadSupervisorPanel(){if(currentUser?.role!=='Supervisor'&&currentUser?.role!=='Admin')return;const officers=DB.getOfficers();document.getElementById('supervisorOfficersList').innerHTML=Object.keys(officers).map(u=>renderOfficerCard(u,officers[u],true)).join('')}
 
