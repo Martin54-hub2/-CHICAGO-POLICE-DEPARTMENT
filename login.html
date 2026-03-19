@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Login — Chicago Police Department</title>
+  <link rel="icon" href="../images/badge.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="top-bar-red"></div>
+  <header class="site-header">
+    <div class="container header-top">
+      <a href="../index.html" class="site-brand">
+        <div class="brand-flag"></div>
+        <span class="brand-name">CHICAGO POLICE DEPARTMENT</span>
+      </a>
+      <div class="header-actions"></div>
+    </div>
+    <div class="header-nav">
+      <div class="container">
+        <nav class="main-nav" role="navigation">
+          <ul>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="news.html">News &amp; Media</a></li>
+            <li><a href="services.html">Our Services</a></li>
+            <li><a href="departments.html">Departments</a></li>
+            <li><a href="roster.html">Roster</a></li>
+            <li><a href="most-wanted.html">Most Wanted</a></li>
+            <li><a href="codes.html">10-Codes</a></li>
+            <li><a href="district.html">Find District</a></li>
+            <li><a href="apply.html">Join CPD</a></li>
+          </ul>
+        </nav>
+        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-header">
+    <div class="container">
+      <div class="breadcrumb"><a href="../index.html">Home</a> <span>›</span> Portal Login</div>
+      <h1>Officer Portal Login</h1>
+      <p>Access your CPD officer dashboard and resources</p>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div class="form-card">
+        <div class="text-center" style="margin-bottom:24px;">
+          <img src="../images/badge.svg" alt="CPD Badge" style="width:72px;height:72px;margin:0 auto 12px;">
+          <h2 style="font-size:20px;">Chicago Police Department</h2>
+          <p style="font-size:14px;color:var(--gray-500);">Authorized Personnel Only</p>
+        </div>
+        <div class="form-error" id="login-error"></div>
+        <form id="login-form">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" class="form-control" placeholder="Enter your username" required>
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" class="form-control" placeholder="Enter your password" required>
+          </div>
+          <button type="submit" class="btn btn-blue btn-lg" style="width:100%;">Sign In</button>
+        </form>
+        <div style="text-align:center;margin-top:20px;">
+          <p style="font-size:13px;color:var(--gray-500);">Don't have an account? <a href="apply.html">Apply to join CPD</a></p>
+        </div>
+
+        <div style="margin-top:28px;padding-top:20px;border-top:1px solid var(--gray-200);">
+          <p style="font-size:12px;color:var(--gray-400);text-align:center;margin-bottom:12px;">Demo Accounts</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px;color:var(--gray-500);">
+            <div><strong>Admin:</strong> bstafford / admin123</div>
+            <div><strong>Supervisor:</strong> jmartinez / super123</div>
+            <div><strong>Lieutenant:</strong> rwilson / lt123</div>
+            <div><strong>Officer:</strong> klee / officer123</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        &copy; 2024 Chicago Police Department — FiveM Roleplay. All rights reserved.
+      </div>
+    </div>
+    <div class="footer-bottom-red"></div>
+  </footer>
+
+  <script src="../js/storage.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    // Redirect if already logged in
+    if (CPD.isLoggedIn()) {
+      window.location.href = 'profile.html';
+    }
+
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+      const errEl = document.getElementById('login-error');
+      errEl.style.display = 'none';
+
+      if (!username || !password) {
+        errEl.textContent = 'Please fill in all fields.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      const result = Auth.login(username, password);
+      if (result.success) {
+        if (result.user.role === 'admin') {
+          window.location.href = '../admin/dashboard.html';
+        } else {
+          window.location.href = 'profile.html';
+        }
+      } else {
+        errEl.textContent = result.message;
+        errEl.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

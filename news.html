@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>News &amp; Media — Chicago Police Department</title>
+  <link rel="icon" href="../images/badge.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="top-bar-red"></div>
+  <header class="site-header">
+    <div class="container header-top">
+      <a href="../index.html" class="site-brand"><div class="brand-flag"></div><span class="brand-name">CHICAGO POLICE DEPARTMENT</span></a>
+      <div class="header-actions"></div>
+    </div>
+    <div class="header-nav">
+      <div class="container">
+        <nav class="main-nav" role="navigation">
+          <ul>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="news.html">News &amp; Media</a></li>
+            <li><a href="services.html">Our Services</a></li>
+            <li><a href="departments.html">Departments</a></li>
+            <li><a href="roster.html">Roster</a></li>
+            <li><a href="most-wanted.html">Most Wanted</a></li>
+            <li><a href="codes.html">10-Codes</a></li>
+            <li><a href="district.html">Find District</a></li>
+            <li><a href="apply.html">Join CPD</a></li>
+          </ul>
+        </nav>
+        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-header">
+    <div class="container">
+      <div class="breadcrumb"><a href="../index.html">Home</a> <span>›</span> News &amp; Media</div>
+      <h1>News &amp; Media</h1>
+      <p>Latest news, stories, and announcements from the Chicago Police Department</p>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div style="display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap;">
+        <input type="text" id="news-search" class="form-control" placeholder="Search news..." style="max-width:360px;">
+        <select id="news-filter" class="form-control" style="max-width:180px;">
+          <option value="">All Categories</option>
+          <option value="Operations">Operations</option>
+          <option value="Community">Community</option>
+          <option value="Training">Training</option>
+        </select>
+      </div>
+      <div class="card-grid" id="news-grid"></div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">&copy; 2024 Chicago Police Department — FiveM Roleplay. All rights reserved.</div>
+    </div>
+    <div class="footer-bottom-red"></div>
+  </footer>
+
+  <script src="../js/storage.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    function renderNews() {
+      const search = document.getElementById('news-search').value.toLowerCase();
+      const cat = document.getElementById('news-filter').value;
+      let news = CPD.getNews();
+
+      if (search) news = news.filter(n => n.title.toLowerCase().includes(search) || n.content.toLowerCase().includes(search));
+      if (cat) news = news.filter(n => n.category === cat);
+
+      const grid = document.getElementById('news-grid');
+      if (!news.length) {
+        grid.innerHTML = '<p style="color:var(--gray-500);padding:40px;text-align:center;">No news articles found.</p>';
+        return;
+      }
+      grid.innerHTML = news.map(n => `
+        <div class="card">
+          <div class="card-header-blue">
+            <span>${n.category || 'General'}</span>
+          </div>
+          <div class="card-body">
+            <p style="font-size:12px;color:var(--gray-400);margin-bottom:6px;">${formatDate(n.date)} — ${n.author || 'CPD'}</p>
+            <h3 style="font-size:16px;margin-bottom:8px;color:var(--navy);">${n.title}</h3>
+            <p>${n.content}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    document.getElementById('news-search').addEventListener('input', renderNews);
+    document.getElementById('news-filter').addEventListener('change', renderNews);
+    renderNews();
+  </script>
+</body>
+</html>

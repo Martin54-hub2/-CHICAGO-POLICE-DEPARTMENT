@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Officer Roster — Chicago Police Department</title>
+  <link rel="icon" href="../images/badge.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="top-bar-red"></div>
+  <header class="site-header">
+    <div class="container header-top">
+      <a href="../index.html" class="site-brand"><div class="brand-flag"></div><span class="brand-name">CHICAGO POLICE DEPARTMENT</span></a>
+      <div class="header-actions"></div>
+    </div>
+    <div class="header-nav">
+      <div class="container">
+        <nav class="main-nav" role="navigation">
+          <ul>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="news.html">News &amp; Media</a></li>
+            <li><a href="services.html">Our Services</a></li>
+            <li><a href="departments.html">Departments</a></li>
+            <li><a href="roster.html">Roster</a></li>
+            <li><a href="most-wanted.html">Most Wanted</a></li>
+            <li><a href="codes.html">10-Codes</a></li>
+            <li><a href="district.html">Find District</a></li>
+            <li><a href="apply.html">Join CPD</a></li>
+          </ul>
+        </nav>
+        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-header">
+    <div class="container">
+      <div class="breadcrumb"><a href="../index.html">Home</a> <span>›</span> Officer Roster</div>
+      <h1>Officer Roster</h1>
+      <p>Current active members of the Chicago Police Department</p>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <!-- Filter -->
+      <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;">
+        <input type="text" id="roster-search" class="form-control" placeholder="Search by name, badge, or department..." style="max-width:360px;">
+        <select id="roster-filter" class="form-control" style="max-width:180px;">
+          <option value="">All Ranks</option>
+          <option value="Superintendent">Superintendent</option>
+          <option value="Deputy Superintendent">Deputy Superintendent</option>
+          <option value="Lieutenant">Lieutenant</option>
+          <option value="Sergeant">Sergeant</option>
+          <option value="Police Officer">Police Officer</option>
+        </select>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Badge #</th>
+              <th>Name</th>
+              <th>Rank</th>
+              <th>Department</th>
+              <th>Status</th>
+              <th>Days of Service</th>
+            </tr>
+          </thead>
+          <tbody id="roster-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">&copy; 2024 Chicago Police Department — FiveM Roleplay. All rights reserved.</div>
+    </div>
+    <div class="footer-bottom-red"></div>
+  </footer>
+
+  <script src="../js/storage.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    function renderRoster() {
+      const search = document.getElementById('roster-search').value.toLowerCase();
+      const rankFilter = document.getElementById('roster-filter').value;
+      let officers = CPD.getOfficers();
+
+      if (search) {
+        officers = officers.filter(o =>
+          `${o.firstName} ${o.lastName}`.toLowerCase().includes(search) ||
+          o.badge.includes(search) ||
+          o.department.toLowerCase().includes(search)
+        );
+      }
+      if (rankFilter) {
+        officers = officers.filter(o => o.rank === rankFilter);
+      }
+
+      // Sort by rank hierarchy
+      const rankOrder = ['Superintendent','Deputy Superintendent','Commander','Lieutenant','Sergeant','Police Officer'];
+      officers.sort((a,b) => rankOrder.indexOf(a.rank) - rankOrder.indexOf(b.rank));
+
+      document.getElementById('roster-body').innerHTML = officers.map(o => `
+        <tr>
+          <td><strong>#${o.badge}</strong></td>
+          <td>${o.firstName} ${o.lastName}</td>
+          <td>${o.rank}</td>
+          <td>${o.department}</td>
+          <td><span class="badge badge-${o.status.toLowerCase()}">${o.status}</span></td>
+          <td>${CPD.getDaysOfService(o.createdAt)} days</td>
+        </tr>
+      `).join('');
+    }
+
+    document.getElementById('roster-search').addEventListener('input', renderRoster);
+    document.getElementById('roster-filter').addEventListener('change', renderRoster);
+    renderRoster();
+  </script>
+</body>
+</html>

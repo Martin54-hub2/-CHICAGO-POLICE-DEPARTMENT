@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Most Wanted — Chicago Police Department</title>
+  <link rel="icon" href="../images/badge.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="top-bar-red"></div>
+  <header class="site-header">
+    <div class="container header-top">
+      <a href="../index.html" class="site-brand"><div class="brand-flag"></div><span class="brand-name">CHICAGO POLICE DEPARTMENT</span></a>
+      <div class="header-actions"></div>
+    </div>
+    <div class="header-nav">
+      <div class="container">
+        <nav class="main-nav" role="navigation">
+          <ul>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="news.html">News &amp; Media</a></li>
+            <li><a href="services.html">Our Services</a></li>
+            <li><a href="departments.html">Departments</a></li>
+            <li><a href="roster.html">Roster</a></li>
+            <li><a href="most-wanted.html">Most Wanted</a></li>
+            <li><a href="codes.html">10-Codes</a></li>
+            <li><a href="district.html">Find District</a></li>
+            <li><a href="apply.html">Join CPD</a></li>
+          </ul>
+        </nav>
+        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-header">
+    <div class="container">
+      <div class="breadcrumb"><a href="../index.html">Home</a> <span>›</span> Most Wanted</div>
+      <h1>Most Wanted / BOLOs</h1>
+      <p>Help the CPD locate these individuals — if you have information, contact your local district immediately</p>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:var(--radius);padding:14px 18px;margin-bottom:24px;font-size:14px;color:#991b1b;">
+        <strong>⚠ Warning:</strong> Do not attempt to apprehend these individuals yourself. If you have information, call 911 or your local district station.
+      </div>
+      <div class="wanted-grid" id="wanted-grid"></div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">&copy; 2024 Chicago Police Department — FiveM Roleplay. All rights reserved.</div>
+    </div>
+    <div class="footer-bottom-red"></div>
+  </footer>
+
+  <script src="../js/storage.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    function renderWanted() {
+      const wanted = CPD.getWanted();
+      const grid = document.getElementById('wanted-grid');
+      if (!wanted.length) {
+        grid.innerHTML = '<p style="text-align:center;color:var(--gray-500);padding:40px;">No wanted persons at this time.</p>';
+        return;
+      }
+      grid.innerHTML = wanted.map(w => `
+        <div class="wanted-card">
+          <div class="wanted-photo">
+            &#128100;
+            <span class="threat-badge badge badge-${w.threat.toLowerCase()}">${w.threat} Threat</span>
+          </div>
+          <div class="wanted-info">
+            <div class="wanted-name">${w.name}</div>
+            ${w.alias ? `<div style="font-size:12px;color:var(--gray-500);margin-bottom:4px;">AKA: "${w.alias}"</div>` : ''}
+            <div class="wanted-charges">${w.charges}</div>
+            <div class="wanted-details">
+              <strong>Description:</strong> ${w.description}<br>
+              <strong>Last Seen:</strong> ${w.lastSeen}<br>
+              <strong>Date Added:</strong> ${formatDate(w.dateAdded)}
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+    renderWanted();
+  </script>
+</body>
+</html>

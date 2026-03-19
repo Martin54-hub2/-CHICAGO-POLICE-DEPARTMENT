@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chicago Police Department — We Serve &amp; Protect</title>
+  <link rel="icon" href="images/badge.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- LOADING SCREEN -->
+  <div class="loading-screen">
+    <img src="images/badge.svg" alt="CPD Badge" class="loading-badge">
+    <div class="loading-text">CHICAGO POLICE DEPARTMENT</div>
+    <div class="loading-sub">WE SERVE &amp; PROTECT</div>
+    <div class="loading-bar"><div class="loading-bar-fill"></div></div>
+  </div>
+
+  <!-- RED TOP BAR -->
+  <div class="top-bar-red"></div>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="container header-top">
+      <a href="index.html" class="site-brand">
+        <div class="brand-flag"></div>
+        <span class="brand-name">CHICAGO POLICE DEPARTMENT</span>
+      </a>
+      <div class="header-actions">
+        <!-- Filled by main.js -->
+      </div>
+    </div>
+    <div class="header-nav">
+      <div class="container">
+        <nav class="main-nav" role="navigation">
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="pages/news.html">News &amp; Media</a></li>
+            <li><a href="pages/services.html">Our Services</a></li>
+            <li><a href="pages/departments.html">Departments</a></li>
+            <li><a href="pages/roster.html">Roster</a></li>
+            <li><a href="pages/most-wanted.html">Most Wanted</a></li>
+            <li><a href="pages/codes.html">10-Codes</a></li>
+            <li><a href="pages/district.html">Find District</a></li>
+            <li><a href="pages/apply.html">Join CPD</a></li>
+          </ul>
+        </nav>
+        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- TAGLINE -->
+  <section class="hero-tagline">
+    <div class="container">
+      <h1>We serve and protect.</h1>
+    </div>
+  </section>
+
+  <!-- HERO CARDS -->
+  <section class="hero-cards">
+    <div class="container">
+      <div class="hero-grid">
+        <!-- Large card: Join CPD -->
+        <div class="hero-card hero-card-large" onclick="location.href='pages/apply.html'">
+          <div class="card-bg" style="background:linear-gradient(135deg,#0369a1,#0ea5e9);"></div>
+          <div class="card-overlay"></div>
+          <div class="card-content">
+            <h3>Join CPD</h3>
+            <p>Serve your community and make a real difference. Apply now to become part of the Chicago Police Department.</p>
+            <span class="card-btn">Learn More</span>
+          </div>
+        </div>
+        <!-- Small card: Superintendent -->
+        <div class="hero-card hero-card-small" onclick="location.href='pages/departments.html'">
+          <div class="card-bg" style="background:linear-gradient(135deg,#1e3a5a,#2c5282);"></div>
+          <div class="card-overlay"></div>
+          <div class="card-content">
+            <h3>Superintendent's Briefing</h3>
+            <p>A message from Superintendent B. Stafford</p>
+            <span class="card-btn">Learn More</span>
+          </div>
+        </div>
+        <!-- Small card: Community -->
+        <div class="hero-card hero-card-small" onclick="location.href='pages/news.html'">
+          <div class="card-bg" style="background:linear-gradient(135deg,#374151,#1e3a5a);"></div>
+          <div class="card-overlay"></div>
+          <div class="card-content">
+            <h3>Community Updates</h3>
+            <p>Latest news and updates from CPD</p>
+            <span class="card-btn">View</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUICK LINKS -->
+  <section class="quick-links">
+    <div class="container">
+      <div class="quick-links-grid">
+        <a href="pages/departments.html" class="quick-link">Bureau of Detectives</a>
+        <a href="pages/departments.html" class="quick-link">Bureau of Internal Affairs</a>
+        <a href="pages/departments.html" class="quick-link">Bureau of Patrol</a>
+        <a href="pages/codes.html" class="quick-link">10-Codes &amp; Radio Codes</a>
+        <a href="pages/roster.html" class="quick-link">Officer Roster</a>
+        <a href="pages/most-wanted.html" class="quick-link">Most Wanted / BOLOs</a>
+        <a href="pages/news.html" class="quick-link">News &amp; Announcements</a>
+        <a href="pages/services.html" class="quick-link">Public Records</a>
+        <a href="pages/apply.html" class="quick-link">Recruitment</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICE CATALOG -->
+  <section class="service-catalog">
+    <div class="container">
+      <h2>Service Catalog</h2>
+      <p class="service-desc">The Chicago Police Department offers several services for its Chicago citizens. We have services for purchasing crime and traffic reports, registering information, reporting tips, requesting data, and searching our databases.</p>
+      <div class="service-icons">
+        <a href="pages/services.html" class="service-icon-item">
+          <div class="icon-circle">&#128203;</div>
+          <div class="icon-label">Purchase</div>
+        </a>
+        <a href="pages/services.html" class="service-icon-item">
+          <div class="icon-circle">&#9997;</div>
+          <div class="icon-label">Register</div>
+        </a>
+        <a href="pages/services.html" class="service-icon-item">
+          <div class="icon-circle">&#9888;</div>
+          <div class="icon-label">Report</div>
+        </a>
+        <a href="pages/services.html" class="service-icon-item">
+          <div class="icon-circle">&#128228;</div>
+          <div class="icon-label">Request</div>
+        </a>
+        <a href="pages/services.html" class="service-icon-item">
+          <div class="icon-circle">&#128269;</div>
+          <div class="icon-label">Search</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FIND YOUR DISTRICT -->
+  <section class="district-section">
+    <div class="container">
+      <h2>Find Your District</h2>
+      <p class="district-sub">Use the search below or navigate to the district map to find your district.</p>
+      <div class="district-search-box">
+        <div class="search-tabs">
+          <button class="search-tab active">Address Search</button>
+          <button class="search-tab">By District #</button>
+        </div>
+        <div class="district-form">
+          <div class="form-group">
+            <label>Street #</label>
+            <input type="text" placeholder="e.g. 1718">
+          </div>
+          <div class="form-group">
+            <label>Direction</label>
+            <select>
+              <option>N</option><option>S</option><option>E</option><option>W</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Street Name</label>
+            <input type="text" placeholder="e.g. State">
+          </div>
+          <div class="form-group">
+            <label>Street Type</label>
+            <select>
+              <option>St</option><option>Ave</option><option>Blvd</option><option>Dr</option><option>Rd</option><option>Pl</option><option>Ct</option>
+            </select>
+          </div>
+          <div class="form-group full">
+            <a href="pages/district.html" class="btn btn-blue">Find My District</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED STORIES -->
+  <section class="featured-section">
+    <div class="container">
+      <div class="featured-grid">
+        <div class="stories-col">
+          <div class="featured-header">
+            <h2>Featured Stories</h2>
+            <a href="pages/news.html">View All News →</a>
+          </div>
+          <div id="home-stories">
+            <!-- Filled by JS -->
+          </div>
+        </div>
+        <div class="breaking-news">
+          <h3>Breaking News</h3>
+          <div class="breaking-item">
+            <span class="breaking-source">Tweets by Chicago_Police</span>
+            <p>Follow us on social media for the latest updates and community alerts from the Chicago Police Department.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOIN CPD BANNER -->
+  <section class="join-banner">
+    <div class="container">
+      <h2>Join CPD. It Starts with You.</h2>
+      <p>The City of Chicago is currently seeking qualified Police Officer candidates for the Chicago Police Department. Chicago has the second largest Police Department in the nation, with over 12,000 officers dedicated to protecting the safety and rights of all people.</p>
+      <a href="pages/apply.html" class="btn btn-white btn-lg">Apply Now</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h4 class="footer-heading">Chicago Police Department</h4>
+          <p class="footer-about">Dedicated to serving and protecting the people of Chicago. We work to maintain public safety through professionalism, integrity, and community engagement.</p>
+          <p class="footer-about" style="margin-top:12px;">
+            <strong>Emergency:</strong> 911<br>
+            <strong>Non-Emergency:</strong> (312) 555-1234
+          </p>
+        </div>
+        <div>
+          <h4 class="footer-heading">Quick Links</h4>
+          <ul class="footer-links">
+            <li><a href="pages/news.html">News &amp; Media</a></li>
+            <li><a href="pages/services.html">Our Services</a></li>
+            <li><a href="pages/departments.html">Departments</a></li>
+            <li><a href="pages/roster.html">Officer Roster</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="footer-heading">Resources</h4>
+          <ul class="footer-links">
+            <li><a href="pages/most-wanted.html">Most Wanted</a></li>
+            <li><a href="pages/codes.html">10-Codes</a></li>
+            <li><a href="pages/district.html">Find Your District</a></li>
+            <li><a href="pages/apply.html">Join CPD</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="footer-heading">Connect</h4>
+          <ul class="footer-links">
+            <li><a href="#">Discord</a></li>
+            <li><a href="#">TeamSpeak</a></li>
+            <li><a href="#">CAD / MDT</a></li>
+            <li><a href="pages/login.html">Officer Portal</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        &copy; 2024 Chicago Police Department — FiveM Roleplay. All rights reserved. We Serve &amp; Protect.
+      </div>
+    </div>
+    <div class="footer-bottom-red"></div>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    // Populate featured stories from storage
+    const storiesEl = document.getElementById('home-stories');
+    if (storiesEl) {
+      const news = CPD.getNews().slice(0, 3);
+      storiesEl.innerHTML = news.map(n => `
+        <div class="story-item">
+          <div class="story-thumb">&#128196;</div>
+          <div class="story-content">
+            <h3>${n.title}</h3>
+            <span class="story-date">${formatDate(n.date)}</span>
+            <p>${n.content.substring(0, 100)}...</p>
+          </div>
+        </div>
+      `).join('');
+    }
+  </script>
+
+</body>
+</html>
