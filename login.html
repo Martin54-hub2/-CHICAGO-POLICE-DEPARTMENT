@@ -5,33 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Portal Login — Chicago Police Department</title>
   <link rel="icon" href="../images/badge.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Source+Sans+3:wght@300;400;600;700&family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 </head>
 <body>
   <div class="top-bar-red"></div>
   <header class="site-header">
     <div class="container header-top">
-      <a href="../index.html" class="site-brand">
-        <div class="brand-flag"></div>
-        <span class="brand-name">CHICAGO POLICE DEPARTMENT</span>
-      </a>
+      <a href="../index.html" class="site-brand"><div class="brand-flag"></div><span class="brand-name">CHICAGO POLICE DEPARTMENT</span></a>
       <div class="header-actions"></div>
     </div>
     <div class="header-nav">
       <div class="container">
-        <nav class="main-nav" role="navigation">
-          <ul>
-            <li><a href="../index.html">Home</a></li>
-            <li><a href="news.html">News &amp; Media</a></li>
-            <li><a href="services.html">Our Services</a></li>
-            <li><a href="departments.html">Departments</a></li>
-            <li><a href="roster.html">Roster</a></li>
-            <li><a href="most-wanted.html">Most Wanted</a></li>
-            <li><a href="codes.html">10-Codes</a></li>
-            <li><a href="district.html">Find District</a></li>
-            <li><a href="apply.html">Join CPD</a></li>
-          </ul>
-        </nav>
+        <nav class="main-nav" role="navigation"><ul>
+          <li><a href="../index.html">Home</a></li><li><a href="news.html">News &amp; Media</a></li><li><a href="services.html">Our Services</a></li><li><a href="departments.html">Departments</a></li><li><a href="roster.html">Roster</a></li><li><a href="most-wanted.html">Most Wanted</a></li><li><a href="codes.html">10-Codes</a></li><li><a href="district.html">Find District</a></li><li><a href="apply.html">Join CPD</a></li>
+        </ul></nav>
         <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button>
       </div>
     </div>
@@ -39,7 +30,7 @@
 
   <div class="page-header">
     <div class="container">
-      <div class="breadcrumb"><a href="../index.html">Home</a> <span>›</span> Portal Login</div>
+      <div class="breadcrumb"><a href="../index.html">Home</a> <span>&rsaquo;</span> Portal Login</div>
       <h1>Officer Portal Login</h1>
       <p>Access your CPD officer dashboard and resources</p>
     </div>
@@ -68,7 +59,6 @@
         <div style="text-align:center;margin-top:20px;">
           <p style="font-size:13px;color:var(--gray-500);">Don't have an account? <a href="apply.html">Apply to join CPD</a></p>
         </div>
-
         <div style="margin-top:28px;padding-top:20px;border-top:1px solid var(--gray-200);">
           <p style="font-size:12px;color:var(--gray-400);text-align:center;margin-bottom:12px;">Demo Accounts</p>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px;color:var(--gray-500);">
@@ -83,11 +73,7 @@
   </section>
 
   <footer class="site-footer">
-    <div class="container">
-      <div class="footer-bottom">
-        &copy; 2024 Chicago Police Department — FiveM Roleplay. All rights reserved.
-      </div>
-    </div>
+    <div class="container"><div class="footer-bottom">&copy; 2024 Chicago Police Department — FiveM Roleplay. All rights reserved.</div></div>
     <div class="footer-bottom-red"></div>
   </footer>
 
@@ -95,10 +81,8 @@
   <script src="../js/auth.js"></script>
   <script src="../js/main.js"></script>
   <script>
-    // Redirect if already logged in
-    if (CPD.isLoggedIn()) {
-      window.location.href = 'profile.html';
-    }
+    lucide.createIcons();
+    if (CPD.isLoggedIn()) window.location.href = 'profile.html';
 
     document.getElementById('login-form').addEventListener('submit', function(e) {
       e.preventDefault();
@@ -106,24 +90,11 @@
       const password = document.getElementById('password').value;
       const errEl = document.getElementById('login-error');
       errEl.style.display = 'none';
-
-      if (!username || !password) {
-        errEl.textContent = 'Please fill in all fields.';
-        errEl.style.display = 'block';
-        return;
-      }
-
+      if (!username || !password) { errEl.textContent = 'Please fill in all fields.'; errEl.style.display = 'block'; return; }
       const result = Auth.login(username, password);
       if (result.success) {
-        if (result.user.role === 'admin') {
-          window.location.href = '../admin/dashboard.html';
-        } else {
-          window.location.href = 'profile.html';
-        }
-      } else {
-        errEl.textContent = result.message;
-        errEl.style.display = 'block';
-      }
+        window.location.href = result.user.role === 'admin' ? '../admin/dashboard.html' : 'profile.html';
+      } else { errEl.textContent = result.message; errEl.style.display = 'block'; }
     });
   </script>
 </body>

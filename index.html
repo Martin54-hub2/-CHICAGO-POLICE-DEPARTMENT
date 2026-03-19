@@ -5,7 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chicago Police Department — We Serve &amp; Protect</title>
   <link rel="icon" href="images/badge.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Source+Sans+3:wght@300;400;600;700&family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 </head>
 <body>
 
@@ -17,19 +21,15 @@
     <div class="loading-bar"><div class="loading-bar-fill"></div></div>
   </div>
 
-  <!-- RED TOP BAR -->
   <div class="top-bar-red"></div>
 
-  <!-- HEADER -->
   <header class="site-header">
     <div class="container header-top">
       <a href="index.html" class="site-brand">
         <div class="brand-flag"></div>
         <span class="brand-name">CHICAGO POLICE DEPARTMENT</span>
       </a>
-      <div class="header-actions">
-        <!-- Filled by main.js -->
-      </div>
+      <div class="header-actions"></div>
     </div>
     <div class="header-nav">
       <div class="container">
@@ -51,18 +51,13 @@
     </div>
   </header>
 
-  <!-- TAGLINE -->
   <section class="hero-tagline">
-    <div class="container">
-      <h1>We serve and protect.</h1>
-    </div>
+    <div class="container"><h1>We serve and protect.</h1></div>
   </section>
 
-  <!-- HERO CARDS -->
   <section class="hero-cards">
     <div class="container">
       <div class="hero-grid">
-        <!-- Large card: Join CPD -->
         <div class="hero-card hero-card-large" onclick="location.href='pages/apply.html'">
           <div class="card-bg" style="background:linear-gradient(135deg,#0369a1,#0ea5e9);"></div>
           <div class="card-overlay"></div>
@@ -72,7 +67,6 @@
             <span class="card-btn">Learn More</span>
           </div>
         </div>
-        <!-- Small card: Superintendent -->
         <div class="hero-card hero-card-small" onclick="location.href='pages/departments.html'">
           <div class="card-bg" style="background:linear-gradient(135deg,#1e3a5a,#2c5282);"></div>
           <div class="card-overlay"></div>
@@ -82,7 +76,6 @@
             <span class="card-btn">Learn More</span>
           </div>
         </div>
-        <!-- Small card: Community -->
         <div class="hero-card hero-card-small" onclick="location.href='pages/news.html'">
           <div class="card-bg" style="background:linear-gradient(135deg,#374151,#1e3a5a);"></div>
           <div class="card-overlay"></div>
@@ -96,7 +89,6 @@
     </div>
   </section>
 
-  <!-- QUICK LINKS -->
   <section class="quick-links">
     <div class="container">
       <div class="quick-links-grid">
@@ -113,37 +105,20 @@
     </div>
   </section>
 
-  <!-- SERVICE CATALOG -->
   <section class="service-catalog">
     <div class="container">
       <h2>Service Catalog</h2>
-      <p class="service-desc">The Chicago Police Department offers several services for its Chicago citizens. We have services for purchasing crime and traffic reports, registering information, reporting tips, requesting data, and searching our databases.</p>
+      <p class="service-desc">The Chicago Police Department offers several services for its Chicago citizens including purchasing crime and traffic reports, registering information, reporting tips, requesting data, and searching our databases.</p>
       <div class="service-icons">
-        <a href="pages/services.html" class="service-icon-item">
-          <div class="icon-circle">&#128203;</div>
-          <div class="icon-label">Purchase</div>
-        </a>
-        <a href="pages/services.html" class="service-icon-item">
-          <div class="icon-circle">&#9997;</div>
-          <div class="icon-label">Register</div>
-        </a>
-        <a href="pages/services.html" class="service-icon-item">
-          <div class="icon-circle">&#9888;</div>
-          <div class="icon-label">Report</div>
-        </a>
-        <a href="pages/services.html" class="service-icon-item">
-          <div class="icon-circle">&#128228;</div>
-          <div class="icon-label">Request</div>
-        </a>
-        <a href="pages/services.html" class="service-icon-item">
-          <div class="icon-circle">&#128269;</div>
-          <div class="icon-label">Search</div>
-        </a>
+        <a href="pages/services.html" class="service-icon-item"><div class="icon-circle"><i data-lucide="file-text"></i></div><div class="icon-label">Purchase</div></a>
+        <a href="pages/services.html" class="service-icon-item"><div class="icon-circle"><i data-lucide="pen-line"></i></div><div class="icon-label">Register</div></a>
+        <a href="pages/services.html" class="service-icon-item"><div class="icon-circle"><i data-lucide="alert-circle"></i></div><div class="icon-label">Report</div></a>
+        <a href="pages/services.html" class="service-icon-item"><div class="icon-circle"><i data-lucide="send"></i></div><div class="icon-label">Request</div></a>
+        <a href="pages/services.html" class="service-icon-item"><div class="icon-circle"><i data-lucide="search"></i></div><div class="icon-label">Search</div></a>
       </div>
     </div>
   </section>
 
-  <!-- FIND YOUR DISTRICT -->
   <section class="district-section">
     <div class="container">
       <h2>Find Your District</h2>
@@ -154,51 +129,30 @@
           <button class="search-tab">By District #</button>
         </div>
         <div class="district-form">
-          <div class="form-group">
-            <label>Street #</label>
-            <input type="text" placeholder="e.g. 1718">
-          </div>
-          <div class="form-group">
-            <label>Direction</label>
-            <select>
-              <option>N</option><option>S</option><option>E</option><option>W</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Street Name</label>
-            <input type="text" placeholder="e.g. State">
-          </div>
-          <div class="form-group">
-            <label>Street Type</label>
-            <select>
-              <option>St</option><option>Ave</option><option>Blvd</option><option>Dr</option><option>Rd</option><option>Pl</option><option>Ct</option>
-            </select>
-          </div>
-          <div class="form-group full">
-            <a href="pages/district.html" class="btn btn-blue">Find My District</a>
-          </div>
+          <div class="form-group"><label>Street #</label><input type="text" placeholder="e.g. 1718"></div>
+          <div class="form-group"><label>Direction</label><select><option>N</option><option>S</option><option>E</option><option>W</option></select></div>
+          <div class="form-group"><label>Street Name</label><input type="text" placeholder="e.g. State"></div>
+          <div class="form-group"><label>Street Type</label><select><option>St</option><option>Ave</option><option>Blvd</option><option>Dr</option><option>Rd</option></select></div>
+          <div class="form-group full"><a href="pages/district.html" class="btn btn-blue">Find My District</a></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- FEATURED STORIES -->
   <section class="featured-section">
     <div class="container">
       <div class="featured-grid">
         <div class="stories-col">
           <div class="featured-header">
             <h2>Featured Stories</h2>
-            <a href="pages/news.html">View All News →</a>
+            <a href="pages/news.html">View All News</a>
           </div>
-          <div id="home-stories">
-            <!-- Filled by JS -->
-          </div>
+          <div id="home-stories"></div>
         </div>
         <div class="breaking-news">
           <h3>Breaking News</h3>
           <div class="breaking-item">
-            <span class="breaking-source">Tweets by Chicago_Police</span>
+            <span class="breaking-source">Chicago Police — Social Media</span>
             <p>Follow us on social media for the latest updates and community alerts from the Chicago Police Department.</p>
           </div>
         </div>
@@ -206,7 +160,6 @@
     </div>
   </section>
 
-  <!-- JOIN CPD BANNER -->
   <section class="join-banner">
     <div class="container">
       <h2>Join CPD. It Starts with You.</h2>
@@ -215,17 +168,13 @@
     </div>
   </section>
 
-  <!-- FOOTER -->
   <footer class="site-footer">
     <div class="container">
       <div class="footer-grid">
         <div>
           <h4 class="footer-heading">Chicago Police Department</h4>
-          <p class="footer-about">Dedicated to serving and protecting the people of Chicago. We work to maintain public safety through professionalism, integrity, and community engagement.</p>
-          <p class="footer-about" style="margin-top:12px;">
-            <strong>Emergency:</strong> 911<br>
-            <strong>Non-Emergency:</strong> (312) 555-1234
-          </p>
+          <p class="footer-about">Dedicated to serving and protecting the people of Chicago through professionalism, integrity, and community engagement.</p>
+          <p class="footer-about" style="margin-top:12px;"><strong>Emergency:</strong> 911<br><strong>Non-Emergency:</strong> (312) 555-1234</p>
         </div>
         <div>
           <h4 class="footer-heading">Quick Links</h4>
@@ -255,25 +204,22 @@
           </ul>
         </div>
       </div>
-      <div class="footer-bottom">
-        &copy; 2024 Chicago Police Department — FiveM Roleplay. All rights reserved. We Serve &amp; Protect.
-      </div>
+      <div class="footer-bottom">&copy; 2024 Chicago Police Department — FiveM Roleplay. All rights reserved.</div>
     </div>
     <div class="footer-bottom-red"></div>
   </footer>
 
-  <!-- SCRIPTS -->
   <script src="js/storage.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/main.js"></script>
   <script>
-    // Populate featured stories from storage
+    lucide.createIcons();
     const storiesEl = document.getElementById('home-stories');
     if (storiesEl) {
       const news = CPD.getNews().slice(0, 3);
       storiesEl.innerHTML = news.map(n => `
         <div class="story-item">
-          <div class="story-thumb">&#128196;</div>
+          <div class="story-thumb"><i data-lucide="file-text"></i></div>
           <div class="story-content">
             <h3>${n.title}</h3>
             <span class="story-date">${formatDate(n.date)}</span>
@@ -281,8 +227,8 @@
           </div>
         </div>
       `).join('');
+      lucide.createIcons();
     }
   </script>
-
 </body>
 </html>

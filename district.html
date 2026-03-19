@@ -5,105 +5,53 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Find Your District — Chicago Police Department</title>
   <link rel="icon" href="../images/badge.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Source+Sans+3:wght@300;400;600;700&family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 </head>
 <body>
   <div class="top-bar-red"></div>
   <header class="site-header">
-    <div class="container header-top">
-      <a href="../index.html" class="site-brand"><div class="brand-flag"></div><span class="brand-name">CHICAGO POLICE DEPARTMENT</span></a>
-      <div class="header-actions"></div>
-    </div>
-    <div class="header-nav">
-      <div class="container">
-        <nav class="main-nav" role="navigation">
-          <ul>
-            <li><a href="../index.html">Home</a></li>
-            <li><a href="news.html">News &amp; Media</a></li>
-            <li><a href="services.html">Our Services</a></li>
-            <li><a href="departments.html">Departments</a></li>
-            <li><a href="roster.html">Roster</a></li>
-            <li><a href="most-wanted.html">Most Wanted</a></li>
-            <li><a href="codes.html">10-Codes</a></li>
-            <li><a href="district.html">Find District</a></li>
-            <li><a href="apply.html">Join CPD</a></li>
-          </ul>
-        </nav>
-        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button>
-      </div>
-    </div>
+    <div class="container header-top"><a href="../index.html" class="site-brand"><div class="brand-flag"></div><span class="brand-name">CHICAGO POLICE DEPARTMENT</span></a><div class="header-actions"></div></div>
+    <div class="header-nav"><div class="container"><nav class="main-nav" role="navigation"><ul><li><a href="../index.html">Home</a></li><li><a href="news.html">News &amp; Media</a></li><li><a href="services.html">Our Services</a></li><li><a href="departments.html">Departments</a></li><li><a href="roster.html">Roster</a></li><li><a href="most-wanted.html">Most Wanted</a></li><li><a href="codes.html">10-Codes</a></li><li><a href="district.html">Find District</a></li><li><a href="apply.html">Join CPD</a></li></ul></nav><button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button></div></div>
   </header>
+  <div class="page-header"><div class="container"><div class="breadcrumb"><a href="../index.html">Home</a> <span>&rsaquo;</span> Find Your District</div><h1>Find Your District</h1><p>Chicago is made up of 22 police districts — find yours below</p></div></div>
 
-  <div class="page-header">
-    <div class="container">
-      <div class="breadcrumb"><a href="../index.html">Home</a> <span>›</span> Find Your District</div>
-      <h1>Find Your District</h1>
-      <p>Chicago is made up of 22 police districts — find yours below</p>
-    </div>
-  </div>
+  <section class="section"><div class="container">
+    <div style="margin-bottom:20px;"><input type="text" id="district-search" class="form-control" placeholder="Search districts by name or number..." style="max-width:360px;"></div>
+    <div class="table-wrapper"><table class="data-table" id="district-table"><thead><tr><th>District #</th><th>Name</th><th>Address</th><th>Phone</th></tr></thead><tbody>
+      <tr><td><strong>001</strong></td><td>Central</td><td>1718 S. State St.</td><td>(312) 745-4290</td></tr>
+      <tr><td><strong>002</strong></td><td>Wentworth</td><td>5101 S. Wentworth Ave.</td><td>(312) 747-8366</td></tr>
+      <tr><td><strong>003</strong></td><td>Grand Crossing</td><td>7040 S. Cottage Grove Ave.</td><td>(312) 747-8201</td></tr>
+      <tr><td><strong>004</strong></td><td>South Chicago</td><td>2255 E. 103rd St.</td><td>(312) 747-7581</td></tr>
+      <tr><td><strong>005</strong></td><td>Calumet</td><td>727 E. 111th St.</td><td>(312) 747-8210</td></tr>
+      <tr><td><strong>006</strong></td><td>Gresham</td><td>7808 S. Halsted St.</td><td>(312) 745-3617</td></tr>
+      <tr><td><strong>007</strong></td><td>Englewood</td><td>1438 W. 63rd St.</td><td>(312) 747-8223</td></tr>
+      <tr><td><strong>008</strong></td><td>Chicago Lawn</td><td>3420 W. 63rd St.</td><td>(312) 747-8730</td></tr>
+      <tr><td><strong>009</strong></td><td>Deering</td><td>3501 S. Lowe Ave.</td><td>(312) 747-8227</td></tr>
+      <tr><td><strong>010</strong></td><td>Ogden</td><td>3315 W. Ogden Ave.</td><td>(312) 747-7511</td></tr>
+      <tr><td><strong>011</strong></td><td>Harrison</td><td>3151 W. Harrison St.</td><td>(312) 746-8386</td></tr>
+      <tr><td><strong>012</strong></td><td>Near West</td><td>1412 S. Blue Island Ave.</td><td>(312) 746-8396</td></tr>
+      <tr><td><strong>014</strong></td><td>Shakespeare</td><td>2150 N. California Ave.</td><td>(312) 744-8250</td></tr>
+      <tr><td><strong>015</strong></td><td>Austin</td><td>5701 W. Madison St.</td><td>(312) 743-1440</td></tr>
+      <tr><td><strong>016</strong></td><td>Jefferson Park</td><td>5151 N. Milwaukee Ave.</td><td>(312) 742-4480</td></tr>
+      <tr><td><strong>017</strong></td><td>Albany Park</td><td>4461 N. Pulaski Rd.</td><td>(312) 742-4410</td></tr>
+      <tr><td><strong>018</strong></td><td>Near North</td><td>1160 N. Larrabee St.</td><td>(312) 742-5870</td></tr>
+      <tr><td><strong>019</strong></td><td>Town Hall</td><td>850 W. Addison St.</td><td>(312) 744-8320</td></tr>
+      <tr><td><strong>020</strong></td><td>Lincoln</td><td>5400 N. Lincoln Ave.</td><td>(312) 742-8714</td></tr>
+      <tr><td><strong>022</strong></td><td>Morgan Park</td><td>1900 W. Monterey Ave.</td><td>(312) 745-0710</td></tr>
+      <tr><td><strong>024</strong></td><td>Rogers Park</td><td>6464 N. Clark St.</td><td>(312) 744-5907</td></tr>
+      <tr><td><strong>025</strong></td><td>Grand Central</td><td>5555 W. Grand Ave.</td><td>(312) 746-8605</td></tr>
+    </tbody></table></div>
+  </div></section>
 
-  <section class="section">
-    <div class="container">
-      <div style="margin-bottom:20px;">
-        <input type="text" id="district-search" class="form-control" placeholder="Search districts by name or number..." style="max-width:360px;">
-      </div>
-      <div class="table-wrapper">
-        <table class="data-table" id="district-table">
-          <thead>
-            <tr>
-              <th>District #</th>
-              <th>Name</th>
-              <th>Address</th>
-              <th>Phone</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td><strong>001</strong></td><td>Central</td><td>1718 S. State St.</td><td>(312) 745-4290</td></tr>
-            <tr><td><strong>002</strong></td><td>Wentworth</td><td>5101 S. Wentworth Ave.</td><td>(312) 747-8366</td></tr>
-            <tr><td><strong>003</strong></td><td>Grand Crossing</td><td>7040 S. Cottage Grove Ave.</td><td>(312) 747-8201</td></tr>
-            <tr><td><strong>004</strong></td><td>South Chicago</td><td>2255 E. 103rd St.</td><td>(312) 747-7581</td></tr>
-            <tr><td><strong>005</strong></td><td>Calumet</td><td>727 E. 111th St.</td><td>(312) 747-8210</td></tr>
-            <tr><td><strong>006</strong></td><td>Gresham</td><td>7808 S. Halsted St.</td><td>(312) 745-3617</td></tr>
-            <tr><td><strong>007</strong></td><td>Englewood</td><td>1438 W. 63rd St.</td><td>(312) 747-8223</td></tr>
-            <tr><td><strong>008</strong></td><td>Chicago Lawn</td><td>3420 W. 63rd St.</td><td>(312) 747-8730</td></tr>
-            <tr><td><strong>009</strong></td><td>Deering</td><td>3501 S. Lowe Ave.</td><td>(312) 747-8227</td></tr>
-            <tr><td><strong>010</strong></td><td>Ogden</td><td>3315 W. Ogden Ave.</td><td>(312) 747-7511</td></tr>
-            <tr><td><strong>011</strong></td><td>Harrison</td><td>3151 W. Harrison St.</td><td>(312) 746-8386</td></tr>
-            <tr><td><strong>012</strong></td><td>Near West</td><td>1412 S. Blue Island Ave.</td><td>(312) 746-8396</td></tr>
-            <tr><td><strong>014</strong></td><td>Shakespeare</td><td>2150 N. California Ave.</td><td>(312) 744-8250</td></tr>
-            <tr><td><strong>015</strong></td><td>Austin</td><td>5701 W. Madison St.</td><td>(312) 743-1440</td></tr>
-            <tr><td><strong>016</strong></td><td>Jefferson Park</td><td>5151 N. Milwaukee Ave.</td><td>(312) 742-4480</td></tr>
-            <tr><td><strong>017</strong></td><td>Albany Park</td><td>4461 N. Pulaski Rd.</td><td>(312) 742-4410</td></tr>
-            <tr><td><strong>018</strong></td><td>Near North</td><td>1160 N. Larrabee St.</td><td>(312) 742-5870</td></tr>
-            <tr><td><strong>019</strong></td><td>Town Hall</td><td>850 W. Addison St.</td><td>(312) 744-8320</td></tr>
-            <tr><td><strong>020</strong></td><td>Lincoln</td><td>5400 N. Lincoln Ave.</td><td>(312) 742-8714</td></tr>
-            <tr><td><strong>022</strong></td><td>Morgan Park</td><td>1900 W. Monterey Ave.</td><td>(312) 745-0710</td></tr>
-            <tr><td><strong>024</strong></td><td>Rogers Park</td><td>6464 N. Clark St.</td><td>(312) 744-5907</td></tr>
-            <tr><td><strong>025</strong></td><td>Grand Central</td><td>5555 W. Grand Ave.</td><td>(312) 746-8605</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <footer class="site-footer">
-    <div class="container">
-      <div class="footer-bottom">&copy; 2024 Chicago Police Department — FiveM Roleplay. All rights reserved.</div>
-    </div>
-    <div class="footer-bottom-red"></div>
-  </footer>
-
-  <script src="../js/storage.js"></script>
-  <script src="../js/auth.js"></script>
-  <script src="../js/main.js"></script>
+  <footer class="site-footer"><div class="container"><div class="footer-bottom">&copy; 2024 Chicago Police Department — FiveM Roleplay.</div></div><div class="footer-bottom-red"></div></footer>
+  <script src="../js/storage.js"></script><script src="../js/auth.js"></script><script src="../js/main.js"></script>
   <script>
-    document.getElementById('district-search').addEventListener('input', function() {
-      const q = this.value.toLowerCase();
-      document.querySelectorAll('#district-table tbody tr').forEach(row => {
-        const text = row.textContent.toLowerCase();
-        row.style.display = text.includes(q) ? '' : 'none';
-      });
-    });
+    document.getElementById('district-search').addEventListener('input',function(){const q=this.value.toLowerCase();document.querySelectorAll('#district-table tbody tr').forEach(r=>{r.style.display=r.textContent.toLowerCase().includes(q)?'':'none';});});
+    lucide.createIcons();
   </script>
 </body>
 </html>

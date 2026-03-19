@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Join CPD — Chicago Police Department</title>
+  <link rel="icon" href="../images/badge.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Source+Sans+3:wght@300;400;600;700&family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+  <div class="top-bar-red"></div>
+  <header class="site-header">
+    <div class="container header-top"><a href="../index.html" class="site-brand"><div class="brand-flag"></div><span class="brand-name">CHICAGO POLICE DEPARTMENT</span></a><div class="header-actions"></div></div>
+    <div class="header-nav"><div class="container"><nav class="main-nav" role="navigation"><ul><li><a href="../index.html">Home</a></li><li><a href="news.html">News &amp; Media</a></li><li><a href="services.html">Our Services</a></li><li><a href="departments.html">Departments</a></li><li><a href="roster.html">Roster</a></li><li><a href="most-wanted.html">Most Wanted</a></li><li><a href="codes.html">10-Codes</a></li><li><a href="district.html">Find District</a></li><li><a href="apply.html">Join CPD</a></li></ul></nav><button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button></div></div>
+  </header>
+  <div class="page-header"><div class="container"><div class="breadcrumb"><a href="../index.html">Home</a> <span>&rsaquo;</span> Join CPD</div><h1>Join the Chicago Police Department</h1><p>Make a difference — serve your community with integrity and courage</p></div></div>
+
+  <section class="section section-white"><div class="container" style="max-width:800px;">
+    <div style="background:linear-gradient(135deg,var(--navy-dark),var(--navy-light));border-radius:var(--radius-lg);padding:32px;color:var(--white);text-align:center;margin-bottom:32px;">
+      <h2 style="color:var(--white);font-size:22px;font-style:italic;">It Starts with You.</h2>
+      <p style="color:var(--gray-300);font-size:14px;margin-top:8px;line-height:1.7;">The City of Chicago is currently seeking qualified Police Officer candidates. Chicago has one of the largest Police Departments in the nation, dedicated to protecting the safety and rights of all people.</p>
+    </div>
+  </div></section>
+
+  <section class="section"><div class="container">
+    <div class="form-card">
+      <h2 style="font-size:20px;margin-bottom:4px;">Application Form</h2>
+      <p style="font-size:14px;color:var(--gray-500);margin-bottom:24px;">Fill out the form below to submit your application to the CPD.</p>
+      <div class="form-error" id="app-error"></div>
+      <div class="form-success" id="app-success"></div>
+      <form id="application-form" class="application-form">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div class="form-group"><label for="app-first">First Name *</label><input type="text" id="app-first" class="form-control" required></div>
+          <div class="form-group"><label for="app-last">Last Name *</label><input type="text" id="app-last" class="form-control" required></div>
+        </div>
+        <div class="form-group"><label for="app-email">Email Address *</label><input type="email" id="app-email" class="form-control" required></div>
+        <div class="form-group"><label for="app-discord">Discord Username *</label><input type="text" id="app-discord" class="form-control" placeholder="username#0000" required></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div class="form-group"><label for="app-age">Age (IRL) *</label><input type="number" id="app-age" class="form-control" min="16" required></div>
+          <div class="form-group"><label for="app-rp-exp">RP Experience *</label><select id="app-rp-exp" class="form-control" required><option value="">Select...</option><option value="none">None — Brand New</option><option value="beginner">Beginner (&lt; 6 months)</option><option value="intermediate">Intermediate (6-12 months)</option><option value="experienced">Experienced (1+ years)</option><option value="veteran">Veteran (3+ years)</option></select></div>
+        </div>
+        <div class="form-group"><label for="app-why">Why do you want to join the CPD? *</label><textarea id="app-why" class="form-control" required></textarea></div>
+        <div class="form-group"><label for="app-scenario">Scenario: You pull over a vehicle for running a red light. The driver becomes aggressive and refuses to provide ID. What do you do?</label><textarea id="app-scenario" class="form-control" required></textarea></div>
+        <div class="form-group"><label for="app-additional">Anything else you'd like us to know?</label><textarea id="app-additional" class="form-control"></textarea></div>
+        <button type="submit" class="btn btn-blue btn-lg" style="width:100%;">Submit Application</button>
+      </form>
+    </div>
+  </div></section>
+
+  <footer class="site-footer"><div class="container"><div class="footer-bottom">&copy; 2024 Chicago Police Department — FiveM Roleplay.</div></div><div class="footer-bottom-red"></div></footer>
+  <script src="../js/storage.js"></script><script src="../js/auth.js"></script><script src="../js/main.js"></script>
+  <script>
+    document.getElementById('application-form').addEventListener('submit',function(e){e.preventDefault();const err=document.getElementById('app-error');const suc=document.getElementById('app-success');err.style.display='none';suc.style.display='none';const req=this.querySelectorAll('[required]');let v=true;req.forEach(f=>{f.style.borderColor='';if(!f.value.trim()){f.style.borderColor='#dc2626';v=false;}});if(!v){err.textContent='Please fill in all required fields.';err.style.display='block';window.scrollTo({top:0,behavior:'smooth'});return;}
+    CPD.addApplication({firstName:document.getElementById('app-first').value.trim(),lastName:document.getElementById('app-last').value.trim(),email:document.getElementById('app-email').value.trim(),discord:document.getElementById('app-discord').value.trim(),age:document.getElementById('app-age').value,rpExperience:document.getElementById('app-rp-exp').value,whyJoin:document.getElementById('app-why').value.trim(),scenario:document.getElementById('app-scenario').value.trim(),additional:document.getElementById('app-additional').value.trim()});
+    suc.textContent='Your application has been submitted successfully! We will review it and get back to you soon.';suc.style.display='block';this.reset();window.scrollTo({top:0,behavior:'smooth'});});
+    lucide.createIcons();
+  </script>
+</body>
+</html>

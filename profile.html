@@ -5,33 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Profile — Chicago Police Department</title>
   <link rel="icon" href="../images/badge.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Source+Sans+3:wght@300;400;600;700&family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 </head>
 <body>
   <div class="top-bar-red"></div>
   <header class="site-header">
     <div class="container header-top">
-      <a href="../index.html" class="site-brand">
-        <div class="brand-flag"></div>
-        <span class="brand-name">CHICAGO POLICE DEPARTMENT</span>
-      </a>
+      <a href="../index.html" class="site-brand"><div class="brand-flag"></div><span class="brand-name">CHICAGO POLICE DEPARTMENT</span></a>
       <div class="header-actions"></div>
     </div>
     <div class="header-nav">
       <div class="container">
-        <nav class="main-nav" role="navigation">
-          <ul>
-            <li><a href="../index.html">Home</a></li>
-            <li><a href="news.html">News &amp; Media</a></li>
-            <li><a href="services.html">Our Services</a></li>
-            <li><a href="departments.html">Departments</a></li>
-            <li><a href="roster.html">Roster</a></li>
-            <li><a href="most-wanted.html">Most Wanted</a></li>
-            <li><a href="codes.html">10-Codes</a></li>
-            <li><a href="district.html">Find District</a></li>
-            <li><a href="apply.html">Join CPD</a></li>
-          </ul>
-        </nav>
+        <nav class="main-nav" role="navigation"><ul>
+          <li><a href="../index.html">Home</a></li><li><a href="news.html">News &amp; Media</a></li><li><a href="services.html">Our Services</a></li><li><a href="departments.html">Departments</a></li><li><a href="roster.html">Roster</a></li><li><a href="most-wanted.html">Most Wanted</a></li><li><a href="codes.html">10-Codes</a></li><li><a href="district.html">Find District</a></li><li><a href="apply.html">Join CPD</a></li>
+        </ul></nav>
         <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button>
       </div>
     </div>
@@ -39,7 +30,6 @@
 
   <section class="section">
     <div class="container" style="max-width:900px;">
-      <!-- Profile Card -->
       <div class="profile-card">
         <div class="profile-banner" id="profile-banner">
           <button class="change-banner-btn" id="change-banner-btn">Change Banner</button>
@@ -59,56 +49,33 @@
         <div class="profile-meta" id="profile-meta"></div>
       </div>
 
-      <!-- Info Grid -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
-        <!-- Certifications -->
         <div class="admin-panel">
           <div class="admin-panel-header">
             <h3>Certifications</h3>
             <button class="btn btn-blue btn-sm" id="add-cert-btn" style="display:none;">+ Add</button>
           </div>
-          <div class="admin-panel-body">
-            <div class="cert-list" id="cert-list"></div>
-          </div>
+          <div class="admin-panel-body"><div class="cert-list" id="cert-list"></div></div>
         </div>
-        <!-- Commendations -->
         <div class="admin-panel">
           <div class="admin-panel-header">
             <h3>Commendations</h3>
             <button class="btn btn-blue btn-sm" id="add-commend-btn" style="display:none;">+ Add</button>
           </div>
-          <div class="admin-panel-body">
-            <div class="commend-list" id="commend-list"></div>
-          </div>
+          <div class="admin-panel-body"><div class="commend-list" id="commend-list"></div></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- EDIT PROFILE MODAL -->
   <div class="modal-overlay" id="edit-modal">
     <div class="modal">
-      <div class="modal-header">
-        <h3>Edit Profile</h3>
-        <button class="modal-close" onclick="closeModal()">&times;</button>
-      </div>
+      <div class="modal-header"><h3>Edit Profile</h3><button class="modal-close" onclick="closeModal()">&times;</button></div>
       <div class="modal-body">
-        <div class="form-group">
-          <label for="edit-bio">Bio</label>
-          <textarea id="edit-bio" class="form-control"></textarea>
-        </div>
-        <div class="form-group">
-          <label for="edit-email">Email</label>
-          <input type="email" id="edit-email" class="form-control">
-        </div>
-        <div class="form-group">
-          <label for="edit-phone">Phone</label>
-          <input type="tel" id="edit-phone" class="form-control">
-        </div>
-        <div class="form-group" id="edit-dept-group" style="display:none;">
-          <label for="edit-dept">Department</label>
-          <input type="text" id="edit-dept" class="form-control">
-        </div>
+        <div class="form-group"><label for="edit-bio">Bio</label><textarea id="edit-bio" class="form-control"></textarea></div>
+        <div class="form-group"><label for="edit-email">Email</label><input type="email" id="edit-email" class="form-control"></div>
+        <div class="form-group"><label for="edit-phone">Phone</label><input type="tel" id="edit-phone" class="form-control"></div>
+        <div class="form-group" id="edit-dept-group" style="display:none;"><label for="edit-dept">Department</label><input type="text" id="edit-dept" class="form-control"></div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-white btn-sm" onclick="closeModal()">Cancel</button>
@@ -118,11 +85,7 @@
   </div>
 
   <footer class="site-footer">
-    <div class="container">
-      <div class="footer-bottom">
-        &copy; 2024 Chicago Police Department — FiveM Roleplay. All rights reserved.
-      </div>
-    </div>
+    <div class="container"><div class="footer-bottom">&copy; 2024 Chicago Police Department — FiveM Roleplay. All rights reserved.</div></div>
     <div class="footer-bottom-red"></div>
   </footer>
 
@@ -130,183 +93,61 @@
   <script src="../js/auth.js"></script>
   <script src="../js/main.js"></script>
   <script>
-    // Require login
     if (!Auth.requireLogin()) throw new Error('Not logged in');
     const user = Auth.refreshCurrentUser();
 
     function renderProfile() {
-      const u = CPD.getCurrentUser();
-      if (!u) return;
-
-      // Banner
+      const u = CPD.getCurrentUser(); if (!u) return;
       const banner = document.getElementById('profile-banner');
       if (u.banner) banner.style.backgroundImage = `url(${u.banner})`;
-
-      // Avatar
       const avatar = document.getElementById('profile-avatar');
-      const initials = (u.firstName[0] || '') + (u.lastName[0] || '');
+      const initials = (u.firstName[0]||'')+(u.lastName[0]||'');
       avatar.innerHTML = u.photo
         ? `<img src="${u.photo}" alt="Photo"><input type="file" id="photo-input" accept="image/*" style="display:none;">`
         : `${initials}<input type="file" id="photo-input" accept="image/*" style="display:none;">`;
-
-      // Details
       document.getElementById('profile-name').textContent = `${u.firstName} ${u.lastName}`;
       document.getElementById('profile-rank').textContent = `${u.rank} — Badge #${u.badge}`;
       document.getElementById('profile-dept').textContent = u.department;
-
-      // Meta
       const days = CPD.getDaysOfService(u.createdAt);
       document.getElementById('profile-meta').innerHTML = `
         <div class="meta-item"><div class="meta-label">Status</div><div class="meta-value"><span class="badge badge-${u.status.toLowerCase()}">${u.status}</span></div></div>
         <div class="meta-item"><div class="meta-label">Days of Service</div><div class="meta-value">${days}</div></div>
-        <div class="meta-item"><div class="meta-label">Role</div><div class="meta-value">${u.role.charAt(0).toUpperCase() + u.role.slice(1)}</div></div>
-        <div class="meta-item"><div class="meta-label">Email</div><div class="meta-value">${u.email || '—'}</div></div>
-        <div class="meta-item"><div class="meta-label">Phone</div><div class="meta-value">${u.phone || '—'}</div></div>
-        <div class="meta-item"><div class="meta-label">Bio</div><div class="meta-value">${u.bio || '—'}</div></div>
-      `;
-
-      // Certifications
+        <div class="meta-item"><div class="meta-label">Role</div><div class="meta-value">${u.role.charAt(0).toUpperCase()+u.role.slice(1)}</div></div>
+        <div class="meta-item"><div class="meta-label">Email</div><div class="meta-value">${u.email||'—'}</div></div>
+        <div class="meta-item"><div class="meta-label">Phone</div><div class="meta-value">${u.phone||'—'}</div></div>
+        <div class="meta-item"><div class="meta-label">Bio</div><div class="meta-value">${u.bio||'—'}</div></div>`;
       const canManage = CPD.hasPermission('manage_certs');
-      if (canManage) {
-        document.getElementById('add-cert-btn').style.display = '';
-        document.getElementById('add-commend-btn').style.display = '';
-      }
-      renderCerts(u, canManage);
-      renderCommendations(u, canManage);
+      document.getElementById('add-cert-btn').style.display = canManage ? '' : 'none';
+      document.getElementById('add-commend-btn').style.display = canManage ? '' : 'none';
+      renderCerts(u,canManage); renderCommendations(u,canManage);
     }
-
-    function renderCerts(u, canManage) {
+    function renderCerts(u,can) {
       const el = document.getElementById('cert-list');
-      if (!u.certifications.length) {
-        el.innerHTML = '<p style="font-size:14px;color:var(--gray-400);">No certifications yet.</p>';
-        return;
-      }
-      el.innerHTML = u.certifications.map((c, i) => `
-        <div class="cert-item">
-          <span>&#10003; ${c}</span>
-          ${canManage ? `<button class="remove-btn" onclick="removeCert(${i})" title="Remove">&times;</button>` : ''}
-        </div>
-      `).join('');
+      el.innerHTML = !u.certifications.length ? '<p style="font-size:14px;color:var(--gray-400);">No certifications yet.</p>' :
+        u.certifications.map((c,i)=>`<div class="cert-item"><span>${c}</span>${can?`<button class="remove-btn" onclick="removeCert(${i})">&times;</button>`:''}</div>`).join('');
     }
-
-    function renderCommendations(u, canManage) {
+    function renderCommendations(u,can) {
       const el = document.getElementById('commend-list');
-      if (!u.commendations.length) {
-        el.innerHTML = '<p style="font-size:14px;color:var(--gray-400);">No commendations yet.</p>';
-        return;
-      }
-      el.innerHTML = u.commendations.map((c, i) => `
-        <div class="commend-item">
-          <span>&#127942; ${c}</span>
-          ${canManage ? `<button class="remove-btn" onclick="removeCommend(${i})" title="Remove">&times;</button>` : ''}
-        </div>
-      `).join('');
+      el.innerHTML = !u.commendations.length ? '<p style="font-size:14px;color:var(--gray-400);">No commendations yet.</p>' :
+        u.commendations.map((c,i)=>`<div class="commend-item"><span>${c}</span>${can?`<button class="remove-btn" onclick="removeCommend(${i})">&times;</button>`:''}</div>`).join('');
     }
+    document.getElementById('add-cert-btn').addEventListener('click',()=>{const n=prompt('Enter certification name:');if(!n)return;const u=CPD.getCurrentUser();u.certifications.push(n.trim());CPD.updateOfficer(u.id,{certifications:u.certifications});renderProfile();});
+    function removeCert(i){const u=CPD.getCurrentUser();u.certifications.splice(i,1);CPD.updateOfficer(u.id,{certifications:u.certifications});renderProfile();}
+    document.getElementById('add-commend-btn').addEventListener('click',()=>{const n=prompt('Enter commendation name:');if(!n)return;const u=CPD.getCurrentUser();u.commendations.push(n.trim());CPD.updateOfficer(u.id,{commendations:u.commendations});renderProfile();});
+    function removeCommend(i){const u=CPD.getCurrentUser();u.commendations.splice(i,1);CPD.updateOfficer(u.id,{commendations:u.commendations});renderProfile();}
 
-    // Add/Remove Certifications
-    document.getElementById('add-cert-btn').addEventListener('click', () => {
-      const name = prompt('Enter certification name:');
-      if (!name) return;
-      const u = CPD.getCurrentUser();
-      u.certifications.push(name.trim());
-      CPD.updateOfficer(u.id, { certifications: u.certifications });
-      renderProfile();
-    });
+    document.getElementById('profile-avatar').addEventListener('click',()=>{document.getElementById('photo-input').click();});
+    document.addEventListener('change',(e)=>{if(e.target.id==='photo-input'&&e.target.files[0]){const r=new FileReader();r.onload=(ev)=>{CPD.updateOfficer(CPD.getCurrentUser().id,{photo:ev.target.result});renderProfile();buildHeaderAuth();};r.readAsDataURL(e.target.files[0]);}});
+    document.getElementById('change-banner-btn').addEventListener('click',()=>{document.getElementById('banner-input').click();});
+    document.getElementById('banner-input').addEventListener('change',(e)=>{if(e.target.files[0]){const r=new FileReader();r.onload=(ev)=>{CPD.updateOfficer(CPD.getCurrentUser().id,{banner:ev.target.result});renderProfile();};r.readAsDataURL(e.target.files[0]);}});
 
-    function removeCert(index) {
-      const u = CPD.getCurrentUser();
-      u.certifications.splice(index, 1);
-      CPD.updateOfficer(u.id, { certifications: u.certifications });
-      renderProfile();
-    }
+    document.getElementById('edit-profile-btn').addEventListener('click',()=>{const u=CPD.getCurrentUser();document.getElementById('edit-bio').value=u.bio||'';document.getElementById('edit-email').value=u.email||'';document.getElementById('edit-phone').value=u.phone||'';if(CPD.hasPermission('edit_department')){document.getElementById('edit-dept-group').style.display='';document.getElementById('edit-dept').value=u.department||'';}document.getElementById('edit-modal').classList.add('open');});
+    function closeModal(){document.getElementById('edit-modal').classList.remove('open');}
+    function saveProfile(){const u=CPD.getCurrentUser();const up={bio:document.getElementById('edit-bio').value.trim(),email:document.getElementById('edit-email').value.trim(),phone:document.getElementById('edit-phone').value.trim()};if(CPD.hasPermission('edit_department'))up.department=document.getElementById('edit-dept').value.trim();CPD.updateOfficer(u.id,up);closeModal();renderProfile();}
+    document.getElementById('edit-modal').addEventListener('click',(e)=>{if(e.target===document.getElementById('edit-modal'))closeModal();});
 
-    // Add/Remove Commendations
-    document.getElementById('add-commend-btn').addEventListener('click', () => {
-      const name = prompt('Enter commendation name:');
-      if (!name) return;
-      const u = CPD.getCurrentUser();
-      u.commendations.push(name.trim());
-      CPD.updateOfficer(u.id, { commendations: u.commendations });
-      renderProfile();
-    });
-
-    function removeCommend(index) {
-      const u = CPD.getCurrentUser();
-      u.commendations.splice(index, 1);
-      CPD.updateOfficer(u.id, { commendations: u.commendations });
-      renderProfile();
-    }
-
-    // Photo Upload
-    document.getElementById('profile-avatar').addEventListener('click', () => {
-      document.getElementById('photo-input').click();
-    });
-    document.addEventListener('change', (e) => {
-      if (e.target.id === 'photo-input' && e.target.files[0]) {
-        const reader = new FileReader();
-        reader.onload = (ev) => {
-          CPD.updateOfficer(CPD.getCurrentUser().id, { photo: ev.target.result });
-          renderProfile();
-          buildHeaderAuth();
-        };
-        reader.readAsDataURL(e.target.files[0]);
-      }
-    });
-
-    // Banner Upload
-    document.getElementById('change-banner-btn').addEventListener('click', () => {
-      document.getElementById('banner-input').click();
-    });
-    document.getElementById('banner-input').addEventListener('change', (e) => {
-      if (e.target.files[0]) {
-        const reader = new FileReader();
-        reader.onload = (ev) => {
-          CPD.updateOfficer(CPD.getCurrentUser().id, { banner: ev.target.result });
-          renderProfile();
-        };
-        reader.readAsDataURL(e.target.files[0]);
-      }
-    });
-
-    // Edit Profile Modal
-    document.getElementById('edit-profile-btn').addEventListener('click', () => {
-      const u = CPD.getCurrentUser();
-      document.getElementById('edit-bio').value = u.bio || '';
-      document.getElementById('edit-email').value = u.email || '';
-      document.getElementById('edit-phone').value = u.phone || '';
-      if (CPD.hasPermission('edit_department')) {
-        document.getElementById('edit-dept-group').style.display = '';
-        document.getElementById('edit-dept').value = u.department || '';
-      }
-      document.getElementById('edit-modal').classList.add('open');
-    });
-
-    function closeModal() {
-      document.getElementById('edit-modal').classList.remove('open');
-    }
-
-    function saveProfile() {
-      const u = CPD.getCurrentUser();
-      const updates = {
-        bio: document.getElementById('edit-bio').value.trim(),
-        email: document.getElementById('edit-email').value.trim(),
-        phone: document.getElementById('edit-phone').value.trim(),
-      };
-      if (CPD.hasPermission('edit_department')) {
-        updates.department = document.getElementById('edit-dept').value.trim();
-      }
-      CPD.updateOfficer(u.id, updates);
-      closeModal();
-      renderProfile();
-    }
-
-    // Close modal on outside click
-    document.getElementById('edit-modal').addEventListener('click', (e) => {
-      if (e.target === document.getElementById('edit-modal')) closeModal();
-    });
-
-    // Initial render
     renderProfile();
+    lucide.createIcons();
   </script>
 </body>
 </html>
