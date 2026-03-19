@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chicago Police Department — We Serve & Protect</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+:root{--blue:#0077be;--blue-dark:#005a94;--blue-deep:#004574;--blue-light:#0891b2;--navy:#0c2340;--navy-dark:#071a2f;--navy-light:#1a3a5f;--red:#ce1126;--red-dark:#a30e1f;--white:#fff;--black:#111;--gray-50:#f8fafc;--gray-100:#f1f5f9;--gray-200:#e2e8f0;--gray-300:#cbd5e1;--gray-400:#94a3b8;--gray-500:#64748b;--gray-600:#475569;--gray-700:#334155;--gray-800:#1e293b;--green:#16a34a;--radius:6px;--radius-lg:10px;--shadow-sm:0 1px 3px rgba(0,0,0,.08);--shadow-md:0 4px 12px rgba(0,0,0,.1);--shadow-lg:0 10px 30px rgba(0,0,0,.15);--transition:.2s ease}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;font-size:15px;line-height:1.6;color:var(--gray-700);background:var(--white);-webkit-font-smoothing:antialiased}
+a{color:var(--blue);text-decoration:none;transition:color var(--transition)}
+a:hover{color:var(--blue-dark)}
+img{max-width:100%;height:auto;display:block}
+ul{list-style:none}
+button{cursor:pointer;font-family:inherit}
+.container{max-width:1100px;margin:0 auto;padding:0 20px}
+.text-center{text-align:center}
+.page{display:none}.page.active{display:block}
+
+/* LOADING */
+.loading-screen{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,var(--navy-dark),var(--navy));display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s ease}
+.loading-screen.fade-out{opacity:0;pointer-events:none}
+.loading-screen h2{color:var(--white);font-family:'Playfair Display',serif;font-size:24px;letter-spacing:4px;margin-bottom:6px}
+.loading-screen p{color:var(--gray-400);font-size:12px;letter-spacing:3px}
+.loading-screen .bar{width:180px;height:2px;background:rgba(255,255,255,.15);border-radius:2px;margin-top:28px;overflow:hidden}
+.loading-screen .bar-fill{height:100%;width:0;background:var(--blue);animation:loadBar 1.2s ease forwards}
+@keyframes loadBar{to{width:100%}}
+
+/* RED BAR */
+.top-red{background:var(--red);height:4px}
+
+/* HEADER */
+.site-header{background:var(--white);border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:1000}
+.header-top{display:flex;align-items:center;justify-content:space-between;padding:10px 0}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand .flag{width:34px;height:22px;border:1px solid var(--gray-300);border-radius:2px;position:relative;overflow:hidden;background:repeating-linear-gradient(180deg,#fff 0px,#fff 3.6px,#ce1126 3.6px,#ce1126 7.2px)}
+.brand .flag::after{content:'\2605';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#0077be;font-size:9px}
+.brand h1{font-family:'Playfair Display',serif;font-size:18px;font-weight:900;color:var(--black);letter-spacing:.3px}
+.header-actions{display:flex;align-items:center;gap:8px}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;font-size:12px;font-weight:700;border-radius:var(--radius);border:none;transition:all var(--transition);text-decoration:none;letter-spacing:.3px}
+.btn-blue{background:var(--blue);color:var(--white)}.btn-blue:hover{background:var(--blue-dark);color:var(--white)}
+.btn-outline{background:transparent;color:var(--blue);border:1.5px solid var(--blue)}.btn-outline:hover{background:var(--blue);color:var(--white)}
+.btn-white{background:var(--white);color:var(--navy);border:1px solid var(--gray-300)}.btn-white:hover{background:var(--gray-100);color:var(--navy)}
+.btn-red{background:var(--red);color:var(--white)}.btn-red:hover{background:var(--red-dark);color:var(--white)}
+.btn-green{background:var(--green);color:var(--white)}.btn-green:hover{background:#15803d;color:var(--white)}
+.btn-sm{padding:5px 10px;font-size:11px}
+.btn-lg{padding:10px 24px;font-size:14px}
+
+/* NAV */
+.header-nav{background:var(--blue)}
+.header-nav .container{display:flex;align-items:center;justify-content:space-between}
+.main-nav ul{display:flex}
+.main-nav a{display:block;padding:10px 14px;color:rgba(255,255,255,.9);font-size:12px;font-weight:600;letter-spacing:.2px;transition:background var(--transition)}
+.main-nav a:hover,.main-nav a.active{background:rgba(0,0,0,.15);color:var(--white)}
+.nav-toggle{display:none;background:none;border:none;color:var(--white);font-size:20px;padding:8px}
+
+/* USER MENU */
+.user-menu{position:relative}
+.user-menu-btn{display:flex;align-items:center;gap:8px;background:none;border:1px solid var(--gray-300);border-radius:50px;padding:3px 12px 3px 3px;cursor:pointer}
+.user-menu-btn:hover{border-color:var(--blue)}
+.user-menu-btn .avatar{width:28px;height:28px;border-radius:50%;background:var(--blue);color:var(--white);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;overflow:hidden}
+.user-menu-btn .avatar img{width:100%;height:100%;object-fit:cover}
+.user-menu-btn .uname{font-size:12px;font-weight:600;color:var(--gray-700)}
+.user-dd{display:none;position:absolute;top:calc(100% + 6px);right:0;background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius);box-shadow:var(--shadow-md);min-width:190px;z-index:100;overflow:hidden}
+.user-dd.open{display:block}
+.user-dd .dd-head{padding:10px 14px;border-bottom:1px solid var(--gray-200);background:var(--gray-50)}
+.user-dd .dd-head .n{font-weight:700;font-size:13px;color:var(--black)}.user-dd .dd-head .r{font-size:11px;color:var(--gray-500)}
+.user-dd a,.user-dd button{display:block;width:100%;padding:9px 14px;font-size:13px;color:var(--gray-700);background:none;border:none;text-align:left;transition:background var(--transition)}
+.user-dd a:hover,.user-dd button:hover{background:var(--gray-100);color:var(--blue)}
+.user-dd .logout{color:var(--red);border-top:1px solid var(--gray-200)}.user-dd .logout:hover{background:#fef2f2}
+
+/* HERO TAGLINE */
+.hero-tag{padding:22px 0 16px;background:var(--white)}
+.hero-tag h2{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--black);font-style:italic}
+
+/* HERO CARDS */
+.hero-cards{padding:0 0 28px;background:var(--white)}
+.hero-grid{display:grid;grid-template-columns:1.8fr 1fr;grid-template-rows:1fr 1fr;gap:10px}
+.hcard{position:relative;border-radius:var(--radius-lg);overflow:hidden;cursor:pointer;transition:transform var(--transition),box-shadow var(--transition)}
+.hcard:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.hcard .bg{position:absolute;inset:0;background-size:cover;background-position:center}
+.hcard .overlay{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.65) 0%,rgba(0,0,0,.05) 55%)}
+.hcard .content{position:relative;z-index:2;padding:18px;color:var(--white);display:flex;flex-direction:column;justify-content:flex-end;height:100%}
+.hcard .content h3{font-family:'Playfair Display',serif;font-size:18px;font-weight:900;margin-bottom:3px}
+.hcard .content p{font-size:12px;color:rgba(255,255,255,.8);margin-bottom:8px;line-height:1.5}
+.hcard .tag{display:inline-block;padding:5px 12px;background:var(--blue);color:var(--white);font-size:10px;font-weight:700;border-radius:var(--radius);text-transform:uppercase;letter-spacing:.5px;width:fit-content}
+.hcard-lg{grid-row:span 2;min-height:320px}
+.hcard-sm{min-height:155px}
+
+/* QUICK LINKS */
+.qlinks{padding:20px 0 28px;background:var(--white)}
+.qlinks-grid{display:flex;flex-wrap:wrap;gap:8px}
+.qlink{padding:9px 16px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:12px;font-weight:600;color:var(--gray-700);transition:all var(--transition);background:var(--white)}
+.qlink:hover{border-color:var(--blue);color:var(--blue);background:#f0f9ff}
+
+/* SERVICE CATALOG */
+.svc-cat{padding:40px 0;background:var(--gray-50);border-top:1px solid var(--gray-200);border-bottom:1px solid var(--gray-200)}
+.svc-cat h2{font-family:'Playfair Display',serif;font-size:22px;text-align:center;margin-bottom:6px}
+.svc-cat .desc{text-align:center;font-size:13px;color:var(--gray-500);max-width:680px;margin:0 auto 28px}
+.svc-icons{display:flex;justify-content:center;gap:40px;flex-wrap:wrap}
+.svc-item{text-align:center;cursor:pointer;transition:transform var(--transition);text-decoration:none}
+.svc-item:hover{transform:translateY(-3px)}
+.svc-item .circle{width:56px;height:56px;border-radius:50%;background:var(--white);border:2px solid var(--gray-200);display:flex;align-items:center;justify-content:center;margin:0 auto 8px;transition:all var(--transition);color:var(--navy);font-weight:800;font-size:18px}
+.svc-item:hover .circle{border-color:var(--blue);color:var(--blue);background:#f0f9ff}
+.svc-item .lbl{font-size:12px;font-weight:600;color:var(--gray-600)}
+
+/* DISTRICT SECTION */
+.dist-sec{background:linear-gradient(135deg,var(--navy-dark),var(--navy),var(--navy-light));padding:40px 0;color:var(--white);text-align:center;position:relative;overflow:hidden}
+.dist-sec::after{content:'002';position:absolute;right:-20px;bottom:-30px;font-size:200px;font-weight:900;color:rgba(255,255,255,.03);font-family:'Playfair Display',serif}
+.dist-sec h2{font-family:'Playfair Display',serif;color:var(--white);font-size:22px;margin-bottom:6px}
+.dist-sec .sub{color:var(--gray-400);font-size:13px;margin-bottom:8px}
+.dist-sec .map-link{color:var(--blue-light);font-size:13px;font-weight:600;margin-bottom:20px;display:inline-block}
+.dist-box{background:var(--white);border-radius:var(--radius-lg);padding:24px;max-width:560px;margin:0 auto}
+.dist-tabs{display:flex;border-bottom:2px solid var(--gray-200);margin-bottom:16px}
+.dist-tab{padding:7px 18px;font-size:12px;font-weight:600;color:var(--gray-500);background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all var(--transition)}
+.dist-tab.active,.dist-tab:hover{color:var(--blue);border-bottom-color:var(--blue)}
+.dist-form{display:grid;grid-template-columns:1fr auto 1fr;gap:10px}
+.dist-form .fg{text-align:left}
+.dist-form .full{grid-column:span 3;text-align:center;margin-top:4px}
+.dist-form label{display:block;font-size:11px;font-weight:600;color:var(--gray-600);margin-bottom:3px}
+.dist-form input,.dist-form select{width:100%;padding:7px 10px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:13px;font-family:inherit}
+
+/* FEATURED STORIES */
+.feat-sec{padding:40px 0;background:var(--white)}
+.feat-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.feat-head h2{font-family:'Playfair Display',serif;font-size:20px}
+.feat-head a{font-size:12px;font-weight:600;color:var(--blue)}
+.feat-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:28px}
+.story{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--gray-200)}
+.story:last-child{border-bottom:none}
+.story .thumb{width:72px;height:72px;border-radius:var(--radius);background:var(--gray-100);flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.story .thumb img{width:100%;height:100%;object-fit:cover}
+.story h3{font-size:14px;font-weight:700;color:var(--black);margin-bottom:2px;line-height:1.3}
+.story .date{font-size:11px;color:var(--gray-400)}
+.story p{font-size:12px;color:var(--gray-500);margin-top:3px;line-height:1.4}
+.breaking h3{font-family:'Playfair Display',serif;font-size:18px;margin-bottom:14px;padding-bottom:6px;border-bottom:2px solid var(--red)}
+.breaking .src{font-size:11px;color:var(--gray-400)}
+.breaking p{font-size:13px;color:var(--gray-700);margin-top:2px}
+
+/* JOIN BANNER */
+.join-ban{background:linear-gradient(135deg,var(--blue-deep),var(--blue));color:var(--white);padding:40px 0;text-align:center}
+.join-ban h2{font-family:'Playfair Display',serif;color:var(--white);font-size:24px;font-style:italic;margin-bottom:10px}
+.join-ban p{font-size:13px;color:rgba(255,255,255,.85);max-width:680px;margin:0 auto 20px;line-height:1.7}
+
+/* PAGE HEADER */
+.pg-head{background:linear-gradient(135deg,var(--navy-dark),var(--navy-light));color:var(--white);padding:36px 0;border-bottom:3px solid var(--blue)}
+.pg-head h1{font-family:'Playfair Display',serif;color:var(--white);font-size:28px;margin-bottom:4px}
+.pg-head p{color:var(--gray-400);font-size:14px}
+.crumb{font-size:11px;color:var(--gray-400);margin-bottom:10px}.crumb a{color:var(--blue-light)}
+
+/* SECTIONS */
+.sec{padding:40px 0}
+
+/* TABLE */
+.tw{overflow-x:auto}
+.dtable{width:100%;border-collapse:collapse;background:var(--white);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm)}
+.dtable thead{background:var(--navy);color:var(--white)}
+.dtable th{padding:10px 14px;text-align:left;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.dtable td{padding:9px 14px;border-bottom:1px solid var(--gray-200);font-size:13px}
+.dtable tbody tr:hover{background:#f0f9ff}
+.dtable tbody tr:nth-child(even){background:var(--gray-50)}
+
+/* BADGES */
+.badge{display:inline-block;padding:2px 8px;border-radius:50px;font-size:10px;font-weight:700;letter-spacing:.3px}
+.badge-active{background:#dcfce7;color:#166534}.badge-loa{background:#fef9c3;color:#854d0e}.badge-suspended{background:#fecaca;color:#991b1b}
+.badge-high{background:var(--red);color:var(--white)}.badge-medium{background:#f59e0b;color:var(--black)}.badge-low{background:var(--blue);color:var(--white)}
+
+/* CARDS */
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;border:1px solid var(--gray-200);transition:transform var(--transition),box-shadow var(--transition)}
+.card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.card-h{background:var(--navy);color:var(--white);padding:12px 16px;font-family:'Playfair Display',serif;font-size:14px;font-weight:700}
+.card-b{padding:16px}
+.card-b p{font-size:13px;color:var(--gray-600)}
+
+/* WANTED */
+.wgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.wcard{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;border:1px solid var(--gray-200);transition:transform var(--transition)}
+.wcard:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.wphoto{height:180px;background:var(--gray-100);display:flex;align-items:center;justify-content:center;color:var(--gray-400);position:relative;font-size:12px;font-weight:600}
+.wphoto .tb{position:absolute;top:8px;right:8px}
+.winfo{padding:14px 16px}
+.wname{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--navy);margin-bottom:3px}
+.wcharges{font-size:12px;color:var(--red);font-weight:600;margin-bottom:6px}
+.wdetails{font-size:12px;color:var(--gray-600);line-height:1.5}
+.wdetails strong{color:var(--navy)}
+
+/* CODES */
+.cogrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.cosec{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;border:1px solid var(--gray-200)}
+.cosec-h{background:var(--navy);color:var(--white);padding:10px 16px;font-family:'Playfair Display',serif;font-size:13px;font-weight:700}
+.colist{padding:6px 16px}
+.coitem{display:flex;gap:14px;padding:6px 0;border-bottom:1px solid var(--gray-100);font-size:13px}
+.coitem:last-child{border-bottom:none}
+.conum{font-family:'IBM Plex Mono',monospace;font-weight:700;color:var(--blue);min-width:55px;font-size:12px}
+.codesc{color:var(--gray-600);font-size:12px}
+
+/* FORMS */
+.fg{margin-bottom:16px}
+.fg label{display:block;font-weight:600;font-size:12px;margin-bottom:4px;color:var(--navy)}
+.fc{width:100%;padding:9px 12px;border:1px solid var(--gray-300);border-radius:var(--radius);font-family:inherit;font-size:13px;transition:border-color var(--transition);background:var(--white)}
+.fc:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,119,190,.1)}
+textarea.fc{min-height:80px;resize:vertical}
+.fcard{background:var(--white);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow-md);border-top:3px solid var(--blue);max-width:640px;margin:0 auto}
+.ferr{background:#fef2f2;border:1px solid #fecaca;color:var(--red);padding:9px 12px;border-radius:var(--radius);font-size:12px;margin-bottom:14px;display:none}
+.fsuc{background:#f0fdf4;border:1px solid #bbf7d0;color:var(--green);padding:9px 12px;border-radius:var(--radius);font-size:12px;margin-bottom:14px;display:none}
+
+/* PROFILE */
+.pbanner{height:180px;background:linear-gradient(135deg,var(--navy-dark),var(--navy-light));background-size:cover;background-position:center;position:relative;border-radius:var(--radius-lg) var(--radius-lg) 0 0}
+.pbanner .chbtn{position:absolute;bottom:10px;right:10px;padding:5px 12px;background:rgba(0,0,0,.5);color:var(--white);border:1px solid rgba(255,255,255,.3);border-radius:var(--radius);font-size:11px;cursor:pointer}
+.pcard{background:var(--white);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);overflow:hidden;margin-bottom:20px}
+.pinfo{display:flex;gap:20px;padding:0 20px 20px;align-items:flex-start}
+.pavatar{width:90px;height:90px;border-radius:50%;border:4px solid var(--white);background:var(--blue);color:var(--white);display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:700;margin-top:-45px;cursor:pointer;overflow:hidden;box-shadow:var(--shadow-md)}
+.pavatar img{width:100%;height:100%;object-fit:cover}
+.pdetails{padding-top:6px;flex:1}
+.pdetails h2{font-family:'Playfair Display',serif;font-size:20px;margin-bottom:1px}
+.pdetails .rk{font-size:13px;color:var(--blue);font-weight:600}
+.pdetails .dp{font-size:12px;color:var(--gray-500);margin-top:2px}
+.pmeta{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;padding:16px 20px;border-top:1px solid var(--gray-200)}
+.mi .ml{font-size:10px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.mi .mv{font-size:13px;color:var(--gray-700);font-weight:600}
+.citem,.ditem{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:13px}
+.citem:last-child,.ditem:last-child{border-bottom:none}
+.rbtn{opacity:0;background:none;border:none;color:var(--red);font-size:14px;cursor:pointer;transition:opacity var(--transition)}
+.citem:hover .rbtn,.ditem:hover .rbtn{opacity:1}
+
+/* MODAL */
+.modal-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:10000;align-items:center;justify-content:center}
+.modal-ov.open{display:flex}
+.modal{background:var(--white);border-radius:var(--radius-lg);width:100%;max-width:460px;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg)}
+.modal-h{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--gray-200)}
+.modal-h h3{font-size:16px}
+.modal-x{background:none;border:none;font-size:20px;color:var(--gray-500);cursor:pointer}.modal-x:hover{color:var(--red)}
+.modal-b{padding:20px}
+.modal-f{padding:14px 20px;border-top:1px solid var(--gray-200);display:flex;justify-content:flex-end;gap:8px}
+
+/* ADMIN */
+.admin-ly{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 100px)}
+.admin-sb{background:var(--navy-dark);padding:20px 0}
+.admin-sb .stitle{padding:0 18px 16px;color:var(--white);font-family:'Playfair Display',serif;font-size:13px;font-weight:700;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:10px}
+.admin-sb a{display:block;padding:9px 18px;color:var(--gray-400);font-size:13px;font-weight:600;transition:all var(--transition)}
+.admin-sb a:hover,.admin-sb a.active{background:rgba(255,255,255,.08);color:var(--white)}
+.admin-sb a.active{border-left:3px solid var(--blue)}
+.admin-ct{padding:24px;background:var(--gray-50)}
+.admin-ct h2{font-family:'Playfair Display',serif;font-size:20px;margin-bottom:18px}
+.asgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin-bottom:24px}
+.ascard{background:var(--white);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow-sm);border:1px solid var(--gray-200)}
+.ascard .sl{font-size:11px;color:var(--gray-500);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.ascard .sv{font-size:24px;font-weight:700;color:var(--navy);margin-top:3px}
+.apanel{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);border:1px solid var(--gray-200);overflow:hidden;margin-bottom:20px}
+.apanel-h{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--gray-200);background:var(--gray-50)}
+.apanel-h h3{font-size:14px}
+.apanel-b{padding:16px}
+.tab-c{display:none}.tab-c.active{display:block}
+
+/* FOOTER */
+.site-footer{background:var(--navy-dark);color:var(--gray-400);padding:36px 0 0;border-top:3px solid var(--blue)}
+.fgrid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:28px;padding-bottom:28px;border-bottom:1px solid rgba(255,255,255,.08);font-size:12px}
+.fh{color:var(--white);font-family:'Playfair Display',serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.fabout{font-size:12px;line-height:1.7}
+.flinks li{margin-bottom:6px}.flinks a{color:var(--gray-400);font-size:12px}.flinks a:hover{color:var(--blue-light)}
+.fbottom{padding:14px 0;text-align:center;font-size:10px}
+.fbottom-red{background:var(--red);height:4px}
+
+/* RESPONSIVE */
+@media(max-width:992px){.fgrid{grid-template-columns:1fr 1fr}.hero-grid{grid-template-columns:1fr}.hcard-lg{min-height:200px}.feat-grid{grid-template-columns:1fr}.admin-ly{grid-template-columns:1fr}.admin-sb{display:none}}
+@media(max-width:768px){.nav-toggle{display:block}.main-nav{display:none;position:absolute;top:100%;left:0;right:0;background:var(--blue-dark);z-index:999;box-shadow:var(--shadow-lg)}.main-nav.open{display:block}.main-nav ul{flex-direction:column}.header-top{flex-wrap:wrap}.fgrid{grid-template-columns:1fr}.pinfo{flex-direction:column;align-items:center;text-align:center}.dist-form{grid-template-columns:1fr}.dist-form .full{grid-column:span 1}}
+@media(max-width:480px){.cgrid,.wgrid,.cogrid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div class="loading-screen" id="ls"><h2>CHICAGO POLICE DEPARTMENT</h2><p>WE SERVE &amp; PROTECT</p><div class="bar"><div class="bar-fill"></div></div></div>
+
+<div class="top-red"></div>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="container header-top">
+    <a href="#" onclick="showPage('home');return false;" class="brand"><div class="flag"></div><h1>CHICAGO POLICE DEPARTMENT</h1></a>
+    <div class="header-actions" id="hdr-acts"></div>
+  </div>
+  <div class="header-nav"><div class="container">
+    <nav class="main-nav" id="mnav"><ul>
+      <li><a href="#" onclick="showPage('home');return false;">Home</a></li>
+      <li><a href="#" onclick="showPage('news');return false;">News &amp; Media</a></li>
+      <li><a href="#" onclick="showPage('services');return false;">Get Service</a></li>
+      <li><a href="#" onclick="showPage('departments');return false;">Inside CPD</a></li>
+      <li><a href="#" onclick="showPage('district');return false;">Find District</a></li>
+      <li><a href="#" onclick="showPage('apply');return false;">Join CPD</a></li>
+    </ul></nav>
+    <button class="nav-toggle" id="ntog">&#9776;</button>
+  </div></div>
+</header>
+
+
+<!-- ============ HOME ============ -->
+<div class="page active" id="page-home">
+  <section class="hero-tag"><div class="container"><h2>We serve and protect.</h2></div></section>
+  <section class="hero-cards"><div class="container"><div class="hero-grid">
+    <div class="hcard hcard-lg" onclick="showPage('apply')">
+      <div class="bg" style="background-image:url('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80');"></div>
+      <div class="overlay"></div>
+      <div class="content"><h3>Join CPD</h3><p>Make a difference within your community and help the people of Chicago. Answer the call to serve.</p><span class="tag">Get Started</span></div>
+    </div>
+    <div class="hcard hcard-sm" onclick="showPage('departments')">
+      <div class="bg" style="background-image:url('https://images.unsplash.com/photo-1557804506-669a67965ba0?w=600&q=80');"></div>
+      <div class="overlay"></div>
+      <div class="content"><h3>Superintendent's Briefing</h3><p>A message from Supt. B. Stafford</p><span class="tag">Learn More</span></div>
+    </div>
+    <div class="hcard hcard-sm" onclick="showPage('news')">
+      <div class="bg" style="background-image:url('https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=600&q=80');"></div>
+      <div class="overlay"></div>
+      <div class="content"><h3>Community Updates</h3><p>Latest news and updates</p><span class="tag">View</span></div>
+    </div>
+  </div></div></section>
+
+  <section class="qlinks"><div class="container"><div class="qlinks-grid">
+    <a href="#" onclick="showPage('departments');return false;" class="qlink">Community Engagement Calendar</a>
+    <a href="#" onclick="showPage('departments');return false;" class="qlink">Bureau of Detectives</a>
+    <a href="#" onclick="showPage('departments');return false;" class="qlink">Bureau of Internal Affairs</a>
+    <a href="#" onclick="showPage('departments');return false;" class="qlink">Training Needs Assessment</a>
+    <a href="#" onclick="showPage('departments');return false;" class="qlink">Independent Monitoring Report</a>
+    <a href="#" onclick="showPage('departments');return false;" class="qlink">Draft Policy Review &amp; Comment</a>
+    <a href="#" onclick="showPage('services');return false;" class="qlink">Public Records Release</a>
+    <a href="#" onclick="showPage('departments');return false;" class="qlink">Community Policing Strategic Plans</a>
+    <a href="#" onclick="showPage('departments');return false;" class="qlink">Strategy for Organizational Excellence</a>
+  </div></div></section>
+
+  <section class="svc-cat"><div class="container">
+    <h2>Service Catalog</h2>
+    <p class="desc">The Chicago Police Department offers several services for its Chicago citizens. We have services for purchasing crime and traffic reports, registering your bicycle or camera, reporting and submitting tips, requesting data and statistics, and searching one of our several databases.</p>
+    <div class="svc-icons">
+      <a href="#" onclick="showPage('services');return false;" class="svc-item"><div class="circle">P</div><div class="lbl">Purchase</div></a>
+      <a href="#" onclick="showPage('services');return false;" class="svc-item"><div class="circle">R</div><div class="lbl">Register</div></a>
+      <a href="#" onclick="showPage('services');return false;" class="svc-item"><div class="circle">!</div><div class="lbl">Report</div></a>
+      <a href="#" onclick="showPage('services');return false;" class="svc-item"><div class="circle">Q</div><div class="lbl">Request</div></a>
+      <a href="#" onclick="showPage('services');return false;" class="svc-item"><div class="circle">S</div><div class="lbl">Search</div></a>
+    </div>
+  </div></section>
+
+  <section class="dist-sec"><div class="container">
+    <h2>Find Your District</h2>
+    <p class="sub">Use the interactive map or search by address to find your district.</p>
+    <a href="#" onclick="showPage('district');return false;" class="map-link">District Map</a>
+    <div class="dist-box">
+      <div class="dist-tabs"><button class="dist-tab active">SEARCH BY ADDRESS</button><button class="dist-tab">VIEW MAP</button></div>
+      <div class="dist-form">
+        <div class="fg"><label>Street #</label><input type="text" placeholder="Number"></div>
+        <div class="fg"><label>Direction</label><select><option>N</option><option>S</option><option>E</option><option>W</option></select></div>
+        <div class="fg"><label>Street Name</label><input type="text" placeholder="Name of street"></div>
+        <div class="full"><button class="btn btn-blue" onclick="showPage('district')">FIND MY DISTRICT</button></div>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="feat-sec"><div class="container"><div class="feat-grid">
+    <div>
+      <div class="feat-head"><h2>Featured Stories</h2><a href="#" onclick="showPage('news');return false;">View All News</a></div>
+      <div id="home-stories"></div>
+    </div>
+    <div class="breaking"><h3>Breaking News</h3><div><span class="src">Tweets by Chicago_Police</span><p>Follow @Chicago_Police on social media for the latest updates and community alerts from the Department.</p></div></div>
+  </div></div></section>
+
+  <section class="join-ban"><div class="container">
+    <h2>Join CPD. It Starts with You.</h2>
+    <p>The City of Chicago is currently seeking qualified Police Officer candidates for the Chicago Police Department. Chicago has the second largest Police Department in the nation, with over 12,000 officers dedicated to protecting the lives, property, and rights of all people.</p>
+    <a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-white btn-lg">Join CPD</a>
+  </div></section>
+</div>
+
+<!-- ============ NEWS ============ -->
+<div class="page" id="page-news">
+  <div class="pg-head"><div class="container"><div class="crumb"><a href="#" onclick="showPage('home');return false;">Home</a> &rsaquo; News</div><h1>News &amp; Media</h1><p>Latest news and announcements from CPD</p></div></div>
+  <section class="sec"><div class="container">
+    <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap"><input type="text" id="ns" class="fc" placeholder="Search news..." style="max-width:340px"><select id="nf" class="fc" style="max-width:160px"><option value="">All</option><option value="Operations">Operations</option><option value="Community">Community</option><option value="Training">Training</option></select></div>
+    <div class="cgrid" id="ng"></div>
+  </div></section>
+</div>
+
+<!-- ============ SERVICES ============ -->
+<div class="page" id="page-services">
+  <div class="pg-head"><div class="container"><div class="crumb"><a href="#" onclick="showPage('home');return false;">Home</a> &rsaquo; Services</div><h1>Service Catalog</h1><p>Resources and services available to citizens</p></div></div>
+  <section class="sec"><div class="container"><div class="cgrid">
+    <div class="card"><div class="card-h">Purchase</div><div class="card-b"><p>Purchase copies of crime reports, traffic crash reports, and other official CPD documents.</p></div></div>
+    <div class="card"><div class="card-h">Register</div><div class="card-b"><p>Register your bicycle, security camera, or business alarm with the Chicago Police Department.</p></div></div>
+    <div class="card"><div class="card-h">Report</div><div class="card-b"><p>Report crimes, suspicious activity, or submit anonymous tips to help keep Chicago safe.</p></div></div>
+    <div class="card"><div class="card-h">Request</div><div class="card-b"><p>Request data, statistics, or file a FOIA request with the Chicago Police Department.</p></div></div>
+    <div class="card"><div class="card-h">Search</div><div class="card-b"><p>Search the CLEARmap crime database, sex offender registry, and arrest records.</p></div></div>
+    <div class="card"><div class="card-h">Emergency</div><div class="card-b"><div style="padding:10px;background:var(--gray-50);border-radius:var(--radius)"><strong style="color:var(--red)">Emergency: 911</strong><br><strong>Non-Emergency: (312) 555-1234</strong></div></div></div>
+  </div></div></section>
+</div>
+
+<!-- ============ DEPARTMENTS ============ -->
+<div class="page" id="page-departments">
+  <div class="pg-head"><div class="container"><div class="crumb"><a href="#" onclick="showPage('home');return false;">Home</a> &rsaquo; Inside CPD</div><h1>Department Offices</h1><p>Organizational structure of the Chicago Police Department</p></div></div>
+  <section class="sec" style="background:var(--white)"><div class="container">
+    <div style="background:linear-gradient(135deg,var(--navy-dark),var(--navy-light));border-radius:var(--radius-lg);padding:28px;color:var(--white);margin-bottom:36px">
+      <h2 style="color:var(--white);font-family:'Playfair Display',serif;font-size:20px">Office of the Superintendent</h2>
+      <p style="color:var(--gray-400);font-size:13px;margin-top:4px">Superintendent <strong style="color:var(--white)">B. Stafford</strong></p>
+      <p style="color:var(--gray-300);font-size:13px;margin-top:8px;line-height:1.6">The Department is led by the Superintendent of Police, who is appointed by the Mayor. The Office of the Superintendent is responsible for critical functions such as planning and implementing the Community Policing Strategy, facilitating and coordinating law enforcement services, and addressing legal and legislative matters.</p>
+    </div>
+    <h2 class="text-center" style="font-family:'Playfair Display',serif;font-size:20px;margin-bottom:24px">Bureaus &amp; Divisions</h2>
+    <div class="cgrid">
+      <div class="card"><div class="card-h">Bureau of Detectives</div><div class="card-b"><p>Investigates major crimes including homicide, robbery, burglary, and financial crimes across the city.</p></div></div>
+      <div class="card"><div class="card-h">Bureau of Patrol</div><div class="card-b"><p>Responsible for field operations including protection of life and property across all 22 police districts.</p></div></div>
+      <div class="card"><div class="card-h">Bureau of Internal Affairs</div><div class="card-b"><p>Investigates allegations of misconduct by department members and ensures professional standards.</p></div></div>
+      <div class="card"><div class="card-h">Bureau of Counter-Terrorism</div><div class="card-b"><p>Coordinates counter-terrorism operations, intelligence gathering, and works with federal agencies.</p></div></div>
+      <div class="card"><div class="card-h">Education &amp; Training</div><div class="card-b"><p>Provides comprehensive instruction for recruits and continuing education for all active officers.</p></div></div>
+      <div class="card"><div class="card-h">Community Policing</div><div class="card-b"><p>Implements the Community Policing Strategy, coordinates beat meetings, and strengthens relationships.</p></div></div>
+    </div>
+  </div></section>
+</div>
+
+<!-- ============ DISTRICT ============ -->
+<div class="page" id="page-district">
+  <div class="pg-head"><div class="container"><div class="crumb"><a href="#" onclick="showPage('home');return false;">Home</a> &rsaquo; Districts</div><h1>Find Your District</h1><p>Chicago is made up of 22 police districts</p></div></div>
+  <section class="sec"><div class="container">
+    <div style="margin-bottom:16px"><input type="text" id="ds" class="fc" placeholder="Search districts..." style="max-width:340px"></div>
+    <div class="tw"><table class="dtable" id="dt"><thead><tr><th>District #</th><th>Name</th><th>Address</th><th>Phone</th></tr></thead><tbody>
+      <tr><td><strong>001</strong></td><td>Central</td><td>1718 S. State St.</td><td>(312) 745-4290</td></tr>
+      <tr><td><strong>002</strong></td><td>Wentworth</td><td>5101 S. Wentworth Ave.</td><td>(312) 747-8366</td></tr>
+      <tr><td><strong>003</strong></td><td>Grand Crossing</td><td>7040 S. Cottage Grove Ave.</td><td>(312) 747-8201</td></tr>
+      <tr><td><strong>004</strong></td><td>South Chicago</td><td>2255 E. 103rd St.</td><td>(312) 747-7581</td></tr>
+      <tr><td><strong>005</strong></td><td>Calumet</td><td>727 E. 111th St.</td><td>(312) 747-8210</td></tr>
+      <tr><td><strong>006</strong></td><td>Gresham</td><td>7808 S. Halsted St.</td><td>(312) 745-3617</td></tr>
+      <tr><td><strong>007</strong></td><td>Englewood</td><td>1438 W. 63rd St.</td><td>(312) 747-8223</td></tr>
+      <tr><td><strong>008</strong></td><td>Chicago Lawn</td><td>3420 W. 63rd St.</td><td>(312) 747-8730</td></tr>
+      <tr><td><strong>009</strong></td><td>Deering</td><td>3501 S. Lowe Ave.</td><td>(312) 747-8227</td></tr>
+      <tr><td><strong>010</strong></td><td>Ogden</td><td>3315 W. Ogden Ave.</td><td>(312) 747-7511</td></tr>
+      <tr><td><strong>011</strong></td><td>Harrison</td><td>3151 W. Harrison St.</td><td>(312) 746-8386</td></tr>
+      <tr><td><strong>012</strong></td><td>Near West</td><td>1412 S. Blue Island Ave.</td><td>(312) 746-8396</td></tr>
+      <tr><td><strong>014</strong></td><td>Shakespeare</td><td>2150 N. California Ave.</td><td>(312) 744-8250</td></tr>
+      <tr><td><strong>015</strong></td><td>Austin</td><td>5701 W. Madison St.</td><td>(312) 743-1440</td></tr>
+      <tr><td><strong>016</strong></td><td>Jefferson Park</td><td>5151 N. Milwaukee Ave.</td><td>(312) 742-4480</td></tr>
+      <tr><td><strong>017</strong></td><td>Albany Park</td><td>4461 N. Pulaski Rd.</td><td>(312) 742-4410</td></tr>
+      <tr><td><strong>018</strong></td><td>Near North</td><td>1160 N. Larrabee St.</td><td>(312) 742-5870</td></tr>
+      <tr><td><strong>019</strong></td><td>Town Hall</td><td>850 W. Addison St.</td><td>(312) 744-8320</td></tr>
+      <tr><td><strong>020</strong></td><td>Lincoln</td><td>5400 N. Lincoln Ave.</td><td>(312) 742-8714</td></tr>
+      <tr><td><strong>022</strong></td><td>Morgan Park</td><td>1900 W. Monterey Ave.</td><td>(312) 745-0710</td></tr>
+      <tr><td><strong>024</strong></td><td>Rogers Park</td><td>6464 N. Clark St.</td><td>(312) 744-5907</td></tr>
+      <tr><td><strong>025</strong></td><td>Grand Central</td><td>5555 W. Grand Ave.</td><td>(312) 746-8605</td></tr>
+    </tbody></table></div>
+  </div></section>
+</div>
+
+<!-- ============ APPLY ============ -->
+<div class="page" id="page-apply">
+  <div class="pg-head"><div class="container"><div class="crumb"><a href="#" onclick="showPage('home');return false;">Home</a> &rsaquo; Join CPD</div><h1>Join the Chicago Police Department</h1><p>Make a difference in your community</p></div></div>
+  <section class="sec" style="background:var(--white)"><div class="container" style="max-width:700px;text-align:center">
+    <div style="background:linear-gradient(135deg,var(--navy-dark),var(--navy-light));border-radius:var(--radius-lg);padding:36px;color:var(--white);margin-bottom:28px">
+      <h2 style="color:var(--white);font-family:'Playfair Display',serif;font-size:24px;font-style:italic">It Starts with You.</h2>
+      <p style="color:var(--gray-300);font-size:13px;margin-top:10px;line-height:1.7">The City of Chicago is currently seeking qualified Police Officer candidates. Join our Discord server to begin the application process and speak with our recruitment team.</p>
+    </div>
+    <a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-blue btn-lg" style="font-size:16px;padding:14px 36px">Apply on Discord</a>
+    <p style="font-size:12px;color:var(--gray-500);margin-top:16px">You will be redirected to our official Discord server where you can complete the application process.</p>
+  </div></section>
+</div>
+
+<!-- ============ LOGIN ============ -->
+<div class="page" id="page-login">
+  <div class="pg-head"><div class="container"><div class="crumb"><a href="#" onclick="showPage('home');return false;">Home</a> &rsaquo; Portal</div><h1>Officer Portal</h1><p>Authorized Personnel Only</p></div></div>
+  <section class="sec"><div class="container"><div class="fcard">
+    <div class="text-center" style="margin-bottom:20px"><h2 style="font-family:'Playfair Display',serif;font-size:18px">Chicago Police Department</h2><p style="font-size:13px;color:var(--gray-500)">Authorized Personnel Only</p></div>
+    <div class="ferr" id="lerr"></div>
+    <form id="lform"><div class="fg"><label>Username</label><input type="text" id="lu" class="fc" required></div><div class="fg"><label>Password</label><input type="password" id="lp" class="fc" required></div><button type="submit" class="btn btn-blue btn-lg" style="width:100%">Sign In</button></form>
+    <div style="margin-top:24px;padding-top:18px;border-top:1px solid var(--gray-200)"><p style="font-size:11px;color:var(--gray-400);text-align:center;margin-bottom:10px">Demo Accounts</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;color:var(--gray-500)"><div><strong>Admin:</strong> bstafford / admin123</div><div><strong>Supervisor:</strong> jmartinez / super123</div><div><strong>Lieutenant:</strong> rwilson / lt123</div><div><strong>Officer:</strong> klee / officer123</div></div></div>
+  </div></div></section>
+</div>
+
+<!-- ============ PORTAL (behind login) ============ -->
+<div class="page" id="page-portal">
+  <div class="pg-head"><div class="container"><div class="crumb"><a href="#" onclick="showPage('home');return false;">Home</a> &rsaquo; Officer Portal</div><h1>Officer Portal</h1><p>Internal resources for CPD personnel</p></div></div>
+  <section class="sec"><div class="container">
+    <div class="cgrid" style="margin-bottom:28px">
+      <div class="card" style="cursor:pointer" onclick="showPage('roster')"><div class="card-h">Officer Roster</div><div class="card-b"><p>View the full department roster including ranks, badge numbers, and assignments.</p></div></div>
+      <div class="card" style="cursor:pointer" onclick="showPage('codes')"><div class="card-h">10-Codes &amp; Radio Codes</div><div class="card-b"><p>Standard radio communication codes and penal codes reference.</p></div></div>
+      <div class="card" style="cursor:pointer" onclick="showPage('mostwanted')"><div class="card-h">Most Wanted / BOLOs</div><div class="card-b"><p>Current wanted persons and Be On the Lookout notices.</p></div></div>
+      <div class="card" style="cursor:pointer" onclick="showPage('profile')"><div class="card-h">My Profile</div><div class="card-b"><p>View and edit your officer profile, certifications, and commendations.</p></div></div>
+    </div>
+  </div></section>
+</div>
+
+<!-- ============ ROSTER (behind login) ============ -->
+<div class="page" id="page-roster">
+  <div class="pg-head"><div class="container"><div class="crumb"><a href="#" onclick="showPage('portal');return false;">Portal</a> &rsaquo; Roster</div><h1>Officer Roster</h1><p>Current active members</p></div></div>
+  <section class="sec"><div class="container">
+    <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap"><input type="text" id="rs" class="fc" placeholder="Search..." style="max-width:340px"><select id="rf" class="fc" style="max-width:160px"><option value="">All Ranks</option><option>Superintendent</option><option>Deputy Superintendent</option><option>Lieutenant</option><option>Sergeant</option><option>Police Officer</option></select></div>
+    <div class="tw"><table class="dtable"><thead><tr><th>Badge</th><th>Name</th><th>Rank</th><th>Department</th><th>Status</th><th>Service</th></tr></thead><tbody id="rb"></tbody></table></div>
+  </div></section>
+</div>
+
+<!-- ============ MOST WANTED (behind login) ============ -->
+<div class="page" id="page-mostwanted">
+  <div class="pg-head"><div class="container"><div class="crumb"><a href="#" onclick="showPage('portal');return false;">Portal</a> &rsaquo; Most Wanted</div><h1>Most Wanted / BOLOs</h1><p>Active wanted persons</p></div></div>
+  <section class="sec"><div class="container">
+    <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:var(--radius);padding:12px 16px;margin-bottom:20px;font-size:13px;color:#991b1b"><strong>Warning:</strong> Do not attempt to apprehend. Call 911 with any information.</div>
+    <div class="wgrid" id="wg"></div>
+  </div></section>
+</div>
+
+<!-- ============ 10-CODES (behind login) ============ -->
+<div class="page" id="page-codes">
+  <div class="pg-head"><div class="container"><div class="crumb"><a href="#" onclick="showPage('portal');return false;">Portal</a> &rsaquo; 10-Codes</div><h1>10-Codes &amp; Radio Codes</h1><p>Standard radio communication codes</p></div></div>
+  <section class="sec"><div class="container">
+    <div style="margin-bottom:16px"><input type="text" id="cs" class="fc" placeholder="Search codes..." style="max-width:340px"></div>
+    <div class="cogrid">
+      <div class="cosec"><div class="cosec-h">General 10-Codes</div><div class="colist"><div class="coitem"><span class="conum">10-1</span><span class="codesc">Poor Reception</span></div><div class="coitem"><span class="conum">10-4</span><span class="codesc">Copy / Acknowledgment</span></div><div class="coitem"><span class="conum">10-6</span><span class="codesc">Busy - Stand By</span></div><div class="coitem"><span class="conum">10-7</span><span class="codesc">Out of Service</span></div><div class="coitem"><span class="conum">10-8</span><span class="codesc">In Service</span></div><div class="coitem"><span class="conum">10-9</span><span class="codesc">Repeat Last Transmission</span></div><div class="coitem"><span class="conum">10-20</span><span class="codesc">Location / Position</span></div></div></div>
+      <div class="cosec"><div class="cosec-h">Emergency Codes</div><div class="colist"><div class="coitem"><span class="conum">10-0</span><span class="codesc">Caution - Extreme Care</span></div><div class="coitem"><span class="conum">10-32</span><span class="codesc">Person with Gun</span></div><div class="coitem"><span class="conum">10-33</span><span class="codesc">Emergency - All Units</span></div><div class="coitem"><span class="conum">10-71</span><span class="codesc">Shooting</span></div><div class="coitem"><span class="conum">10-99</span><span class="codesc">Officer Down</span></div><div class="coitem"><span class="conum">Code 3</span><span class="codesc">Lights &amp; Sirens</span></div></div></div>
+      <div class="cosec"><div class="cosec-h">Status Codes</div><div class="colist"><div class="coitem"><span class="conum">10-23</span><span class="codesc">Arrived at Scene</span></div><div class="coitem"><span class="conum">10-24</span><span class="codesc">Assignment Complete</span></div><div class="coitem"><span class="conum">10-29</span><span class="codesc">Check for Wanted</span></div><div class="coitem"><span class="conum">10-41</span><span class="codesc">Beginning Tour of Duty</span></div><div class="coitem"><span class="conum">10-42</span><span class="codesc">Ending Tour of Duty</span></div><div class="coitem"><span class="conum">10-76</span><span class="codesc">En Route</span></div><div class="coitem"><span class="conum">10-97</span><span class="codesc">On Scene</span></div></div></div>
+      <div class="cosec"><div class="cosec-h">Penal Codes</div><div class="colist"><div class="coitem"><span class="conum">187</span><span class="codesc">Homicide</span></div><div class="coitem"><span class="conum">211</span><span class="codesc">Robbery</span></div><div class="coitem"><span class="conum">240</span><span class="codesc">Assault</span></div><div class="coitem"><span class="conum">245</span><span class="codesc">Assault w/ Deadly Weapon</span></div><div class="coitem"><span class="conum">459</span><span class="codesc">Burglary</span></div><div class="coitem"><span class="conum">487</span><span class="codesc">Grand Theft</span></div><div class="coitem"><span class="conum">502</span><span class="codesc">DUI</span></div></div></div>
+    </div>
+  </div></section>
+</div>
+
+<!-- ============ PROFILE ============ -->
+<div class="page" id="page-profile">
+  <section class="sec"><div class="container" style="max-width:860px">
+    <div class="pcard"><div class="pbanner" id="pb"><button class="chbtn" id="cbb">Change Banner</button><input type="file" id="bi" accept="image/*" style="display:none"></div><div class="pinfo"><div class="pavatar" id="pa"><input type="file" id="pi" accept="image/*" style="display:none"></div><div class="pdetails"><h2 id="pn"></h2><div class="rk" id="pr"></div><div class="dp" id="pd"></div></div><button class="btn btn-outline btn-sm" id="epb">Edit Profile</button></div><div class="pmeta" id="pm"></div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px"><div class="apanel"><div class="apanel-h"><h3>Certifications</h3><button class="btn btn-blue btn-sm" id="acb" style="display:none">+ Add</button></div><div class="apanel-b"><div id="cl"></div></div></div><div class="apanel"><div class="apanel-h"><h3>Commendations</h3><button class="btn btn-blue btn-sm" id="adb" style="display:none">+ Add</button></div><div class="apanel-b"><div id="dl"></div></div></div></div>
+  </div></section>
+  <div class="modal-ov" id="em"><div class="modal"><div class="modal-h"><h3>Edit Profile</h3><button class="modal-x" onclick="document.getElementById('em').classList.remove('open')">&times;</button></div><div class="modal-b"><div class="fg"><label>Bio</label><textarea id="eb" class="fc"></textarea></div><div class="fg"><label>Email</label><input type="email" id="ee" class="fc"></div><div class="fg"><label>Phone</label><input type="tel" id="ep" class="fc"></div><div class="fg" id="edg" style="display:none"><label>Dept</label><input type="text" id="ed" class="fc"></div></div><div class="modal-f"><button class="btn btn-white btn-sm" onclick="document.getElementById('em').classList.remove('open')">Cancel</button><button class="btn btn-blue btn-sm" onclick="sp()">Save</button></div></div></div>
+</div>
+
+<!-- ============ ADMIN DASHBOARD ============ -->
+<div class="page" id="page-dashboard">
+  <div class="admin-ly"><aside class="admin-sb"><div class="stitle">Admin Panel</div><a href="#" class="sidebar-link active" data-tab="overview">Overview</a><a href="#" class="sidebar-link" data-tab="roster">Roster</a><a href="#" class="sidebar-link" data-tab="news">News</a><a href="#" class="sidebar-link" data-tab="wanted">Wanted</a><a href="#" class="sidebar-link" data-tab="apps">Applications</a></aside>
+  <main class="admin-ct">
+    <div class="tab-c active" id="tab-overview"><h2>Dashboard</h2><div class="asgrid" id="sg"></div></div>
+    <div class="tab-c" id="tab-roster"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h2 style="margin:0">Roster</h2><button class="btn btn-blue btn-sm" onclick="document.getElementById('aop').style.display=''">+ Add</button></div><div class="apanel" id="aop" style="display:none"><div class="apanel-h"><h3>Add Officer</h3></div><div class="apanel-b"><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div class="fg"><label>Username *</label><input type="text" id="nu" class="fc"></div><div class="fg"><label>Password *</label><input type="text" id="np" class="fc"></div><div class="fg"><label>First *</label><input type="text" id="nfi" class="fc"></div><div class="fg"><label>Last *</label><input type="text" id="nla" class="fc"></div><div class="fg"><label>Rank</label><select id="nr" class="fc"><option>Police Officer</option><option>Sergeant</option><option>Lieutenant</option><option>Commander</option></select></div><div class="fg"><label>Badge *</label><input type="text" id="nb" class="fc"></div><div class="fg"><label>Dept</label><input type="text" id="nd" class="fc" value="Bureau of Patrol"></div><div class="fg"><label>Role</label><select id="nrl" class="fc"><option value="officer">Officer</option><option value="supervisor">Supervisor</option><option value="admin">Admin</option></select></div></div><div style="margin-top:10px"><button class="btn btn-blue btn-sm" onclick="ao()">Add</button> <button class="btn btn-white btn-sm" onclick="document.getElementById('aop').style.display='none'">Cancel</button></div></div></div><div class="apanel"><div class="apanel-h"><h3>Officers</h3></div><div class="apanel-b" style="padding:0"><div class="tw"><table class="dtable"><thead><tr><th>Badge</th><th>Name</th><th>Rank</th><th>Status</th><th>Actions</th></tr></thead><tbody id="arb"></tbody></table></div></div></div></div>
+    <div class="tab-c" id="tab-news"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h2 style="margin:0">News</h2><button class="btn btn-blue btn-sm" onclick="document.getElementById('anp').style.display=''">+ Post</button></div><div class="apanel" id="anp" style="display:none"><div class="apanel-h"><h3>New Article</h3></div><div class="apanel-b"><div class="fg"><label>Title *</label><input type="text" id="nt2" class="fc"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div class="fg"><label>Category</label><select id="ncat" class="fc"><option>Operations</option><option>Community</option><option>Training</option><option>General</option></select></div><div class="fg"><label>Author</label><input type="text" id="naut" class="fc" value="Public Affairs"></div></div><div class="fg"><label>Content *</label><textarea id="nc" class="fc"></textarea></div><div><button class="btn btn-blue btn-sm" onclick="an()">Publish</button> <button class="btn btn-white btn-sm" onclick="document.getElementById('anp').style.display='none'">Cancel</button></div></div></div><div class="apanel"><div class="apanel-b" style="padding:0"><div class="tw"><table class="dtable"><thead><tr><th>Date</th><th>Title</th><th>Category</th><th>Actions</th></tr></thead><tbody id="anb"></tbody></table></div></div></div></div>
+    <div class="tab-c" id="tab-wanted"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h2 style="margin:0">Wanted</h2><button class="btn btn-blue btn-sm" onclick="document.getElementById('awp').style.display=''">+ Add</button></div><div class="apanel" id="awp" style="display:none"><div class="apanel-h"><h3>Add Wanted</h3></div><div class="apanel-b"><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div class="fg"><label>Name *</label><input type="text" id="wn" class="fc"></div><div class="fg"><label>Alias</label><input type="text" id="wa" class="fc"></div></div><div class="fg"><label>Charges *</label><input type="text" id="wc" class="fc"></div><div class="fg"><label>Description *</label><textarea id="wd" class="fc" style="min-height:50px"></textarea></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div class="fg"><label>Threat</label><select id="wt" class="fc"><option>High</option><option>Medium</option><option>Low</option></select></div><div class="fg"><label>Last Seen</label><input type="text" id="wl" class="fc"></div></div><div><button class="btn btn-blue btn-sm" onclick="aw()">Add</button> <button class="btn btn-white btn-sm" onclick="document.getElementById('awp').style.display='none'">Cancel</button></div></div></div><div class="apanel"><div class="apanel-b" style="padding:0"><div class="tw"><table class="dtable"><thead><tr><th>Name</th><th>Charges</th><th>Threat</th><th>Actions</th></tr></thead><tbody id="awb"></tbody></table></div></div></div></div>
+    <div class="tab-c" id="tab-apps"><h2>Applications</h2><div class="apanel"><div class="apanel-b" style="padding:0"><div class="tw"><table class="dtable"><thead><tr><th>Date</th><th>Name</th><th>Discord</th><th>Status</th><th>Actions</th></tr></thead><tbody id="aab"></tbody></table></div></div></div></div>
+  </main></div>
+</div>
+
+
+<!-- FOOTER -->
+<footer class="site-footer"><div class="container">
+  <div class="fgrid">
+    <div><h4 class="fh">Contact Us</h4><p class="fabout"><strong>Emergency Phone:</strong><br>9-1-1<br><br><strong>Non Emergency Number:</strong><br>(312) 555-1234<br><br><strong>City Services &amp; Questions:</strong><br>3-1-1</p></div>
+    <div><h4 class="fh">Main Pages</h4><ul class="flinks"><li><a href="#" onclick="showPage('news');return false;">News &amp; Media</a></li><li><a href="#" onclick="showPage('services');return false;">Get Service</a></li><li><a href="#" onclick="showPage('departments');return false;">Community Policing</a></li><li><a href="#" onclick="showPage('departments');return false;">Transform</a></li></ul></div>
+    <div><h4 class="fh">News &amp; Media</h4><ul class="flinks"><li><a href="#" onclick="showPage('news');return false;">Crime Stories</a></li><li><a href="#" onclick="showPage('news');return false;">Missing Persons</a></li><li><a href="#" onclick="showPage('news');return false;">News Conferences</a></li><li><a href="#" onclick="showPage('news');return false;">Major Incident Notifications</a></li></ul></div>
+    <div><h4 class="fh">Inside CPD</h4><ul class="flinks"><li><a href="#" onclick="showPage('district');return false;">Find Your District</a></li><li><a href="#" onclick="showPage('departments');return false;">Police Districts</a></li><li><a href="#" onclick="showPage('departments');return false;">Fallen Officers</a></li><li><a href="#" onclick="showPage('departments');return false;">Policies Review</a></li></ul></div>
+    <div>
+      <a href="#" onclick="showPage('login');return false;" class="btn btn-outline btn-sm" style="width:100%;margin-bottom:8px;justify-content:center">Compliment an Officer</a>
+      <a href="#" onclick="showPage('login');return false;" class="btn btn-outline btn-sm" style="width:100%;margin-bottom:8px;justify-content:center">File a Complaint</a>
+      <a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-outline btn-sm" style="width:100%;justify-content:center">Submit a Tip</a>
+    </div>
+  </div>
+  <div class="fbottom">&copy; Chicago Police Department. All Rights Reserved.</div>
+</div><div class="fbottom-red"></div></footer>
+
+<script>
+/* ===== STORAGE ===== */
+var CPD={KEYS:{O:'cpd_officers',U:'cpd_currentUser',N:'cpd_news',W:'cpd_wanted',A:'cpd_applications'},init:function(){if(!localStorage.getItem(this.KEYS.O))this.seedO();if(!localStorage.getItem(this.KEYS.N))this.seedN();if(!localStorage.getItem(this.KEYS.W))this.seedW();if(!localStorage.getItem(this.KEYS.A))localStorage.setItem(this.KEYS.A,'[]');},gO:function(){try{return JSON.parse(localStorage.getItem(this.KEYS.O))||[];}catch(e){return[];}},sO:function(o){localStorage.setItem(this.KEYS.O,JSON.stringify(o));},gOU:function(u){return this.gO().find(function(o){return o.username.toLowerCase()===u.toLowerCase();});},gOI:function(id){return this.gO().find(function(o){return o.id===id;});},uO:function(id,up){var o=this.gO();for(var i=0;i<o.length;i++){if(o[i].id===id){for(var k in up)o[i][k]=up[k];this.sO(o);var c=this.gU();if(c&&c.id===id)this.sU(o[i]);return true;}}return false;},aO:function(o){var arr=this.gO();o.id='o_'+Date.now()+'_'+Math.random().toString(36).substr(2,4);o.createdAt=Date.now();o.certifications=o.certifications||[];o.commendations=o.commendations||[];o.photo=o.photo||'';o.banner=o.banner||'';o.bio=o.bio||'';o.email=o.email||'';o.phone=o.phone||'';o.status=o.status||'Active';arr.push(o);this.sO(arr);return o;},rO:function(id){this.sO(this.gO().filter(function(o){return o.id!==id;}));},gU:function(){try{return JSON.parse(localStorage.getItem(this.KEYS.U));}catch(e){return null;}},sU:function(u){localStorage.setItem(this.KEYS.U,JSON.stringify(u));},lo:function(){localStorage.removeItem(this.KEYS.U);},isL:function(){return this.gU()!==null;},gN:function(){try{return JSON.parse(localStorage.getItem(this.KEYS.N))||[];}catch(e){return[];}},sN:function(n){localStorage.setItem(this.KEYS.N,JSON.stringify(n));},aN:function(item){var n=this.gN();item.id='n_'+Date.now();item.date=item.date||new Date().toISOString();n.unshift(item);this.sN(n);return item;},rN:function(id){this.sN(this.gN().filter(function(n){return n.id!==id;}));},gW:function(){try{return JSON.parse(localStorage.getItem(this.KEYS.W))||[];}catch(e){return[];}},sW:function(w){localStorage.setItem(this.KEYS.W,JSON.stringify(w));},aW:function(p){var w=this.gW();p.id='w_'+Date.now();p.dateAdded=new Date().toISOString();w.unshift(p);this.sW(w);return p;},rW:function(id){this.sW(this.gW().filter(function(w){return w.id!==id;}));},gA:function(){try{return JSON.parse(localStorage.getItem(this.KEYS.A))||[];}catch(e){return[];}},sA:function(a){localStorage.setItem(this.KEYS.A,JSON.stringify(a));},aA:function(app){var a=this.gA();app.id='a_'+Date.now();app.date=new Date().toISOString();app.status='Pending';a.unshift(app);this.sA(a);return app;},uA:function(id,up){var a=this.gA();for(var i=0;i<a.length;i++){if(a[i].id===id){for(var k in up)a[i][k]=up[k];this.sA(a);return true;}}return false;},dos:function(c){return Math.floor((Date.now()-c)/(1e3*60*60*24));},hp:function(a){var u=this.gU();if(!u)return false;var r=u.role;if(a==='mc')return r==='admin'||r==='supervisor';if(a==='ed'||a==='admin')return r==='admin';return false;},
+seedO:function(){this.sO([{id:'o1',username:'bstafford',password:'admin123',firstName:'B.',lastName:'Stafford',rank:'Superintendent',badge:'0001',department:'Office of the Superintendent',role:'admin',status:'Active',bio:'Superintendent of the Chicago Police Department.',email:'superintendent@chicagopd.gov',phone:'(312) 555-0001',photo:'',banner:'',certifications:['Executive Leadership','Crisis Management','Use of Force Policy'],commendations:['Distinguished Service Medal','Meritorious Service Award'],createdAt:Date.now()-365*864e5},{id:'o2',username:'jmartinez',password:'super123',firstName:'J.',lastName:'Martinez',rank:'Deputy Superintendent',badge:'0102',department:'Bureau of Detectives',role:'supervisor',status:'Active',bio:'Deputy Superintendent overseeing the Bureau of Detectives.',email:'jmartinez@chicagopd.gov',phone:'(312) 555-0102',photo:'',banner:'',certifications:['Criminal Investigations','Forensic Analysis'],commendations:['Investigator of the Year'],createdAt:Date.now()-300*864e5},{id:'o3',username:'rwilson',password:'lt123',firstName:'R.',lastName:'Wilson',rank:'Lieutenant',badge:'1247',department:'Bureau of Patrol - District 1',role:'supervisor',status:'Active',bio:'Watch Commander for District 1.',email:'rwilson@chicagopd.gov',phone:'(312) 555-1247',photo:'',banner:'',certifications:['Field Training Officer','SWAT Certified'],commendations:['Bravery Award'],createdAt:Date.now()-200*864e5},{id:'o4',username:'tchen',password:'sgt123',firstName:'T.',lastName:'Chen',rank:'Sergeant',badge:'2456',department:'Bureau of Patrol - District 7',role:'supervisor',status:'Active',bio:'Patrol Sergeant, District 7.',email:'tchen@chicagopd.gov',phone:'',photo:'',banner:'',certifications:['Field Training Officer'],commendations:['Department Commendation'],createdAt:Date.now()-180*864e5},{id:'o5',username:'klee',password:'officer123',firstName:'K.',lastName:'Lee',rank:'Police Officer',badge:'5678',department:'Bureau of Patrol - District 1',role:'officer',status:'Active',bio:'Patrol officer.',email:'klee@chicagopd.gov',phone:'',photo:'',banner:'',certifications:['Firearms Qualified','First Aid/CPR'],commendations:[],createdAt:Date.now()-90*864e5},{id:'o6',username:'apatel',password:'officer123',firstName:'A.',lastName:'Patel',rank:'Police Officer',badge:'5901',department:'Bureau of Patrol - District 11',role:'officer',status:'Active',bio:'Patrol officer, District 11.',email:'',phone:'',photo:'',banner:'',certifications:['Firearms Qualified','Traffic Enforcement'],commendations:['Honorable Mention'],createdAt:Date.now()-60*864e5}]);},
+seedN:function(){this.sN([{id:'n1',title:'CPD DUI Saturation Patrol - 4th (South Chicago) District',content:'The Chicago Police Department will be conducting a DUI Saturation Patrol in the 4th District to combat impaired driving and improve road safety.',date:new Date(Date.now()-2*864e5).toISOString(),author:'Public Affairs',category:'Operations'},{id:'n2',title:'CPD DUI Saturation Patrol - 25th (Lincoln) District',content:'Officers will conduct targeted enforcement operations to reduce DUI incidents in the Lincoln District area.',date:new Date(Date.now()-5*864e5).toISOString(),author:'Public Affairs',category:'Operations'},{id:'n3',title:'Community Engagement Initiative Launch',content:'The CPD is launching a new community engagement initiative to strengthen relationships between officers and the neighborhoods they serve.',date:new Date(Date.now()-7*864e5).toISOString(),author:'Community Policing',category:'Community'},{id:'n4',title:'New Officer Training Academy Class Begins',content:'A new class of recruits has started training at the CPD Academy. We welcome these future officers.',date:new Date(Date.now()-14*864e5).toISOString(),author:'Training Division',category:'Training'}]);},
+seedW:function(){this.sW([{id:'w1',name:'Marcus "Ghost" Rivera',alias:'Ghost',charges:'Armed Robbery, Assault with a Deadly Weapon',description:'Male, 6\'1", 190 lbs, black hair, brown eyes. Tattoo on left forearm.',threat:'High',lastSeen:'District 11 - Harrison',dateAdded:new Date(Date.now()-3*864e5).toISOString()},{id:'w2',name:'Janice Kowalski',alias:'',charges:'Grand Theft Auto, Evading Police',description:'Female, 5\'6", 140 lbs, blonde hair, blue eyes.',threat:'Medium',lastSeen:'District 1 - Central',dateAdded:new Date(Date.now()-7*864e5).toISOString()},{id:'w3',name:'DeShawn Carter',alias:'Smoke',charges:'Drug Trafficking, Illegal Firearms',description:'Male, 5\'10", 175 lbs, black hair, brown eyes. Scar above right eye.',threat:'High',lastSeen:'District 7 - Englewood',dateAdded:new Date(Date.now()-10*864e5).toISOString()}]);}};
+CPD.init();
+
+/* ===== AUTH ===== */
+var Auth={login:function(u,p){var o=CPD.gOU(u);if(!o)return{ok:false,msg:'Account not found.'};if(o.password!==p)return{ok:false,msg:'Incorrect password.'};CPD.sU(o);return{ok:true,user:o};},logout:function(){CPD.lo();showPage('home');buildAuth();},refresh:function(){var c=CPD.gU();if(!c)return null;var f=CPD.gOI(c.id);if(f){CPD.sU(f);return f;}return c;}};
+
+/* ===== ROUTING ===== */
+function showPage(name){
+  var pages=document.querySelectorAll('.page');for(var i=0;i<pages.length;i++)pages[i].classList.remove('active');
+  // Check if page requires login
+  var restricted=['roster','mostwanted','codes','profile','portal','dashboard'];
+  if(restricted.indexOf(name)!==-1&&!CPD.isL()){name='login';}
+  if(name==='dashboard'){var u=CPD.gU();if(!u||u.role!=='admin'){name='login';}}
+  var el=document.getElementById('page-'+name);if(el)el.classList.add('active');
+  window.scrollTo(0,0);
+  if(name==='roster')renderRoster();
+  if(name==='news')renderNews();
+  if(name==='mostwanted')renderWanted();
+  if(name==='profile')renderProfile();
+  if(name==='dashboard')renderDash();
+}
+
+/* ===== LOADING ===== */
+setTimeout(function(){var l=document.getElementById('ls');if(l){l.classList.add('fade-out');setTimeout(function(){l.remove();},600);}},1200);
+
+/* ===== NAV ===== */
+document.getElementById('ntog').addEventListener('click',function(){var n=document.getElementById('mnav');n.classList.toggle('open');this.innerHTML=n.classList.contains('open')?'&#10005;':'&#9776;';});
+
+/* ===== HEADER AUTH ===== */
+function buildAuth(){
+  var c=document.getElementById('hdr-acts');var u=CPD.gU();
+  if(u){var f=CPD.gOI(u.id);if(f)CPD.sU(f);u=f||u;var ini=(u.firstName[0]||'')+(u.lastName[0]||'');var ph=u.photo?'<img src="'+u.photo+'">':ini;
+  c.innerHTML='<div class="user-menu"><button class="user-menu-btn" id="umbtn"><div class="avatar">'+ph+'</div><span class="uname">'+u.firstName+' '+u.lastName+'</span></button><div class="user-dd" id="udd"><div class="dd-head"><div class="n">'+u.firstName+' '+u.lastName+'</div><div class="r">'+u.rank+'</div></div><a href="#" onclick="showPage(\'portal\');return false;">Officer Portal</a><a href="#" onclick="showPage(\'profile\');return false;">My Profile</a>'+(u.role==='admin'?'<a href="#" onclick="showPage(\'dashboard\');return false;">Admin Dashboard</a>':'')+'<button class="logout" onclick="Auth.logout()">Logout</button></div></div>';}
+  else{c.innerHTML='<a href="#" onclick="showPage(\'login\');return false;" class="btn btn-outline btn-sm">Portal Login</a><a href="https://discord.gg/7vQEJnaD" target="_blank" class="btn btn-blue btn-sm">Join CPD</a>';}
+}
+document.addEventListener('click',function(e){var t=e.target.closest('.user-menu-btn');var d=document.getElementById('udd');if(t&&d){e.stopPropagation();d.classList.toggle('open');}else if(d&&!e.target.closest('.user-dd')){d.classList.remove('open');}});
+
+/* ===== UTILS ===== */
+function fD(d){return new Date(d).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});}
+function fDS(d){return new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}
+
+/* ===== HOME STORIES ===== */
+function renderStories(){var el=document.getElementById('home-stories');if(!el)return;var n=CPD.gN().slice(0,3);el.innerHTML=n.map(function(x){return '<div class="story"><div class="thumb" style="background:var(--gray-200);color:var(--gray-400);font-size:11px;font-weight:700">CPD</div><div><h3>'+x.title+'</h3><span class="date">'+fD(x.date)+'</span></div></div>';}).join('');}
+
+/* ===== ROSTER ===== */
+function renderRoster(){var s=document.getElementById('rs').value.toLowerCase();var r=document.getElementById('rf').value;var o=CPD.gO();if(s)o=o.filter(function(x){return(x.firstName+' '+x.lastName).toLowerCase().indexOf(s)!==-1||x.badge.indexOf(s)!==-1||x.department.toLowerCase().indexOf(s)!==-1;});if(r)o=o.filter(function(x){return x.rank===r;});var rk=['Superintendent','Deputy Superintendent','Commander','Lieutenant','Sergeant','Police Officer'];o.sort(function(a,b){return rk.indexOf(a.rank)-rk.indexOf(b.rank);});document.getElementById('rb').innerHTML=o.map(function(x){return '<tr><td><strong>#'+x.badge+'</strong></td><td>'+x.firstName+' '+x.lastName+'</td><td>'+x.rank+'</td><td>'+x.department+'</td><td><span class="badge badge-'+x.status.toLowerCase()+'">'+x.status+'</span></td><td>'+CPD.dos(x.createdAt)+' days</td></tr>';}).join('');}
+document.getElementById('rs').addEventListener('input',renderRoster);
+document.getElementById('rf').addEventListener('change',renderRoster);
+
+/* ===== NEWS ===== */
+function renderNews(){var s=document.getElementById('ns').value.toLowerCase();var c=document.getElementById('nf').value;var n=CPD.gN();if(s)n=n.filter(function(x){return x.title.toLowerCase().indexOf(s)!==-1;});if(c)n=n.filter(function(x){return x.category===c;});document.getElementById('ng').innerHTML=n.length?n.map(function(x){return '<div class="card"><div class="card-h">'+(x.category||'General')+'</div><div class="card-b"><p style="font-size:11px;color:var(--gray-400);margin-bottom:4px">'+fD(x.date)+' &mdash; '+(x.author||'CPD')+'</p><h3 style="font-size:14px;margin-bottom:6px;color:var(--navy)">'+x.title+'</h3><p>'+x.content+'</p></div></div>';}).join(''):'<p style="text-align:center;color:var(--gray-500);padding:36px">No articles found.</p>';}
+document.getElementById('ns').addEventListener('input',renderNews);
+document.getElementById('nf').addEventListener('change',renderNews);
+
+/* ===== WANTED ===== */
+function renderWanted(){var w=CPD.gW();document.getElementById('wg').innerHTML=w.length?w.map(function(x){return '<div class="wcard"><div class="wphoto">NO PHOTO<span class="tb badge badge-'+x.threat.toLowerCase()+'">'+x.threat+'</span></div><div class="winfo"><div class="wname">'+x.name+'</div>'+(x.alias?'<div style="font-size:11px;color:var(--gray-500);margin-bottom:3px">AKA: "'+x.alias+'"</div>':'')+'<div class="wcharges">'+x.charges+'</div><div class="wdetails"><strong>Description:</strong> '+x.description+'<br><strong>Last Seen:</strong> '+x.lastSeen+'<br><strong>Added:</strong> '+fD(x.dateAdded)+'</div></div></div>';}).join(''):'<p style="text-align:center;color:var(--gray-500);padding:36px">No wanted persons.</p>';}
+
+/* ===== SEARCH HANDLERS ===== */
+document.getElementById('cs').addEventListener('input',function(){var q=this.value.toLowerCase();var items=document.querySelectorAll('.coitem');for(var i=0;i<items.length;i++)items[i].style.display=items[i].textContent.toLowerCase().indexOf(q)!==-1?'':'none';});
+document.getElementById('ds').addEventListener('input',function(){var q=this.value.toLowerCase();var rows=document.querySelectorAll('#dt tbody tr');for(var i=0;i<rows.length;i++)rows[i].style.display=rows[i].textContent.toLowerCase().indexOf(q)!==-1?'':'none';});
+
+/* ===== LOGIN ===== */
+document.getElementById('lform').addEventListener('submit',function(e){e.preventDefault();var u=document.getElementById('lu').value.trim();var p=document.getElementById('lp').value;var err=document.getElementById('lerr');err.style.display='none';if(!u||!p){err.textContent='Fill all fields.';err.style.display='block';return;}var r=Auth.login(u,p);if(r.ok){buildAuth();showPage(r.user.role==='admin'?'dashboard':'portal');}else{err.textContent=r.msg;err.style.display='block';}});
+
+/* ===== PROFILE ===== */
+function renderProfile(){var u=CPD.gU();if(!u){showPage('login');return;}Auth.refresh();u=CPD.gU();if(u.banner)document.getElementById('pb').style.backgroundImage='url('+u.banner+')';var ini=(u.firstName[0]||'')+(u.lastName[0]||'');document.getElementById('pa').innerHTML=u.photo?'<img src="'+u.photo+'"><input type="file" id="pi" accept="image/*" style="display:none">':ini+'<input type="file" id="pi" accept="image/*" style="display:none">';document.getElementById('pn').textContent=u.firstName+' '+u.lastName;document.getElementById('pr').textContent=u.rank+' - Badge #'+u.badge;document.getElementById('pd').textContent=u.department;document.getElementById('pm').innerHTML='<div class="mi"><div class="ml">Status</div><div class="mv"><span class="badge badge-'+u.status.toLowerCase()+'">'+u.status+'</span></div></div><div class="mi"><div class="ml">Days of Service</div><div class="mv">'+CPD.dos(u.createdAt)+'</div></div><div class="mi"><div class="ml">Role</div><div class="mv">'+u.role+'</div></div><div class="mi"><div class="ml">Email</div><div class="mv">'+(u.email||'-')+'</div></div><div class="mi"><div class="ml">Phone</div><div class="mv">'+(u.phone||'-')+'</div></div><div class="mi"><div class="ml">Bio</div><div class="mv">'+(u.bio||'-')+'</div></div>';var cm=u.role==='admin'||u.role==='supervisor';document.getElementById('acb').style.display=cm?'':'none';document.getElementById('adb').style.display=cm?'':'none';document.getElementById('cl').innerHTML=!u.certifications.length?'<p style="color:var(--gray-400);font-size:12px">None</p>':u.certifications.map(function(c,i){return '<div class="citem"><span>'+c+'</span>'+(cm?'<button class="rbtn" onclick="rc('+i+')">&times;</button>':'')+'</div>';}).join('');document.getElementById('dl').innerHTML=!u.commendations.length?'<p style="color:var(--gray-400);font-size:12px">None</p>':u.commendations.map(function(c,i){return '<div class="ditem"><span>'+c+'</span>'+(cm?'<button class="rbtn" onclick="rd('+i+')">&times;</button>':'')+'</div>';}).join('');}
+document.getElementById('acb').addEventListener('click',function(){var n=prompt('Certification:');if(!n)return;var u=CPD.gU();u.certifications.push(n.trim());CPD.uO(u.id,{certifications:u.certifications});renderProfile();});
+function rc(i){var u=CPD.gU();u.certifications.splice(i,1);CPD.uO(u.id,{certifications:u.certifications});renderProfile();}
+document.getElementById('adb').addEventListener('click',function(){var n=prompt('Commendation:');if(!n)return;var u=CPD.gU();u.commendations.push(n.trim());CPD.uO(u.id,{commendations:u.commendations});renderProfile();});
+function rd(i){var u=CPD.gU();u.commendations.splice(i,1);CPD.uO(u.id,{commendations:u.commendations});renderProfile();}
+document.getElementById('pa').addEventListener('click',function(){document.getElementById('pi').click();});
+document.addEventListener('change',function(e){if(e.target.id==='pi'&&e.target.files[0]){var r=new FileReader();r.onload=function(ev){CPD.uO(CPD.gU().id,{photo:ev.target.result});renderProfile();buildAuth();};r.readAsDataURL(e.target.files[0]);}if(e.target.id==='bi'&&e.target.files[0]){var r2=new FileReader();r2.onload=function(ev){CPD.uO(CPD.gU().id,{banner:ev.target.result});renderProfile();};r2.readAsDataURL(e.target.files[0]);}});
+document.getElementById('cbb').addEventListener('click',function(){document.getElementById('bi').click();});
+document.getElementById('epb').addEventListener('click',function(){var u=CPD.gU();document.getElementById('eb').value=u.bio||'';document.getElementById('ee').value=u.email||'';document.getElementById('ep').value=u.phone||'';if(u.role==='admin'){document.getElementById('edg').style.display='';document.getElementById('ed').value=u.department||'';}document.getElementById('em').classList.add('open');});
+function sp(){var u=CPD.gU();var up={bio:document.getElementById('eb').value.trim(),email:document.getElementById('ee').value.trim(),phone:document.getElementById('ep').value.trim()};if(u.role==='admin')up.department=document.getElementById('ed').value.trim();CPD.uO(u.id,up);document.getElementById('em').classList.remove('open');renderProfile();}
+document.getElementById('em').addEventListener('click',function(e){if(e.target===document.getElementById('em'))document.getElementById('em').classList.remove('open');});
+
+/* ===== ADMIN DASHBOARD ===== */
+function renderDash(){rs2();rr2();rn2();rw2();ra2();}
+var sl=document.querySelectorAll('.sidebar-link');for(var i=0;i<sl.length;i++)sl[i].addEventListener('click',function(e){e.preventDefault();for(var j=0;j<sl.length;j++)sl[j].classList.remove('active');this.classList.add('active');var tabs=document.querySelectorAll('.tab-c');for(var k=0;k<tabs.length;k++)tabs[k].classList.remove('active');document.getElementById('tab-'+this.dataset.tab).classList.add('active');});
+function rs2(){var o=CPD.gO(),n=CPD.gN(),w=CPD.gW(),a=CPD.gA(),p=a.filter(function(x){return x.status==='Pending';}).length;document.getElementById('sg').innerHTML='<div class="ascard"><div class="sl">Officers</div><div class="sv">'+o.length+'</div></div><div class="ascard"><div class="sl">Active</div><div class="sv">'+o.filter(function(x){return x.status==='Active';}).length+'</div></div><div class="ascard"><div class="sl">News</div><div class="sv">'+n.length+'</div></div><div class="ascard"><div class="sl">Wanted</div><div class="sv">'+w.length+'</div></div><div class="ascard"><div class="sl">Pending</div><div class="sv"'+(p>0?' style="color:var(--red)"':'')+'">'+p+'</div></div>';}
+function rr2(){var o=CPD.gO();document.getElementById('arb').innerHTML=o.map(function(x){return '<tr><td>#'+x.badge+'</td><td>'+x.firstName+' '+x.lastName+'</td><td>'+x.rank+'</td><td><span class="badge badge-'+x.status.toLowerCase()+'">'+x.status+'</span></td><td><button class="btn btn-sm btn-white" onclick="ts(\''+x.id+'\')">'+(x.status==='Active'?'Suspend':'Activate')+'</button> <button class="btn btn-sm btn-red" onclick="ro(\''+x.id+'\')">X</button></td></tr>';}).join('');}
+function ao(){var u=document.getElementById('nu').value.trim(),p=document.getElementById('np').value.trim(),fn=document.getElementById('nfi').value.trim(),ln=document.getElementById('nla').value.trim(),b=document.getElementById('nb').value.trim();if(!u||!p||!fn||!ln||!b){alert('Fill required.');return;}if(CPD.gOU(u)){alert('Username taken.');return;}CPD.aO({username:u,password:p,firstName:fn,lastName:ln,rank:document.getElementById('nr').value,badge:b,department:document.getElementById('nd').value.trim(),role:document.getElementById('nrl').value});document.getElementById('aop').style.display='none';renderDash();}
+function ts(id){var o=CPD.gOI(id);CPD.uO(id,{status:o.status==='Active'?'Suspended':'Active'});renderDash();}
+function ro(id){if(!confirm('Remove?'))return;CPD.rO(id);renderDash();}
+function rn2(){var n=CPD.gN();document.getElementById('anb').innerHTML=n.map(function(x){return '<tr><td>'+fDS(x.date)+'</td><td>'+x.title+'</td><td>'+(x.category||'-')+'</td><td><button class="btn btn-sm btn-red" onclick="dn(\''+x.id+'\')">Del</button></td></tr>';}).join('')||'<tr><td colspan="4" style="text-align:center;color:var(--gray-400)">None</td></tr>';}
+function an(){var t=document.getElementById('nt2').value.trim(),c=document.getElementById('nc').value.trim();if(!t||!c){alert('Required.');return;}CPD.aN({title:t,content:c,category:document.getElementById('ncat').value,author:document.getElementById('naut').value.trim()});document.getElementById('anp').style.display='none';document.getElementById('nt2').value='';document.getElementById('nc').value='';renderDash();}
+function dn(id){if(!confirm('Delete?'))return;CPD.rN(id);renderDash();}
+function rw2(){var w=CPD.gW();document.getElementById('awb').innerHTML=w.map(function(x){return '<tr><td>'+x.name+'</td><td>'+x.charges+'</td><td><span class="badge badge-'+x.threat.toLowerCase()+'">'+x.threat+'</span></td><td><button class="btn btn-sm btn-red" onclick="dw(\''+x.id+'\')">Rem</button></td></tr>';}).join('')||'<tr><td colspan="4" style="text-align:center;color:var(--gray-400)">None</td></tr>';}
+function aw(){var n=document.getElementById('wn').value.trim(),c=document.getElementById('wc').value.trim(),d=document.getElementById('wd').value.trim();if(!n||!c||!d){alert('Required.');return;}CPD.aW({name:n,alias:document.getElementById('wa').value.trim(),charges:c,description:d,threat:document.getElementById('wt').value,lastSeen:document.getElementById('wl').value.trim()});document.getElementById('awp').style.display='none';renderDash();}
+function dw(id){if(!confirm('Remove?'))return;CPD.rW(id);renderDash();}
+function ra2(){var a=CPD.gA();document.getElementById('aab').innerHTML=a.map(function(x){return '<tr><td>'+fDS(x.date)+'</td><td>'+x.firstName+' '+x.lastName+'</td><td>'+x.discord+'</td><td><span class="badge badge-'+(x.status==='Pending'?'loa':x.status==='Approved'?'active':'suspended')+'">'+x.status+'</span></td><td>'+(x.status==='Pending'?'<button class="btn btn-sm btn-green" onclick="ua(\''+x.id+'\',\'Approved\')">OK</button> <button class="btn btn-sm btn-red" onclick="ua(\''+x.id+'\',\'Denied\')">X</button>':x.status)+'</td></tr>';}).join('')||'<tr><td colspan="5" style="text-align:center;color:var(--gray-400)">None</td></tr>';}
+function ua(id,s){CPD.uA(id,{status:s});renderDash();}
+
+/* ===== INIT ===== */
+buildAuth();
+renderStories();
+</script>
+</body>
+</html>
