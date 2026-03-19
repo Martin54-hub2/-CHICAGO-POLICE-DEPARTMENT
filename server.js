@@ -11,7 +11,10 @@ const JWT_SECRET = process.env.JWT_SECRET || 'cpd-secret-key-change-in-productio
 const MONGO_URI = process.env.MONGO_URI || process.env.MONGODB_URL || 'mongodb://localhost:27017/cpd';
 
 // ===== MIDDLEWARE =====
-app.use(cors());
+app.use(cors({
+  origin: ['https://martin54-hub2.github.io', 'http://localhost:3000', 'http://localhost:5500', 'http://127.0.0.1:5500'],
+  credentials: true
+}));
 app.use(express.json({ limit: '10mb' }));
 
 // ===== MONGOOSE CONNECT =====
@@ -111,6 +114,15 @@ const configSchema = new mongoose.Schema({
   value: mongoose.Schema.Types.Mixed
 });
 
+const logSchema = new mongoose.Schema({
+  action: { type: String, required: true },
+  details: String,
+  userId: String,
+  userName: String,
+  userRole: String,
+  ip: String
+}, { timestamps: true });
+
 // ===== MODELS =====
 const Officer = mongoose.model('Officer', officerSchema);
 const News = mongoose.model('News', newsSchema);
@@ -119,6 +131,19 @@ const District = mongoose.model('District', districtSchema);
 const Suspect = mongoose.model('Suspect', suspectSchema);
 const Application = mongoose.model('Application', applicationSchema);
 const Config = mongoose.model('Config', configSchema);
+const Log = mongoose.model('Log', logSchema);
+
+// ===== LOGGING HELPER =====
+async function logAction(req, action, details) {
+  try {
+    let userName = 'System';
+    if (req.userId) {
+      const u = await Officer.findById(req.userId).select('firstName lastName');
+      if (u) userName = u.firstName + ' ' + u.lastName;
+    }
+    await Log.create({ action, details, userId: req.userId || '', userName, userRole: req.userRole || '', ip: req.ip });
+  } catch(e) { console.error('Log error:', e); }
+}
 
 // ===== AUTH MIDDLEWARE =====
 function auth(req, res, next) {
@@ -157,6 +182,7 @@ app.post('/api/auth/login', async (req, res) => {
     const valid = await bcrypt.compare(password, officer.password);
     if (!valid) return res.status(401).json({ error: 'Incorrect password' });
     const token = jwt.sign({ id: officer._id, role: officer.role }, JWT_SECRET, { expiresIn: '7d' });
+    await Log.create({ action: 'LOGIN', details: officer.firstName + ' ' + officer.lastName + ' logged in', userId: officer._id, userName: officer.firstName + ' ' + officer.lastName, userRole: officer.role });
     res.json({ token, user: { ...officer.toObject(), password: undefined } });
   } catch (e) {
     res.status(500).json({ error: e.message });
@@ -200,6 +226,7 @@ app.post('/api/officers', auth, adminOnly, async (req, res) => {
     if (exists) return res.status(400).json({ error: 'Username taken' });
     const hashed = await bcrypt.hash(password, 10);
     const officer = await Officer.create({ username: username.toLowerCase(), password: hashed, ...rest });
+    await logAction(req, 'OFFICER_CREATED', 'Created officer: ' + rest.firstName + ' ' + rest.lastName + ' (Badge #' + rest.badge + ')');
     res.json({ ...officer.toObject(), password: undefined });
   } catch (e) {
     res.status(500).json({ error: e.message });
@@ -215,6 +242,7 @@ app.put('/api/officers/:id', auth, async (req, res) => {
     }
     if (password) updates.password = await bcrypt.hash(password, 10);
     const officer = await Officer.findByIdAndUpdate(req.params.id, updates, { new: true }).select('-password');
+    await logAction(req, 'OFFICER_UPDATED', 'Updated officer: ' + officer.firstName + ' ' + officer.lastName + (updates.rank ? ' (rank -> ' + updates.rank + ')' : '') + (updates.callsign ? ' (callsign -> ' + updates.callsign + ')' : '') + (updates.subdivision ? ' (subdivision -> ' + updates.subdivision + ')' : '') + (updates.status ? ' (status -> ' + updates.status + ')' : ''));
     res.json(officer);
   } catch (e) {
     res.status(500).json({ error: e.message });
@@ -223,6 +251,8 @@ app.put('/api/officers/:id', auth, async (req, res) => {
 
 app.delete('/api/officers/:id', auth, adminOnly, async (req, res) => {
   try {
+    const toDelete = await Officer.findById(req.params.id);
+    await logAction(req, 'OFFICER_REMOVED', 'Removed officer: ' + (toDelete ? toDelete.firstName + ' ' + toDelete.lastName : req.params.id));
     await Officer.findByIdAndDelete(req.params.id);
     res.json({ success: true });
   } catch (e) {
@@ -237,6 +267,7 @@ app.post('/api/officers/:id/infractions', auth, supOrAdmin, async (req, res) => 
     if (!officer) return res.status(404).json({ error: 'Not found' });
     officer.infractions.unshift(req.body);
     await officer.save();
+    await logAction(req, 'INFRACTION_ADDED', 'Infraction added to ' + officer.firstName + ' ' + officer.lastName + ': ' + req.body.title);
     res.json(officer.infractions);
   } catch (e) {
     res.status(500).json({ error: e.message });
@@ -467,6 +498,16 @@ app.put('/api/config/:key', auth, adminOnly, async (req, res) => {
       { upsert: true, new: true }
     );
     res.json(config);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// ===== AUDIT LOGS =====
+app.get('/api/logs', auth, adminOnly, async (req, res) => {
+  try {
+    const logs = await Log.find().sort({ createdAt: -1 }).limit(200);
+    res.json(logs);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
